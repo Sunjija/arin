@@ -1,0 +1,240 @@
+@import 'tailwindcss';
+
+:root {
+  --bg: #f3eee4;
+  --bg-elevated: #faf7f1;
+  --ink: #1f2421;
+  --ink-muted: #5c635e;
+  --line: #d9d0c2;
+  --accent: #1f4f56;
+  --accent-soft: #d7e6e8;
+  --correct: #2f6b4f;
+  --correct-soft: #e2f0e8;
+  --wrong: #a14b45;
+  --wrong-soft: #f6e6e4;
+  --focus: #0b6e7a;
+  --shadow: 0 10px 30px rgba(31, 36, 33, 0.06);
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(31, 79, 86, 0.08), transparent 28%),
+    linear-gradient(180deg, #f7f2e9 0%, var(--bg) 42%, #efe7da 100%);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: 'Noto Serif KR', serif;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in oklab, var(--focus) 70%, white);
+  outline-offset: 2px;
+}
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.app-shell {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 1rem 1rem 6.5rem;
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    padding: 1.5rem 1.5rem 2.5rem;
+  }
+}
+
+.surface {
+  background: color-mix(in oklab, var(--bg-elevated) 92%, white);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 0.9rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #f7fbfb;
+}
+
+.btn-primary:hover {
+  background: #183e44;
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line);
+}
+
+.btn-correct {
+  background: var(--correct-soft);
+  color: var(--correct);
+  border-color: color-mix(in oklab, var(--correct) 35%, white);
+}
+
+.btn-wrong {
+  background: var(--wrong-soft);
+  color: var(--wrong);
+  border-color: color-mix(in oklab, var(--wrong) 35%, white);
+}
+
+.nav-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  background: color-mix(in oklab, var(--bg-elevated) 94%, white);
+  border-top: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.nav-bottom-inner {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+  padding: 0.45rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom));
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 52px;
+  border-radius: 0.85rem;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.progress-rail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.progress-step {
+  padding: 0.55rem 0.4rem;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 0.78rem;
+  background: #ebe4d8;
+  color: var(--ink-muted);
+}
+
+.progress-step.current {
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+}
+
+.progress-step.done {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.flashcard {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.meter {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #e5ddd0;
+  overflow: hidden;
+}
+
+.meter > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
