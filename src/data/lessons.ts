@@ -1,6 +1,6 @@
 import type { Lesson } from '../types'
 
-/** 8주 계획의 초기 학습 단원 (자체 제작) */
+/** 8주 계획의 학습 단원 — topicCatalog 전 시대·토픽 대응 (자체 제작) */
 export const lessons: Lesson[] = [
   {
     id: 'lesson-01',
@@ -35,6 +35,22 @@ export const lessons: Lesson[] = [
     estimatedMinutes: 30,
   },
   {
+    id: 'lesson-12',
+    title: '삼국 불교와 문화',
+    era: 'three-kingdoms',
+    week: 1,
+    dayOrder: 3,
+    summary:
+      '이차돈 순교와 신라 불교 공인, 황룡사·미륵사·무령왕릉 등 삼국 문화재를 시대·성격과 연결합니다.',
+    keywords: ['이차돈', '황룡사', '미륵사', '무령왕릉', '담덕'],
+    checkpoints: [
+      '신라: 이차돈 순교 → 법흥왕 불교 공인, 황룡사',
+      '백제: 미륵사, 무령왕릉의 국제성',
+      '고구려: 고분 벽화·담덕(광개토) 전승과 문화',
+    ],
+    estimatedMinutes: 25,
+  },
+  {
     id: 'lesson-03',
     title: '남북국 시대의 변화',
     era: 'north-south',
@@ -63,6 +79,22 @@ export const lessons: Lesson[] = [
       '광종: 노비안검법, 과거제, 공복 제정으로 왕권 강화',
       '성종: 최승로의 시무 28조 수용, 12목 설치, 유교 정치',
       '목적 차이: 광종=호족 견제·왕권 / 성종=유교적 통치 질서',
+    ],
+    estimatedMinutes: 30,
+  },
+  {
+    id: 'lesson-13',
+    title: '고려 제도·원간섭·공민왕',
+    era: 'goryeo',
+    week: 2,
+    dayOrder: 3,
+    summary:
+      '전시과·기인·도병마사 등 통치·수취 제도와, 원 간섭기·공민왕의 반원·개혁 정책을 연결합니다.',
+    keywords: ['전시과', '기인', '정동행성', '공민왕', '전민변정도감', '신돈'],
+    checkpoints: [
+      '전시과·기인: 토지·지방 통제의 골격',
+      '원 간섭: 정동행성·쌍성총관부 등 종속 장치',
+      '공민왕: 기철 제거, 신돈·전민변정도감으로 개혁 시도',
     ],
     estimatedMinutes: 30,
   },
@@ -97,6 +129,22 @@ export const lessons: Lesson[] = [
     estimatedMinutes: 30,
   },
   {
+    id: 'lesson-14',
+    title: '사림·훈구와 사화',
+    era: 'joseon-early',
+    week: 3,
+    dayOrder: 3,
+    summary:
+      '김종직·조광조로 이어지는 사림의 성장과 기묘·을사 사화, 붕당 형성의 흐름을 정리합니다.',
+    keywords: ['김종직', '조광조', '기묘사화', '을사사화', '붕당'],
+    checkpoints: [
+      '훈구 vs 사림: 중앙 공신 세력과 지방 출신 신진',
+      '기묘사화: 조광조 등 사림 숙청',
+      '을사사화 이후 붕당 정치의 단초',
+    ],
+    estimatedMinutes: 25,
+  },
+  {
     id: 'lesson-07',
     title: '조선 후기 사회 변동',
     era: 'joseon-late',
@@ -108,6 +156,22 @@ export const lessons: Lesson[] = [
       '대동법: 공물 → 쌀·포 납부, 방납 폐단 완화',
       '균역법: 군포 부담 경감',
       '세도정치기 농민 봉기와 사회 모순',
+    ],
+    estimatedMinutes: 30,
+  },
+  {
+    id: 'lesson-17',
+    title: '영·정조와 실학',
+    era: 'joseon-late',
+    week: 4,
+    dayOrder: 2,
+    summary:
+      '영조의 탕평, 정조의 규장각·수원 화성, 유형원·정약용 등 실학의 지향을 왕·정책·사상으로 묶습니다.',
+    keywords: ['탕평책', '규장각', '수원화성', '정약용', '북학'],
+    checkpoints: [
+      '영조: 탕평책으로 붕당 완화 시도',
+      '정조: 규장각·초계문신, 수원 화성',
+      '실학: 유형원·정약용, 북학파의 현실 개혁론',
     ],
     estimatedMinutes: 30,
   },
@@ -127,6 +191,22 @@ export const lessons: Lesson[] = [
     estimatedMinutes: 30,
   },
   {
+    id: 'lesson-18',
+    title: '대한제국과 국권 위기',
+    era: 'opening',
+    week: 5,
+    dayOrder: 2,
+    summary:
+      '대한제국·광무개혁·독립협회를 정리하고, 을미사변부터 을사늑약으로 이어지는 국권 위기를 순서대로 잡습니다.',
+    keywords: ['대한제국', '광무개혁', '만민공동회', '을미사변', '을사늑약'],
+    checkpoints: [
+      '대한제국: 황제권·대한국국제, 광무개혁',
+      '독립협회·만민공동회: 민권·참정 논의',
+      '을미사변 → 아관파천 → 을사늑약으로 외교권 상실',
+    ],
+    estimatedMinutes: 25,
+  },
+  {
     id: 'lesson-09',
     title: '일제강점과 독립운동',
     era: 'colonial',
@@ -142,6 +222,22 @@ export const lessons: Lesson[] = [
     estimatedMinutes: 35,
   },
   {
+    id: 'lesson-15',
+    title: '식민 통치의 변화',
+    era: 'colonial',
+    week: 6,
+    dayOrder: 2,
+    summary:
+      '무단통치·문화통치·산미증식·국가총동원·황민화로 이어지는 식민 통치 단계와 수탈 정책을 구분합니다.',
+    keywords: ['무단통치', '문화통치', '산미증식', '국가총동원', '황민화'],
+    checkpoints: [
+      '무단 → 3·1 이후 문화통치로 통치 방식 전환',
+      '산미증식계획: 식량·토지 수탈 심화',
+      '전시 총동원·황민화: 인력·자원·정체성 억압',
+    ],
+    estimatedMinutes: 25,
+  },
+  {
     id: 'lesson-10',
     title: '광복 이후 현대사',
     era: 'modern',
@@ -155,6 +251,22 @@ export const lessons: Lesson[] = [
       '헌법 개정과 민주화의 연결',
     ],
     estimatedMinutes: 30,
+  },
+  {
+    id: 'lesson-16',
+    title: '현대 경제·사회 변화',
+    era: 'modern',
+    week: 7,
+    dayOrder: 2,
+    summary:
+      '경제개발계획·새마을·중화학공업, IMF 위기, 남북정상회담 등 경제·사회·남북 관계의 큰 흐름을 잡습니다.',
+    keywords: ['경제개발계획', '새마을', '중화학', 'IMF', '남북정상회담'],
+    checkpoints: [
+      '1960~70년대: 개발계획·수출 주도·중화학',
+      '1997 IMF 외환위기와 구조 조정',
+      '남북정상회담 등 화해·협력의 이정표',
+    ],
+    estimatedMinutes: 25,
   },
   {
     id: 'lesson-11',
