@@ -87,10 +87,16 @@ export function pickMockQuestions(
     picked.push(q)
   }
 
-  // 은행이 부족하면 순환 보충해 50문항 구조를 맞춤 (축소 모드는 total이 작음)
+  // 은행이 부족하면 고유 id를 붙인 사본으로 50문항 구조를 맞춤 (축소 모드는 total이 작음)
   let i = 0
   while (picked.length < total && pool.length > 0) {
-    picked.push(pool[i % pool.length]!)
+    const base = pool[i % pool.length]!
+    const copyIndex = Math.floor(i / pool.length) + 1
+    picked.push({
+      ...base,
+      id: `${base.id}__pad${copyIndex}`,
+      stem: `${base.stem} (연습 ${copyIndex})`,
+    })
     i += 1
   }
 
