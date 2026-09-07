@@ -46,14 +46,14 @@ export const questions: Question[] = [
       '중국 군현과 대립·교류하며 성장하였고, 후기에 이르러 외부에서 들어온 세력이 왕위를 차지하였다. 사회 질서를 유지하기 위한 법령이 전해지며, 중계 무역으로 경제적 이득을 취하였다.',
     choices: [
       '골품제에 따라 관등 승진과 혼인이 제한되었다.',
-      '위만 집권 이후 중계 무역을 바탕으로 세력을 확대하였다.',
+      '고조선 후기에 중계 무역을 바탕으로 세력을 확대하였다.',
       '녹읍을 지급하여 귀족의 경제 기반을 보장하였다.',
       '기인 제도를 실시하여 지방 세력을 견제하였다.',
       '전시과를 시행하여 관료에게 토지 수조권을 지급하였다.',
     ],
     answerIndex: 1,
     explanation:
-      '위만·중계 무역·법령(8조법 전승)은 고조선입니다. 골품·녹읍은 신라, 기인·전시과는 고려의 제도입니다.',
+      '중계 무역·법령(8조법 전승)·후기 집권 세력은 고조선입니다. 선지에 인물명을 반복하지 않았습니다. 골품·녹읍은 신라, 기인·전시과는 고려입니다.',
     era: 'prehistoric',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
@@ -83,19 +83,13 @@ export const questions: Question[] = [
   // ─── 삼국 ───
   {
     id: 'q-04',
-    stem: '다음 왕에 대한 설명으로 옳은 것은?',
+    stem: '다음 왕이 누구인지 고른 것으로 옳은 것은?',
     passage:
       '남진 정책을 추진하여 한강 유역을 확보하고, 새로 편입한 지역을 순행하며 비를 세웠다. 불교를 공인한 선대의 정책을 이어받아 중앙 집권과 영토 확장을 동시에 추진하였다.',
-    choices: [
-      '평양으로 천도하여 남하 정책을 본격화하였다.',
-      '한강 유역을 확보하고 순수비를 건립하였다.',
-      '살수에서 수나라 군대를 크게 무찔렀다.',
-      '익산에 미륵사 창건을 추진하였다.',
-      '나·당 연합군의 일원으로 백제 공략에 나섰다.',
-    ],
-    answerIndex: 1,
+    choices: ['근초고왕', '광개토대왕', '진흥왕', '장수왕', '법흥왕'],
+    answerIndex: 2,
     explanation:
-      '한강 확보·순수비는 신라 진흥왕입니다. ① 장수왕, ③ 을지문덕(영양왕대), ④ 백제 무왕, ⑤ 김유신 등 통일전쟁 시기입니다.',
+      '한강 확보·순수비는 신라 진흥왕입니다. 법흥왕은 불교 공인, 장수왕은 평양 천도, 광개토대왕은 고구려 정복 군주입니다.',
     era: 'three-kingdoms',
     tags: ['king-figure', 'source'],
     difficulty: 2,
@@ -184,19 +178,13 @@ export const questions: Question[] = [
   },
   {
     id: 'q-09',
-    stem: '다음 국가에 대한 설명으로 옳은 것은?',
+    stem: '다음 국가를 세운 인물로 옳은 것은?',
     passage:
       '고구려 유민을 중심으로 건국되어 당과 대립·교류하였다. 전성기에는 해동성국으로 불리며 독자적인 문화를 발전시켰다.',
-    choices: [
-      '대조영이 건국하였고 고구려 계승 의식을 표방하였다.',
-      '견훤이 완산주에 도읍을 정하고 세력을 키웠다.',
-      '궁예가 후고구려를 세우고 철원으로 천도하였다.',
-      '왕건이 후삼국을 통합하여 새 왕조를 열었다.',
-      '문무왕이 삼국을 통일하고 9주를 설치하였다.',
-    ],
-    answerIndex: 0,
+    choices: ['견훤', '궁예', '대조영', '왕건', '문무왕'],
+    answerIndex: 2,
     explanation:
-      '발해=대조영입니다. 견훤·궁예·왕건은 후삼국, 문무왕은 통일신라입니다.',
+      '발해 건국자는 대조영입니다. 견훤·궁예·왕건은 후삼국, 문무왕은 통일신라입니다.',
     era: 'north-south',
     tags: ['king-figure', 'source'],
     difficulty: 1,
@@ -226,19 +214,13 @@ export const questions: Question[] = [
   // ─── 고려 ───
   {
     id: 'q-11',
-    stem: '다음 자료의 왕이 추진한 정책으로 옳은 것은?',
+    stem: '다음 정책을 추진한 왕으로 옳은 것은?',
     passage:
-      '불법적으로 노비가 된 자를 조사하여 양인으로 돌리고, 과거를 시행하여 신진 관료를 등용하였으며, 관리의 복색을 정하였다. 이를 통해 호족을 억누르고 왕권을 강화하려 하였다.',
-    choices: [
-      '지방에 12목을 두고 관리를 파견하였다.',
-      '노비안검법·과거제·공복 제정으로 왕권을 강화하였다.',
-      '정방을 설치하여 인사권을 장악하였다.',
-      '전민변정도감을 두어 권문세족을 억눌렀다.',
-      '삼별초를 조직하여 대몽 항쟁을 이끌었다.',
-    ],
+      '불법적으로 노비가 된 자를 조사하여 양인으로 돌리고, 시험을 통해 신진 관료를 등용하였으며, 관리의 복색을 정하였다. 이를 통해 호족을 억누르고 왕권을 강화하려 하였다.',
+    choices: ['태조', '광종', '성종', '예종', '공민왕'],
     answerIndex: 1,
     explanation:
-      '노비안검·과거·공복은 광종입니다. 12목은 성종, 정방은 최씨 무신정권, 전민변정도감은 공민왕입니다.',
+      '노비 신분 조사·과거·공복은 광종의 왕권 강화 정책입니다. 성종은 시무 28조·12목, 공민왕은 전민변정도감 등으로 구분합니다.',
     era: 'goryeo',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
@@ -325,18 +307,12 @@ export const questions: Question[] = [
   },
   {
     id: 'q-16',
-    stem: '다음 인물의 활동으로 알맞은 것은?',
+    stem: '다음 인물로 알맞은 것은?',
     passage: '성종에게 시무책을 올려 유교적 정치 이념과 제도 정비를 건의하였다.',
-    choices: [
-      '정방을 설치하여 인사권을 장악하였다.',
-      '시무 28조를 올려 유교 정치를 건의하였다.',
-      '전민변정도감을 운영하여 토지·노비를 바로잡으려 하였다.',
-      '묘청과 함께 서경 천도를 주장하였다.',
-      '무신 정변을 주도하여 의종을 폐위하였다.',
-    ],
+    choices: ['정중부', '최승로', '최충헌', '묘청', '이자겸'],
     answerIndex: 1,
     explanation:
-      '최승로=시무 28조입니다. 정방은 최씨 무신, 전민변정도감은 공민왕대, 묘청은 인종대, 무신 정변은 정중부 등입니다.',
+      '성종에게 시무 28조를 올린 인물은 최승로입니다. 정중부·최충헌은 무신, 묘청·이자겸은 다른 정치 세력입니다.',
     era: 'goryeo',
     tags: ['king-figure', 'source'],
     difficulty: 2,
@@ -743,19 +719,13 @@ export const questions: Question[] = [
   // ─── 통합·변별 강화 ───
   {
     id: 'q-38',
-    stem: '밑줄 친 ㉠ 제도에 대한 설명으로 옳은 것은?',
+    stem: '밑줄 친 ㉠ 제도의 명칭으로 옳은 것은?',
     passage:
       '정부는 공납의 폐단을 줄이기 위해 ㉠ 을/를 확대 시행하였다. 각 지역의 특산물 대신 미·포 등을 거두어 필요한 물품을 마련하도록 하였다.',
-    choices: [
-      '양인의 군포를 줄이기 위해 시행된 제도이다.',
-      '공물을 미·포 등으로 납부하게 한 제도이다.',
-      '관료에게 수조지를 지급한 제도이다.',
-      '호족의 자제를 개경에 머물게 한 제도이다.',
-      '노비 문서를 조사하여 양인으로 돌린 제도이다.',
-    ],
+    choices: ['과전법', '대동법', '균역법', '기인 제도', '노비안검법'],
     answerIndex: 1,
     explanation:
-      '㉠은 대동법입니다. ① 균역법, ③ 과전/전시과, ④ 기인, ⑤ 노비안검과 구분합니다.',
+      '특산물 공납을 미·포로 바꾼 것은 대동법입니다. 균역법은 군포 경감, 과전법은 수조권 지급입니다.',
     era: 'joseon-late',
     tags: ['political-system', 'source'],
     difficulty: 2,
@@ -783,19 +753,13 @@ export const questions: Question[] = [
   },
   {
     id: 'q-40',
-    stem: '(가) 인물의 정책으로 적절한 것은?',
+    stem: '(가) 인물로 알맞은 것은?',
     passage:
       '(가)은/는 호족을 억누르기 위해 노비 신분을 조사하고, 시험을 통해 관리를 뽑았으며, 관리의 복식을 정하였다.',
-    choices: [
-      '12목을 설치하고 지방관을 파견하였다.',
-      '과거제를 도입하고 공복을 제정하였다.',
-      '정방을 두어 인사권을 장악하였다.',
-      '기인 제도로 지방 세력을 견제하였다.',
-      '전시과를 개혁하여 관료의 수조지를 조정하였다.',
-    ],
+    choices: ['태조', '광종', '성종', '인종', '공민왕'],
     answerIndex: 1,
     explanation:
-      '(가)는 광종입니다. 과거·공복이 맞으며, 12목은 성종, 정방·기인·전시과는 다른 맥락입니다.',
+      '노비 신분 조사·과거·공복은 광종입니다. 성종은 12목·시무 28조, 공민왕은 반원 개혁과 전민변정도감으로 구분합니다.',
     era: 'goryeo',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
@@ -814,7 +778,7 @@ export function getQuestionById(id: string): Question | undefined {
   return questions.find((q) => q.id === id)
 }
 
-/** 품질 점검용: 선지 수·정답 인덱스·중복 선지 */
+/** 품질 점검용: 선지 수·정답 인덱스·중복 선지·지문 복붙형 */
 export function validateQuestionBank(list: Question[] = questions): string[] {
   const errors: string[] = []
   for (const q of list) {
@@ -825,6 +789,16 @@ export function validateQuestionBank(list: Question[] = questions): string[] {
     const normalized = q.choices.map((c) => c.replace(/\s+/g, ''))
     if (new Set(normalized).size !== normalized.length) {
       errors.push(`${q.id}: duplicate choices`)
+    }
+    const passage = (q.passage ?? '').replace(/\s+/g, '')
+    const answer = q.choices[q.answerIndex]?.replace(/\s+/g, '') ?? ''
+    if (passage && answer.length >= 8) {
+      // 정답 문장 상당 부분이 지문에 그대로 있으면 복붙형으로 간주
+      const chunks = [answer.slice(0, Math.min(12, answer.length))]
+      if (answer.length > 16) chunks.push(answer.slice(8, 20))
+      if (chunks.some((c) => c.length >= 8 && passage.includes(c))) {
+        errors.push(`${q.id}: answer appears copied from passage`)
+      }
     }
   }
   return errors
