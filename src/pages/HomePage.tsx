@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ensureSeeded } from '../db/seed'
 import { buildTodayPlan, type TodayPlan } from '../lib/studyService'
 import { formatMinutes } from '../lib/dates'
 
@@ -11,7 +12,6 @@ export function HomePage() {
     let alive = true
     ;(async () => {
       try {
-        const { ensureSeeded } = await import('../db/seed')
         await ensureSeeded()
         const p = await buildTodayPlan()
         if (alive) setPlan(p)
