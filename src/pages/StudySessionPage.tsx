@@ -274,7 +274,7 @@ function QuizStep({
         <button
           type="button"
           className="btn btn-primary mt-4"
-          onClick={() => void finishSession(session).then((_) => onChange({ ...session, step: 'result' }))}
+          onClick={() => void finishSession(session).then(() => onChange({ ...session, step: 'result' }))}
         >
           결과 보기
         </button>

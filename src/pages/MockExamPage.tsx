@@ -184,7 +184,7 @@ export function MockExamPage() {
             const correct = result.answers[i]?.correct
             if (correct) return null
             return (
-              <article key={q.id} className="surface p-4">
+              <article key={`${q.id}-${i}`} className="surface p-4">
                 <p className="text-sm text-[var(--wrong)]">오답</p>
                 <h3 className="font-semibold">{q.stem}</h3>
                 <p className="mt-1 text-sm text-[var(--ink-muted)]">{q.explanation}</p>
