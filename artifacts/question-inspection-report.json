@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-07T11:33:56.407Z",
-  "total": 85,
+  "generatedAt": "2026-09-07T11:38:09.995Z",
+  "total": 100,
   "findings": [],
   "formatCounts": {
-    "source-underline": 5,
-    "source-what": 7,
-    "wrong-statement": 6,
+    "source-underline": 6,
+    "source-what": 5,
+    "wrong-statement": 7,
     "map-region": 4,
-    "chronology-labeled": 5,
+    "chronology-labeled": 7,
     "king-policy-match": 5,
-    "policy-content": 9,
+    "policy-content": 14,
     "source-who": 10,
-    "chronology-events": 6,
-    "king-compare": 4,
-    "org-activity": 7,
-    "cause-effect": 7,
+    "chronology-events": 7,
+    "king-compare": 6,
+    "org-activity": 8,
+    "cause-effect": 10,
     "heritage-period": 6,
-    "policy-name": 4
+    "policy-name": 5
   },
   "summary": {
     "errors": 0,
@@ -27,10 +27,10 @@
   "recommendations": [
     "신규 문항은 examFormats.ts의 formatId를 먼저 고른 뒤 작성할 것",
     "오답은 인접 시대·유사 제도·혼동 인물로만 구성할 것",
-    "포맷 부족: source-what (현재 7, 목표 약 9)",
-    "포맷 부족: source-underline (현재 5, 목표 약 7)",
-    "포맷 부족: chronology-events (현재 6, 목표 약 10)",
-    "포맷 부족: chronology-labeled (현재 5, 목표 약 7)",
-    "포맷 부족: king-policy-match (현재 5, 목표 약 10)"
+    "포맷 부족: source-who (현재 10, 목표 약 12)",
+    "포맷 부족: source-what (현재 5, 목표 약 10)",
+    "포맷 부족: source-underline (현재 6, 목표 약 8)",
+    "포맷 부족: chronology-events (현재 7, 목표 약 12)",
+    "포맷 부족: king-policy-match (현재 5, 목표 약 12)"
   ]
 }

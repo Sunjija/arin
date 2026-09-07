@@ -4,7 +4,7 @@ import { SessionProgress } from '../components/SessionProgress'
 import { lessons } from '../data/lessons'
 import { getQuestionById } from '../data/questions'
 import { buildCardChoiceSet, ratingFromQuizResult, type CardChoiceSet } from '../lib/cardQuiz'
-import { ERA_LABELS, ALL_ERAS, WRONG_CAUSE_LABELS, type WrongCause } from '../types'
+import { ERA_LABELS, WRONG_CAUSE_LABELS, type WrongCause } from '../types'
 import {
   addCardFromContent,
   finishSession,
@@ -114,7 +114,13 @@ export function StudySessionPage() {
           onMemo={async (conceptMemo) => update({ ...session, conceptMemo })}
           onDone={async () => {
             questionStartedAt.current = Date.now()
-            await update({ ...session, conceptDone: true, step: 'quiz', quizPhase: 'stem' })
+            await update({
+              ...session,
+              conceptDone: true,
+              step: 'quiz',
+              quizPhase: 'choices',
+              revealedChoices: true,
+            })
           }}
         />
       )}
@@ -190,9 +196,9 @@ function CardsStep({
   if (!card || !choiceSet) {
     return (
       <div className="surface p-5">
-        <p>오늘 복습할 카드가 없습니다.</p>
+        <p>오늘 복습할 카드가 없습니다. 바로 오늘 단원 개념으로 넘어갑니다.</p>
         <button type="button" className="btn btn-primary mt-4" onClick={() => void onSkipToConcept()}>
-          개념 학습으로
+          개념 읽기로
         </button>
       </div>
     )
@@ -201,10 +207,10 @@ function CardsStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-[var(--ink-muted)]">
-        복습 {session.cardIndex + 1} / {session.cardIds.length} · {ERA_LABELS[card.era]} · 선지 고르기
+        카드 {session.cardIndex + 1} / {session.cardIds.length} · {ERA_LABELS[card.era]} · {choiceSet.kindLabel}
       </p>
       <div className="surface p-5">
-        <p className="mb-2 text-sm font-medium text-[var(--accent)]">맞는 설명을 고르세요</p>
+        <p className="mb-2 text-sm font-medium text-[var(--accent)]">{choiceSet.ask}</p>
         <h1 className="font-display text-xl leading-relaxed sm:text-2xl">{choiceSet.prompt}</h1>
       </div>
       <div className="space-y-2" role="group" aria-label="선택지">
@@ -240,8 +246,8 @@ function CardsStep({
         {revealed
           ? selected === choiceSet.answerIndex
             ? '정답입니다. 다음 카드로 이동합니다.'
-            : '틀렸습니다. 잠시 뒤 다시 복습 큐에 들어갑니다.'
-          : '번호 키(1–4)로도 고를 수 있습니다. 고르면 바로 채점됩니다.'}
+            : '틀렸습니다. 잠시 뒤 다시 같은 카드가 나옵니다.'
+          : '번호 키(1–4)로도 고를 수 있습니다. 맞으면 간격이 늘고, 틀리면 곧 다시 복습합니다.'}
       </p>
     </div>
   )
@@ -261,9 +267,15 @@ function ConceptStep({
   return (
     <div className="surface space-y-4 p-5">
       <div>
-        <p className="text-sm text-[var(--accent)]">{ERA_LABELS[lesson.era]}</p>
+        <p className="text-sm text-[var(--accent)]">
+          {ERA_LABELS[lesson.era]} · 오늘 단원 읽기 (약 {lesson.estimatedMinutes}분)
+        </p>
         <h1 className="font-display text-2xl">{lesson.title}</h1>
         <p className="mt-2 text-[var(--ink-muted)]">{lesson.summary}</p>
+        <p className="mt-3 rounded-xl bg-[var(--accent-soft)]/60 p-3 text-sm leading-relaxed text-[var(--ink)]">
+          카드로 키워드를 깨운 뒤, 여기서 오늘 범위를 한 번에 정리합니다. 읽고 나면 같은 범위의 맞춤
+          문제로 바로 점검합니다.
+        </p>
       </div>
       <div>
         <h2 className="font-semibold">핵심 키워드</h2>
@@ -278,17 +290,17 @@ function ConceptStep({
         </ul>
       </div>
       <label className="block">
-        <span className="text-sm font-medium">교재·강의 범위 메모</span>
+        <span className="text-sm font-medium">교재·강의 범위 메모 (선택)</span>
         <textarea
           className="mt-1 w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
           rows={3}
           value={memo}
           onChange={(e) => void onMemo(e.target.value)}
-          placeholder="예: 자습서 고려 광종·성종 단원"
+          placeholder="예: 자습서 고려 광종·성종 단원 p.42~45"
         />
       </label>
       <button type="button" className="btn btn-primary w-full" onClick={() => void onDone()}>
-        개념 학습 완료 · 문제 풀기
+        읽기 완료 · 맞춤 문제 풀기
       </button>
     </div>
   )
@@ -308,6 +320,18 @@ function QuizStep({
   const qid = session.questionIds[session.questionIndex]
   const question = qid ? getQuestionById(qid) : undefined
   const [message, setMessage] = useState<string | null>(null)
+
+  // 예전 다단 세션이 남아 있으면 선택지 화면으로 보정
+  useEffect(() => {
+    if (
+      session.quizPhase === 'stem' ||
+      session.quizPhase === 'era' ||
+      session.quizPhase === 'clue'
+    ) {
+      void onChange({ ...session, quizPhase: 'choices', revealedChoices: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only normalize legacy phases
+  }, [session.quizPhase, session.questionIndex])
 
   if (!question) {
     return (
@@ -333,89 +357,61 @@ function QuizStep({
       return
     }
     resetTimer()
+    setMessage(null)
     await onChange({
       ...session,
       answered,
       questionIndex: nextIndex,
-      quizPhase: 'stem',
+      quizPhase: 'choices',
       eraGuess: undefined,
       clueMemo: '',
       selectedIndex: undefined,
-      revealedChoices: false,
+      revealedChoices: true,
     })
   }
+
+  const phase =
+    session.quizPhase === 'stem' || session.quizPhase === 'era' || session.quizPhase === 'clue'
+      ? 'choices'
+      : session.quizPhase
 
   return (
     <div className="surface space-y-4 p-5">
       <p className="text-sm text-[var(--ink-muted)]">
-        문제 {session.questionIndex + 1} / {session.questionIds.length} · 배점 {question.difficulty}점
+        문제 {session.questionIndex + 1} / {session.questionIds.length} · 배점 {question.difficulty}점 ·{' '}
+        {ERA_LABELS[question.era]}
+      </p>
+      <p className="rounded-xl bg-[var(--accent-soft)]/50 p-3 text-sm text-[var(--ink-muted)]">
+        방금 읽은 개념을 문제로 확인하는 단계입니다. 선지를 고른 뒤 제출하면 바로 해설이 나옵니다.
       </p>
       {question.passage ? (
-        <blockquote className="rounded-xl bg-[var(--accent-soft)]/50 p-4 text-[0.95rem] leading-relaxed">
+        <blockquote className="rounded-xl bg-[var(--accent-soft)]/50 p-4 text-[0.95rem] leading-relaxed whitespace-pre-line">
           {question.passage}
         </blockquote>
       ) : null}
       <h1 className="text-lg font-semibold leading-relaxed">{question.stem}</h1>
 
-      {session.quizPhase === 'stem' && (
-        <button
-          type="button"
-          className="btn btn-primary w-full"
-          onClick={() => void onChange({ ...session, quizPhase: 'era' })}
-        >
-          시대 고르기로
-        </button>
-      )}
-
-      {session.quizPhase === 'era' && (
-        <div className="space-y-2">
-          <p className="font-medium">어느 시대의 내용인가?</p>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {ALL_ERAS.map((era) => (
-              <button
-                key={era}
-                type="button"
-                className={`btn ${session.eraGuess === era ? 'btn-primary' : 'btn-secondary'} justify-start`}
-                onClick={() => void onChange({ ...session, eraGuess: era, quizPhase: 'clue' })}
-              >
-                {ERA_LABELS[era]}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {(session.quizPhase === 'clue' || session.quizPhase === 'choices' || session.quizPhase === 'feedback' || session.quizPhase === 'cause') && (
+      {(phase === 'choices' || phase === 'feedback' || phase === 'cause') && (
         <label className="block">
-          <span className="text-sm font-medium">핵심 단서 메모</span>
+          <span className="text-sm font-medium">단서 메모 (선택)</span>
           <input
             className="mt-1 w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
             value={session.clueMemo}
             onChange={(e) => void onChange({ ...session, clueMemo: e.target.value })}
-            placeholder="예: 노비안검·과거 → 광종"
-            disabled={session.quizPhase === 'feedback' || session.quizPhase === 'cause'}
+            placeholder="예: 노비안검·과거·공복 → 광종"
+            disabled={phase === 'feedback' || phase === 'cause'}
           />
         </label>
       )}
 
-      {session.quizPhase === 'clue' && (
-        <button
-          type="button"
-          className="btn btn-primary w-full"
-          onClick={() => void onChange({ ...session, quizPhase: 'choices', revealedChoices: true })}
-        >
-          선택지 보기
-        </button>
-      )}
-
-      {session.quizPhase === 'choices' && (
+      {phase === 'choices' && (
         <div className="space-y-2">
           {question.choices.map((choice, index) => (
             <button
               key={choice}
               type="button"
               className={`btn w-full justify-start ${session.selectedIndex === index ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => void onChange({ ...session, selectedIndex: index })}
+              onClick={() => void onChange({ ...session, selectedIndex: index, quizPhase: 'choices' })}
             >
               <span className="mr-2 font-semibold">{index + 1}.</span> {choice}
             </button>
@@ -458,9 +454,9 @@ function QuizStep({
         </div>
       )}
 
-      {session.quizPhase === 'cause' && (
+      {phase === 'cause' && (
         <div className="space-y-2">
-          <p className="font-medium">오답 원인을 선택해 주세요</p>
+          <p className="font-medium">왜 틀렸는지 골라 주세요 (다음에 같은 유형을 더 냅니다)</p>
           {(Object.keys(WRONG_CAUSE_LABELS) as WrongCause[]).map((cause) => (
             <button
               key={cause}
@@ -498,9 +494,11 @@ function QuizStep({
         </div>
       )}
 
-      {session.quizPhase === 'feedback' && (
+      {phase === 'feedback' && (
         <div className="space-y-3">
-          <p className={`font-semibold ${session.answered.at(-1)?.correct ? 'text-[var(--correct)]' : 'text-[var(--wrong)]'}`}>
+          <p
+            className={`font-semibold ${session.answered.at(-1)?.correct ? 'text-[var(--correct)]' : 'text-[var(--wrong)]'}`}
+          >
             {session.answered.at(-1)?.correct ? '정답입니다' : '오답입니다'}
             <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">
               (정답: {question.answerIndex + 1}번)
@@ -528,7 +526,7 @@ function QuizStep({
           )}
           {message ? <p className="text-sm text-[var(--accent)]">{message}</p> : null}
           <button type="button" className="btn btn-primary w-full" onClick={() => void goNext()}>
-            다음
+            {session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'}
           </button>
         </div>
       )}
@@ -541,16 +539,19 @@ function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTi
   return (
     <div className="surface space-y-4 p-5">
       <h1 className="font-display text-2xl">오늘 학습 결과</h1>
-      <p className="text-[var(--ink-muted)]">{lessonTitle} 학습을 마쳤습니다.</p>
+      <p className="text-[var(--ink-muted)]">
+        <strong className="font-medium text-[var(--ink)]">{lessonTitle}</strong> 흐름을 마쳤습니다.
+        카드로 암기 → 개념으로 정리 → 문제로 점검한 결과입니다.
+      </p>
       <ul className="space-y-2">
-        <li>복습 카드 {session.cardIds.length}장</li>
+        <li>① 카드 복습 {session.cardIds.length}장</li>
         <li>
-          맞춤 문제 {stats.correct}/{stats.total} 정답 ({stats.accuracy}%)
+          ③ 맞춤 문제 {stats.correct}/{stats.total} 정답 ({stats.accuracy}%)
         </li>
-        <li>오답 {stats.total - stats.correct}문항은 카드·복습 일정에 반영됩니다.</li>
+        <li>오답은 카드·다음 복습일에 자동 반영됩니다.</li>
       </ul>
       <p className="text-sm text-[var(--ink-muted)]">
-        다음 복습일과 내일 학습 범위는 홈 화면에서 자동으로 갱신됩니다.
+        홈으로 돌아가면 내일 범위와 복습 카드 수가 갱신됩니다.
       </p>
       <div className="flex flex-col gap-2 sm:flex-row">
         <Link to="/" className="btn btn-primary">

@@ -1,13 +1,37 @@
-import type { FlashcardRecord } from '../types'
+import type { CardKind, FlashcardRecord } from '../types'
 
 export interface CardChoiceSet {
+  /** 화면에 크게 보이는 주제 (왕 이름, 업적 문구 등) */
   prompt: string
+  /** 구체적으로 무엇을 고르는지 */
+  ask: string
+  /** 카드 종류 한 줄 안내 */
+  kindLabel: string
   choices: string[]
   answerIndex: number
 }
 
+const KIND_COPY: Record<CardKind, { ask: string; kindLabel: string }> = {
+  'king-to-deed': {
+    ask: '이 왕(인물)의 대표 업적·정책으로 옳은 것은?',
+    kindLabel: '왕 → 업적',
+  },
+  'deed-to-king': {
+    ask: '다음 업적·정책과 가장 잘 맞는 인물은?',
+    kindLabel: '업적 → 왕',
+  },
+  chronology: {
+    ask: '빈칸·순서에 들어갈 내용으로 옳은 것은?',
+    kindLabel: '연표·순서',
+  },
+  concept: {
+    ask: '이 개념·제도에 대한 설명으로 옳은 것은?',
+    kindLabel: '개념',
+  },
+}
+
 /**
- * 듀오링고/말해보카형 선택지 생성.
+ * 듀오링고형 선택지 생성.
  * 같은 종류·시대 카드의 뒷면을 오답으로 섞는다.
  */
 export function buildCardChoiceSet(
@@ -16,6 +40,7 @@ export function buildCardChoiceSet(
   random = Math.random,
 ): CardChoiceSet {
   const correct = card.back.trim()
+  const copy = KIND_COPY[card.kind]
   const distractors = uniqueStrings(
     pool
       .filter((c) => c.id !== card.id)
@@ -24,7 +49,6 @@ export function buildCardChoiceSet(
       .filter((text) => text.length > 0 && normalize(text) !== normalize(correct)),
   )
 
-  // 같은 종류가 부족하면 전체 풀에서 보충
   if (distractors.length < 3) {
     for (const c of pool) {
       if (c.id === card.id) continue
@@ -48,6 +72,8 @@ export function buildCardChoiceSet(
 
   return {
     prompt: card.front,
+    ask: copy.ask,
+    kindLabel: copy.kindLabel,
     choices: choices.slice(0, 4),
     answerIndex,
   }

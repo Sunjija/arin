@@ -19,7 +19,7 @@ function card(partial: Partial<FlashcardRecord> & Pick<FlashcardRecord, 'id' | '
 }
 
 describe('buildCardChoiceSet', () => {
-  it('creates 4 choices with exactly one correct answer', () => {
+  it('creates 4 choices with exactly one correct answer and a concrete ask', () => {
     const target = card({ id: '1', front: '광종', back: '노비안검법' })
     const pool = [
       target,
@@ -32,6 +32,9 @@ describe('buildCardChoiceSet', () => {
     expect(set.choices).toHaveLength(4)
     expect(set.choices[set.answerIndex]).toBe('노비안검법')
     expect(new Set(set.choices).size).toBe(4)
+    expect(set.ask).toContain('업적')
+    expect(set.kindLabel).toBe('왕 → 업적')
+    expect(set.prompt).toBe('광종')
   })
 })
 

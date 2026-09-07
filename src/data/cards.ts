@@ -12,7 +12,7 @@ export const flashcardSeeds: FlashcardSeed[] = [
   },
   {
     id: 'c-02',
-    front: '노비안검법 · 과거제 · 공복',
+    front: '노비안검법 · 과거제 · 공복 제정',
     back: '고려 광종',
     kind: 'deed-to-king',
     era: 'goryeo',
