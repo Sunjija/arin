@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "inspect:questions": "vitest run src/data/inspectQuestions.test.ts",
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {

@@ -84,6 +84,12 @@ src/
 
 현재 은행: 40문항, 배점 분포 약 20·60·20.
 
+### 문제유형 수집·검사
+
+1. 유형 카탈로그: `src/data/examFormats.ts` (한능검 심화 출제 골격)
+2. 자동 검사: `npm run inspect:questions` → `artifacts/question-inspection-report.md`
+3. 검사 에이전트 지침: `agents/question-inspector.md`
+
 - **암기카드**: 뒤집기가 아니라 **4지 선지 선택**. 틀리면 잠시 뒤 같은 세션에서 다시 출제.
 - **맞춤 문제**: 사료/시대 단서 → 선지 → 채점. 오답 원인 기록 후 카드화 가능.
 - 문항 문체는 심화 시험의 사료형·순서형·왕·제도 연결형을 참고해 **자체 제작**했습니다.
