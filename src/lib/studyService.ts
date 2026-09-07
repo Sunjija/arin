@@ -133,7 +133,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     planWeeks: settings.planWeeks,
     completionRate,
     focusLine: `오늘은 ${lesson.title} — ${weakAreas[0] ?? '기초'}를 차분히 구분해봅시다.`,
-    summaryLine: `복습 카드 ${dueCards.length}장 · 개념 1개 · 맞춤 문제 ${settings.dailyQuestionCount}개`,
+    summaryLine: `오늘 흐름: ①카드 복습 ${dueCards.length}장 → ②개념 읽기 → ③맞춤 문제 ${settings.dailyQuestionCount}문항`,
     timeLine: `예상 소요 시간 ${formatDuration(estimatedMinutes)}`,
     todayDone: Boolean(studyDay?.completed),
   }
@@ -142,6 +142,19 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
 export async function startOrResumeSession(today = toDateKey()): Promise<ActiveSession> {
   const existing = await db.activeSession.toCollection().first()
   if (existing && existing.date === today && existing.step !== 'result') {
+    if (
+      existing.step === 'quiz' &&
+      (existing.quizPhase === 'stem' || existing.quizPhase === 'era' || existing.quizPhase === 'clue')
+    ) {
+      const normalized = {
+        ...existing,
+        quizPhase: 'choices' as const,
+        revealedChoices: true,
+        updatedAt: new Date().toISOString(),
+      }
+      await db.activeSession.put(normalized)
+      return normalized
+    }
     return existing
   }
 
@@ -175,9 +188,9 @@ export async function startOrResumeSession(today = toDateKey()): Promise<ActiveS
     conceptMemo: '',
     questionIds: selected.map((q) => q.id),
     questionIndex: 0,
-    quizPhase: 'stem',
+    quizPhase: 'choices',
     clueMemo: '',
-    revealedChoices: false,
+    revealedChoices: true,
     answered: [],
     startedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
