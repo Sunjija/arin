@@ -362,7 +362,8 @@ export async function saveMockResult(result: MockExamResult): Promise<void> {
   await db.mockResults.put(result)
   for (const ans of result.answers) {
     if (ans.selectedIndex == null) continue
-    const q = questions.find((item) => item.id === ans.questionId)
+    const baseId = ans.questionId.split('__pad')[0]!
+    const q = questions.find((item) => item.id === baseId || item.id === ans.questionId)
     if (!q) continue
     await recordQuizAnswer({
       question: q,

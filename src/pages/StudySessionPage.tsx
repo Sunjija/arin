@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SessionProgress } from '../components/SessionProgress'
 import { lessons } from '../data/lessons'
@@ -21,7 +21,11 @@ export function StudySessionPage() {
   const [cards, setCards] = useState<FlashcardRecord[]>([])
   const [error, setError] = useState<string | null>(null)
   const [flipped, setFlipped] = useState(false)
-  const questionStartedAt = useRef(Date.now())
+  const questionStartedAt = useRef(0)
+
+  useEffect(() => {
+    questionStartedAt.current = Date.now()
+  }, [])
 
   const refreshCards = useCallback(async (ids: string[]) => {
     const all = await db.cards.bulkGet(ids)
@@ -110,7 +114,10 @@ export function StudySessionPage() {
         <QuizStep
           session={session}
           onChange={update}
-          questionStartedAt={questionStartedAt}
+          getElapsedMs={() => Date.now() - questionStartedAt.current}
+          resetTimer={() => {
+            questionStartedAt.current = Date.now()
+          }}
         />
       )}
       {session.step === 'result' && <ResultStep session={session} lessonTitle={lesson.title} />}
@@ -257,11 +264,13 @@ function ConceptStep({
 function QuizStep({
   session,
   onChange,
-  questionStartedAt,
+  getElapsedMs,
+  resetTimer,
 }: {
   session: ActiveSession
   onChange: (s: ActiveSession) => Promise<void>
-  questionStartedAt: MutableRefObject<number>
+  getElapsedMs: () => number
+  resetTimer: () => void
 }) {
   const qid = session.questionIds[session.questionIndex]
   const question = qid ? getQuestionById(qid) : undefined
@@ -290,7 +299,7 @@ function QuizStep({
       await onChange(done)
       return
     }
-    questionStartedAt.current = Date.now()
+    resetTimer()
     await onChange({
       ...session,
       answered,
@@ -385,7 +394,7 @@ function QuizStep({
             onClick={async () => {
               if (session.selectedIndex == null) return
               const correct = session.selectedIndex === question.answerIndex
-              const responseMs = Date.now() - questionStartedAt.current
+              const responseMs = getElapsedMs()
               if (correct) {
                 await recordQuizAnswer({
                   question,
@@ -426,7 +435,7 @@ function QuizStep({
               className="btn btn-secondary w-full justify-start"
               onClick={async () => {
                 if (session.selectedIndex == null) return
-                const responseMs = Date.now() - questionStartedAt.current
+                const responseMs = getElapsedMs()
                 await recordQuizAnswer({
                   question,
                   selectedIndex: session.selectedIndex,
