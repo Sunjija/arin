@@ -55,6 +55,8 @@ export interface Question {
   license: string
   imageRights: string
   lessonId?: string
+  /** examFormats.ts의 ExamFormatId (선택; 없으면 휴리스틱 추정) */
+  formatId?: string
 }
 
 export interface Lesson {

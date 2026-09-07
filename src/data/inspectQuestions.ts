@@ -41,12 +41,19 @@ function normalize(text: string): string {
   return text.replace(/\s+/g, '')
 }
 
-/** 휴리스틱으로 포맷 추정 */
+const SPACE_CLUE =
+  /천도|유역|한강|평양|강화|사비|웅진|진출|순수|도읍|지역|해안|북진|남진|서경|동경/
+
+/** 휴리스틱으로 포맷 추정 (명시 formatId 우선) */
 export function guessFormat(q: Question): ExamFormatId {
+  if (q.formatId && EXAM_FORMATS.some((f) => f.id === q.formatId)) {
+    return q.formatId as ExamFormatId
+  }
   const stem = q.stem
+  const passage = q.passage ?? ''
   if (stem.includes('옳지 않은')) return 'wrong-statement'
   if (stem.includes('배열') || stem.includes('순서') || stem.includes('나열')) {
-    return q.passage?.includes('(가)') ? 'chronology-labeled' : 'chronology-events'
+    return passage.includes('(가)') ? 'chronology-labeled' : 'chronology-events'
   }
   if (stem.includes('비교')) return 'king-compare'
   if (stem.includes('연결') || stem.includes('짝')) return 'king-policy-match'
@@ -55,13 +62,16 @@ export function guessFormat(q: Question): ExamFormatId {
   if (stem.includes('문화유산') || stem.includes('조성된 시기')) return 'heritage-period'
   if (stem.includes('활동') && q.tags.includes('independence-org')) return 'org-activity'
   if (stem.includes('밑줄') || stem.includes('㉠')) return 'source-underline'
+  if (SPACE_CLUE.test(stem + passage) && (stem.includes('지역') || stem.includes('어디') || stem.includes('공간') || /천도|유역|진출/.test(passage))) {
+    return 'map-region'
+  }
   if (
     (stem.includes('왕') || stem.includes('인물')) &&
     q.choices.every((c) => c.length <= 12 && !c.includes('하였다'))
   ) {
     return 'source-who'
   }
-  if (q.passage && (stem.includes('가리키') || stem.includes('설명'))) return 'source-what'
+  if (passage && (stem.includes('가리키') || stem.includes('설명'))) return 'source-what'
   if (stem.includes('법') || stem.includes('제도')) return 'policy-content'
   if (q.tags.includes('king-figure')) return 'king-policy-match'
   return 'source-what'
