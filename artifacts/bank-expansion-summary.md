@@ -4,7 +4,7 @@
 
 | 항목 | 수량 |
 |------|-----:|
-| 토픽 (`topicCatalog.ts`) | 177 |
+| 토픽 (`topicCatalog.ts`) | 88 |
 | 단원 (`lessons.ts`) | 18 |
 | 문항 (`questions.ts`) | 85 |
 | 카드 (`cards.ts`) | 95 |
