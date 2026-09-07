@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { ensureSeeded } from './db/seed'
 import { HomePage } from './pages/HomePage'
 import { StudySessionPage } from './pages/StudySessionPage'
@@ -31,6 +32,9 @@ function Bootstrap({ children }: { children: ReactNode }) {
     return (
       <div className="surface p-5">
         <p role="alert">앱 초기화에 실패했습니다: {error}</p>
+        <button type="button" className="btn btn-primary mt-4" onClick={() => window.location.reload()}>
+          다시 시도
+        </button>
       </div>
     )
   }
@@ -48,21 +52,23 @@ function Bootstrap({ children }: { children: ReactNode }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AppShell>
-        <Bootstrap>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/study" element={<StudySessionPage />} />
-            <Route path="/cards" element={<CardsPage />} />
-            <Route path="/wrong" element={<Navigate to="/cards" replace />} />
-            <Route path="/progress" element={<ProgressPage />} />
-            <Route path="/mock" element={<MockExamPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Bootstrap>
-      </AppShell>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppShell>
+          <Bootstrap>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/study" element={<StudySessionPage />} />
+              <Route path="/cards" element={<CardsPage />} />
+              <Route path="/wrong" element={<Navigate to="/cards" replace />} />
+              <Route path="/progress" element={<ProgressPage />} />
+              <Route path="/mock" element={<MockExamPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Bootstrap>
+        </AppShell>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }

@@ -24,8 +24,15 @@ export function seedCards(today = toDateKey()): FlashcardRecord[] {
 }
 
 export async function ensureSeeded(): Promise<void> {
-  const meta = await db.meta.get('meta')
-  if (meta) return
+  const [meta, settings, mastery, cardCount] = await Promise.all([
+    db.meta.get('meta'),
+    db.settings.get('settings'),
+    db.mastery.get('mastery'),
+    db.cards.count(),
+  ])
+
+  // 부분 손상 복구: meta만 있고 설정/카드가 비어 홈이 멈추는 경우 방지
+  if (meta && settings && mastery && cardCount > 0) return
 
   const today = toDateKey()
   await db.transaction(
@@ -42,16 +49,18 @@ export async function ensureSeeded(): Promise<void> {
       db.activeSession,
     ],
     async () => {
-      await db.settings.put({ id: 'settings', ...defaultSettings() })
-      await db.mastery.put({ id: 'mastery', ...defaultMastery() })
-      await db.cards.bulkPut(seedCards(today))
-      await db.meta.put({
-        id: 'meta',
-        seededAt: today,
-        streak: 0,
-        lastStudyDate: null,
-        estimatedScore: 40,
-      })
+      if (!settings) await db.settings.put({ id: 'settings', ...defaultSettings() })
+      if (!mastery) await db.mastery.put({ id: 'mastery', ...defaultMastery() })
+      if (cardCount === 0) await db.cards.bulkPut(seedCards(today))
+      if (!meta) {
+        await db.meta.put({
+          id: 'meta',
+          seededAt: today,
+          streak: 0,
+          lastStudyDate: null,
+          estimatedScore: 40,
+        })
+      }
     },
   )
 }

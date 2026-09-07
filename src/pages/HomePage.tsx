@@ -9,13 +9,16 @@ export function HomePage() {
 
   useEffect(() => {
     let alive = true
-    buildTodayPlan()
-      .then((p) => {
+    ;(async () => {
+      try {
+        const { ensureSeeded } = await import('../db/seed')
+        await ensureSeeded()
+        const p = await buildTodayPlan()
         if (alive) setPlan(p)
-      })
-      .catch((e: unknown) => {
+      } catch (e: unknown) {
         if (alive) setError(e instanceof Error ? e.message : '불러오기 실패')
-      })
+      }
+    })()
     return () => {
       alive = false
     }

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { SessionProgress } from '../components/SessionProgress'
 import { lessons } from '../data/lessons'
 import { getQuestionById } from '../data/questions'
-import { ERA_LABELS, ALL_ERAS, WRONG_CAUSE_LABELS, type CardRating, type WrongCause } from '../types'
+import { buildCardChoiceSet, ratingFromQuizResult, type CardChoiceSet } from '../lib/cardQuiz'
+import { ERA_LABELS, ALL_ERAS, WRONG_CAUSE_LABELS, type WrongCause } from '../types'
 import {
   addCardFromContent,
   finishSession,
@@ -20,7 +21,7 @@ export function StudySessionPage() {
   const [session, setSession] = useState<ActiveSession | null>(null)
   const [cards, setCards] = useState<FlashcardRecord[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [flipped, setFlipped] = useState(false)
+  const [allCards, setAllCards] = useState<FlashcardRecord[]>([])
   const questionStartedAt = useRef(0)
 
   useEffect(() => {
@@ -28,8 +29,9 @@ export function StudySessionPage() {
   }, [])
 
   const refreshCards = useCallback(async (ids: string[]) => {
-    const all = await db.cards.bulkGet(ids)
-    setCards(all.filter(Boolean) as FlashcardRecord[])
+    const [selected, every] = await Promise.all([db.cards.bulkGet(ids), db.cards.toArray()])
+    setCards(selected.filter(Boolean) as FlashcardRecord[])
+    setAllCards(every)
   }, [])
 
   useEffect(() => {
@@ -80,18 +82,24 @@ export function StudySessionPage() {
         <CardsStep
           session={session}
           cards={cards}
-          flipped={flipped}
-          setFlipped={setFlipped}
-          onRate={async (rating) => {
+          pool={allCards}
+          onAdvance={async (rating, requeue) => {
             const card = cards[session.cardIndex]
             if (!card) return
             await rateCard(card.id, rating)
+            let nextIds = [...session.cardIds]
+            if (requeue) {
+              const rest = nextIds.slice(session.cardIndex + 1)
+              const insertAt = Math.min(rest.length, 2)
+              rest.splice(insertAt, 0, card.id)
+              nextIds = [...nextIds.slice(0, session.cardIndex + 1), ...rest]
+            }
             const nextIndex = session.cardIndex + 1
-            if (nextIndex >= session.cardIds.length) {
-              await update({ ...session, step: 'concept', cardIndex: nextIndex })
+            if (nextIndex >= nextIds.length) {
+              await update({ ...session, cardIds: nextIds, step: 'concept', cardIndex: nextIndex })
             } else {
-              setFlipped(false)
-              await update({ ...session, cardIndex: nextIndex })
+              await update({ ...session, cardIds: nextIds, cardIndex: nextIndex })
+              await refreshCards(nextIds)
             }
           }}
           onSkipToConcept={async () => {
@@ -128,38 +136,58 @@ export function StudySessionPage() {
 function CardsStep({
   session,
   cards,
-  flipped,
-  setFlipped,
-  onRate,
+  pool,
+  onAdvance,
   onSkipToConcept,
 }: {
   session: ActiveSession
   cards: FlashcardRecord[]
-  flipped: boolean
-  setFlipped: (v: boolean) => void
-  onRate: (rating: CardRating) => Promise<void>
+  pool: FlashcardRecord[]
+  onAdvance: (rating: 'again' | 'hard' | 'good' | 'easy', requeue: boolean) => Promise<void>
   onSkipToConcept: () => Promise<void>
 }) {
   const card = cards[session.cardIndex]
+  const [choiceSet, setChoiceSet] = useState<CardChoiceSet | null>(null)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [revealed, setRevealed] = useState(false)
+  const startedAt = useRef(Date.now())
+
+  useEffect(() => {
+    if (!card) {
+      setChoiceSet(null)
+      return
+    }
+    setChoiceSet(buildCardChoiceSet(card, pool.length ? pool : cards))
+    setSelected(null)
+    setRevealed(false)
+    startedAt.current = Date.now()
+  }, [card, pool, cards, session.cardIndex])
+
+  const submit = async (index: number) => {
+    if (!choiceSet || revealed) return
+    setSelected(index)
+    setRevealed(true)
+    const correct = index === choiceSet.answerIndex
+    const rating = ratingFromQuizResult(correct, Date.now() - startedAt.current)
+    window.setTimeout(() => {
+      void onAdvance(rating, !correct)
+    }, 900)
+  }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!card) return
-      if (e.key === ' ' || e.key === 'Enter') {
+      if (!choiceSet || revealed) return
+      const num = Number(e.key)
+      if (num >= 1 && num <= choiceSet.choices.length) {
         e.preventDefault()
-        setFlipped(!flipped)
+        void submit(num - 1)
       }
-      if (!flipped) return
-      if (e.key === '1') void onRate('again')
-      if (e.key === '2') void onRate('hard')
-      if (e.key === '3') void onRate('good')
-      if (e.key === '4') void onRate('easy')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [card, flipped, onRate, setFlipped])
+  })
 
-  if (!card) {
+  if (!card || !choiceSet) {
     return (
       <div className="surface p-5">
         <p>오늘 복습할 카드가 없습니다.</p>
@@ -173,43 +201,48 @@ function CardsStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-[var(--ink-muted)]">
-        카드 {session.cardIndex + 1} / {session.cardIds.length} · {ERA_LABELS[card.era]}
+        복습 {session.cardIndex + 1} / {session.cardIds.length} · {ERA_LABELS[card.era]} · 선지 고르기
       </p>
-      <button
-        type="button"
-        className="flashcard surface w-full"
-        onClick={() => setFlipped(!flipped)}
-        aria-label={flipped ? '카드 앞면 보기' : '카드 답 공개'}
-      >
-        <div>
-          <p className="mb-2 text-sm text-[var(--ink-muted)]">{flipped ? '답' : '질문'}</p>
-          <p className="font-display text-xl leading-relaxed">{flipped ? card.back : card.front}</p>
-        </div>
-      </button>
-      {flipped ? (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {(
-            [
-              ['again', '모름', 'btn-wrong'],
-              ['hard', '헷갈림', 'btn-secondary'],
-              ['good', '맞음', 'btn-correct'],
-              ['easy', '너무 쉬움', 'btn-primary'],
-            ] as const
-          ).map(([rating, label, cls]) => (
+      <div className="surface p-5">
+        <p className="mb-2 text-sm font-medium text-[var(--accent)]">맞는 설명을 고르세요</p>
+        <h1 className="font-display text-xl leading-relaxed sm:text-2xl">{choiceSet.prompt}</h1>
+      </div>
+      <div className="space-y-2" role="group" aria-label="선택지">
+        {choiceSet.choices.map((choice, index) => {
+          let cls = 'btn btn-secondary w-full justify-start text-left'
+          if (revealed && index === choiceSet.answerIndex) cls = 'btn btn-correct w-full justify-start text-left'
+          if (revealed && selected === index && index !== choiceSet.answerIndex) {
+            cls = 'btn btn-wrong w-full justify-start text-left'
+          }
+          if (!revealed && selected === index) cls = 'btn btn-primary w-full justify-start text-left'
+          return (
             <button
-              key={rating}
+              key={`${choice}-${index}`}
               type="button"
-              className={`btn ${cls}`}
-              onClick={() => void onRate(rating)}
-              aria-label={`평가: ${label}`}
+              className={cls}
+              disabled={revealed}
+              onClick={() => void submit(index)}
+              aria-label={`${index + 1}번 ${choice}`}
             >
-              {label}
+              <span className="mr-2 font-semibold">{index + 1}.</span>
+              <span>{choice}</span>
+              {revealed && index === choiceSet.answerIndex ? (
+                <span className="ml-auto text-sm">정답</span>
+              ) : null}
+              {revealed && selected === index && index !== choiceSet.answerIndex ? (
+                <span className="ml-auto text-sm">오답</span>
+              ) : null}
             </button>
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-[var(--ink-muted)]">카드를 누르거나 Space/Enter로 답을 확인하세요.</p>
-      )}
+          )
+        })}
+      </div>
+      <p className="text-sm text-[var(--ink-muted)]">
+        {revealed
+          ? selected === choiceSet.answerIndex
+            ? '정답입니다. 다음 카드로 이동합니다.'
+            : '틀렸습니다. 잠시 뒤 다시 복습 큐에 들어갑니다.'
+          : '번호 키(1–4)로도 고를 수 있습니다. 고르면 바로 채점됩니다.'}
+      </p>
     </div>
   )
 }
