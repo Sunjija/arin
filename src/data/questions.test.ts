@@ -6,8 +6,8 @@ import {
 } from '../data/questions'
 
 describe('question bank quality', () => {
-  it('has at least 30 items with 5 choices and valid answers', () => {
-    expect(questions.length).toBeGreaterThanOrEqual(30)
+  it('has at least 80 items with 5 choices and valid answers', () => {
+    expect(questions.length).toBeGreaterThanOrEqual(80)
     expect(validateQuestionBank()).toEqual([])
   })
 

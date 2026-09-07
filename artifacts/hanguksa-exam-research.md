@@ -65,4 +65,5 @@
 | 암기카드 | ≥ 80 (왕↔업적·순서 비중) |
 | 포맷 | `map-region`·`source-underline`·`king-compare`·`wrong-statement` 등 공백 우선 보충 |
 
-상세 토픽·매트릭스는 `src/data/topicCatalog.ts` 참고.
+상세 토픽·매트릭스는 `src/data/topicCatalog.ts` 참고 (고조선~근현대 전 범위, 토픽 ≥80).
+문항 은행은 `src/data/questions.ts` (≥80, formatId 부여).

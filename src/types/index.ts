@@ -205,6 +205,8 @@ export interface SessionAnswer {
 export interface AppMeta {
   id: 'meta'
   seededAt: string
+  /** 콘텐츠 시드 버전 — 올리며 카드 보강 재시드 */
+  contentVersion?: number
   streak: number
   lastStudyDate: string | null
   estimatedScore: number

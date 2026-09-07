@@ -5,6 +5,9 @@ import { toDateKey } from '../lib/dates'
 import type { FlashcardRecord } from '../types'
 import { db } from './database'
 
+/** 카드·단원 확장 시 올려 기존 IndexedDB에 새 카드를 보강한다 */
+export const CONTENT_VERSION = 2
+
 export function seedCards(today = toDateKey()): FlashcardRecord[] {
   return flashcardSeeds.map((seed, index) => {
     // 초반 일부는 오늘 복습 대상으로 두어 첫 세션이 비지 않게 함
@@ -31,10 +34,11 @@ export async function ensureSeeded(): Promise<void> {
     db.cards.count(),
   ])
 
-  // 부분 손상 복구: meta만 있고 설정/카드가 비어 홈이 멈추는 경우 방지
-  if (meta && settings && mastery && cardCount > 0) return
-
   const today = toDateKey()
+  const needsContentBump = Boolean(meta) && (meta?.contentVersion ?? 1) < CONTENT_VERSION
+  // 부분 손상 복구: meta만 있고 설정/카드가 비어 홈이 멈추는 경우 방지
+  if (meta && settings && mastery && cardCount > 0 && !needsContentBump) return
+
   await db.transaction(
     'rw',
     [
@@ -51,15 +55,24 @@ export async function ensureSeeded(): Promise<void> {
     async () => {
       if (!settings) await db.settings.put({ id: 'settings', ...defaultSettings() })
       if (!mastery) await db.mastery.put({ id: 'mastery', ...defaultMastery() })
-      if (cardCount === 0) await db.cards.bulkPut(seedCards(today))
+      if (cardCount === 0) {
+        await db.cards.bulkPut(seedCards(today))
+      } else if (needsContentBump) {
+        const existing = new Set((await db.cards.toArray()).map((c) => c.id))
+        const fresh = seedCards(today).filter((c) => !existing.has(c.id))
+        if (fresh.length) await db.cards.bulkPut(fresh)
+      }
       if (!meta) {
         await db.meta.put({
           id: 'meta',
           seededAt: today,
+          contentVersion: CONTENT_VERSION,
           streak: 0,
           lastStudyDate: null,
           estimatedScore: 40,
         })
+      } else if (needsContentBump) {
+        await db.meta.put({ ...meta, contentVersion: CONTENT_VERSION })
       }
     },
   )
@@ -96,6 +109,7 @@ export async function restoreSampleData(): Promise<void> {
       await db.meta.put({
         id: 'meta',
         seededAt: today,
+        contentVersion: CONTENT_VERSION,
         streak: 0,
         lastStudyDate: null,
         estimatedScore: 40,
