@@ -304,13 +304,6 @@ select {
   letter-spacing: -0.035em;
 }
 
-.page-description {
-  max-width: 42rem;
-  margin-top: 0.55rem;
-  color: var(--ink-muted);
-  line-height: 1.7;
-}
-
 .section-title {
   font-size: 1.05rem;
   font-weight: 700;

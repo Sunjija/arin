@@ -114,20 +114,39 @@ export function MockExamPage() {
         <header className="page-header">
           <p className="eyebrow">실전 연습</p>
           <h1 className="page-title">모의고사</h1>
-          <p className="page-description">
-            실제 시험의 시간과 배점 구조에 맞춰 현재 실력을 점검합니다.
-          </p>
         </header>
         <section className="surface p-5">
           <h2 className="section-title">시험 구성</h2>
-          <p className="mt-2 text-[var(--ink-muted)]">
-            심화 형식(50문항·80분·1·2·3점 배점)을 지원합니다. 샘플이 부족할 때는 축소 모드를 사용하세요.
-            배점 비율은 77~79회 심화 정답표(1점 10·2점 30·3점 10)를 참고합니다.
-          </p>
-          <label className="mt-4 flex items-center gap-2">
-            <input type="checkbox" checked={sampleMode} onChange={(e) => setSampleMode(e.target.checked)} />
-            축소 모드 (개발·연습용 10문항)
-          </label>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              className={`btn ${sampleMode ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setSampleMode(true)}
+            >
+              10문항 연습
+            </button>
+            <button
+              type="button"
+              className={`btn ${sampleMode ? 'btn-secondary' : 'btn-primary'}`}
+              onClick={() => setSampleMode(false)}
+            >
+              50문항 실전
+            </button>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            <div className="metric-card">
+              <p className="metric-label">문항</p>
+              <p className="metric-value">{sampleMode ? 10 : 50}</p>
+            </div>
+            <div className="metric-card">
+              <p className="metric-label">제한 시간</p>
+              <p className="metric-value">{sampleMode ? 16 : 80}분</p>
+            </div>
+            <div className="metric-card">
+              <p className="metric-label">배점</p>
+              <p className="metric-value">1·2·3점</p>
+            </div>
+          </div>
           <button type="button" className="btn btn-primary mt-4 w-full sm:w-auto" onClick={start}>
             시험 시작
           </button>
@@ -144,7 +163,7 @@ export function MockExamPage() {
             </ul>
           )}
           {isStableZone(recent, goal, 3) ? (
-            <p className="mt-3 font-semibold text-[var(--correct)]">1급 안정권 (목표 점수 이상 3회 연속)</p>
+            <p className="mt-3 font-semibold text-[var(--correct)]">1급 안정권</p>
           ) : (
             <p className="mt-3 text-sm text-[var(--ink-muted)]">
               연속 달성 {consecutiveAboveThreshold(recent, goal)} / 3회

@@ -65,7 +65,6 @@ export function CardsPage() {
       <header className="page-header">
         <p className="eyebrow">복습 라이브러리</p>
         <h1 className="page-title">오답 · 암기카드</h1>
-        <p className="page-description">복습 일정, 직접 만든 카드, 문제에서 저장한 오답을 관리합니다.</p>
       </header>
 
       <section className="surface p-2">

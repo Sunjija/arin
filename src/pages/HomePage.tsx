@@ -47,9 +47,6 @@ export function HomePage() {
           계획 {plan.week}주차 · 오늘의 학습
         </p>
         <h1 className="page-title">{plan.focusLine}</h1>
-        <p className="page-description">
-          한 번에 많이 보기보다 카드, 개념, 문제 순서로 오늘 범위를 확실히 끝냅니다.
-        </p>
       </header>
 
       <section className="grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]">
@@ -103,8 +100,7 @@ export function HomePage() {
             <span style={{ width: `${plan.completionRate}%` }} />
           </div>
           <p className="mt-4 border-t border-[var(--line)] pt-4 text-sm leading-relaxed text-[var(--ink-muted)]">
-            목표 {plan.goalScore}점까지 <strong className="text-[var(--ink)]">{plan.remainingToGoal}점</strong>
-            {plan.scoreIsEstimate ? ' · 현재 점수는 연습 기록 기반 추정치입니다.' : ''}
+            목표 {plan.goalScore}점 · <strong className="text-[var(--ink)]">차이 {plan.remainingToGoal}점</strong>
           </p>
         </aside>
       </section>
@@ -119,13 +115,9 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="surface p-5 sm:p-6">
-        <h2 className="section-title">집중할 영역</h2>
-        {plan.streak === 0 && plan.completionRate === 0 ? (
-          <p className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">
-            첫 학습을 마치면 정답률과 오답 원인을 바탕으로 취약 영역을 보여드립니다.
-          </p>
-        ) : (
+      {plan.streak > 0 || plan.completionRate > 0 ? (
+        <section className="surface p-5 sm:p-6">
+          <h2 className="section-title">집중할 영역</h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {plan.weakAreas.map((area) => (
               <li
@@ -136,8 +128,8 @@ export function HomePage() {
               </li>
             ))}
           </ul>
-        )}
-      </section>
+        </section>
+      ) : null}
     </div>
   )
 }

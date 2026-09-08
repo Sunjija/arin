@@ -198,9 +198,9 @@ function CardsStep({
   if (!card || !choiceSet) {
     return (
       <div className="surface p-5">
-        <p>오늘 복습할 카드가 없습니다. 바로 오늘 단원 개념으로 넘어갑니다.</p>
+        <h1 className="section-title">복습할 카드 없음</h1>
         <button type="button" className="btn btn-primary mt-4" onClick={() => void onSkipToConcept()}>
-          개념 읽기로
+          개념 시작
         </button>
       </div>
     )
@@ -265,15 +265,6 @@ function CardsStep({
           )
         })}
       </div>
-      <p className="text-sm text-[var(--ink-muted)]" aria-live="polite">
-        {revealed
-          ? selected === choiceSet.answerIndex
-            ? '정답입니다. 아래 버튼을 눌러 다음 카드로 이동하세요.'
-            : session.cardIds.length < MAX_DAILY_CARDS
-              ? '틀렸습니다. 이 세션 뒤쪽에서 한 번 더 확인합니다.'
-              : '틀렸습니다. 복습 일정에 다시 반영합니다.'
-          : '번호 키(1–4)로도 고를 수 있습니다. 맞으면 간격이 늘고, 틀리면 곧 다시 복습합니다.'}
-      </p>
       {revealed && pendingReview ? (
         <button
           type="button"
@@ -318,10 +309,6 @@ function ConceptStep({
         </p>
         <h1 className="font-display text-2xl">{lesson.title}</h1>
         <p className="mt-2 text-[var(--ink-muted)]">{lesson.summary}</p>
-        <p className="mt-3 rounded-xl bg-[var(--accent-soft)]/60 p-3 text-sm leading-relaxed text-[var(--ink)]">
-          카드로 키워드를 깨운 뒤, 여기서 오늘 범위를 한 번에 정리합니다. 읽고 나면 같은 범위의 맞춤
-          문제로 바로 점검합니다.
-        </p>
       </div>
       <div>
         <h2 className="font-semibold">핵심 키워드</h2>
@@ -427,28 +414,12 @@ function QuizStep({
         문제 {session.questionIndex + 1} / {session.questionIds.length} · 배점 {question.difficulty}점 ·{' '}
         {ERA_LABELS[question.era]}
       </p>
-      <p className="rounded-xl bg-[var(--accent-soft)]/50 p-3 text-sm text-[var(--ink-muted)]">
-        방금 읽은 개념을 문제로 확인하는 단계입니다. 선지를 고른 뒤 제출하면 바로 해설이 나옵니다.
-      </p>
       {question.passage ? (
         <blockquote className="rounded-xl bg-[var(--accent-soft)]/50 p-4 text-[0.95rem] leading-relaxed whitespace-pre-line">
           {question.passage}
         </blockquote>
       ) : null}
       <h1 className="text-lg font-semibold leading-relaxed">{question.stem}</h1>
-
-      {(phase === 'choices' || phase === 'feedback' || phase === 'cause') && (
-        <label className="block">
-          <span className="text-sm font-medium">단서 메모 (선택)</span>
-          <input
-            className="field-control mt-1"
-            value={session.clueMemo}
-            onChange={(e) => void onChange({ ...session, clueMemo: e.target.value })}
-            placeholder="예: 노비안검·과거·공복 → 광종"
-            disabled={phase === 'feedback' || phase === 'cause'}
-          />
-        </label>
-      )}
 
       {phase === 'choices' && (
         <div className="space-y-2">
@@ -503,7 +474,7 @@ function QuizStep({
 
       {phase === 'cause' && (
         <div className="space-y-2">
-          <p className="font-medium">왜 틀렸는지 골라 주세요 (다음에 같은 유형을 더 냅니다)</p>
+          <p className="font-medium">오답 원인</p>
           {(Object.keys(WRONG_CAUSE_LABELS) as WrongCause[]).map((cause) => (
             <button
               key={cause}
@@ -586,20 +557,20 @@ function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTi
   return (
     <div className="surface space-y-4 p-5">
       <h1 className="font-display text-2xl">오늘 학습 결과</h1>
-      <p className="text-[var(--ink-muted)]">
-        <strong className="font-medium text-[var(--ink)]">{lessonTitle}</strong> 흐름을 마쳤습니다.
-        카드로 암기 → 개념으로 정리 → 문제로 점검한 결과입니다.
-      </p>
-      <ul className="space-y-2">
-        <li>① 카드 복습 {session.cardIds.length}장</li>
-        <li>
-          ③ 맞춤 문제 {stats.correct}/{stats.total} 정답 ({stats.accuracy}%)
-        </li>
-        <li>오답은 카드·다음 복습일에 자동 반영됩니다.</li>
-      </ul>
-      <p className="text-sm text-[var(--ink-muted)]">
-        홈으로 돌아가면 내일 범위와 복습 카드 수가 갱신됩니다.
-      </p>
+      <p className="text-sm text-[var(--ink-muted)]">{lessonTitle}</p>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="metric-card">
+          <p className="metric-label">복습 카드</p>
+          <p className="metric-value">{session.cardIds.length}장</p>
+        </div>
+        <div className="metric-card">
+          <p className="metric-label">문제 정답률</p>
+          <p className="metric-value">{stats.accuracy}%</p>
+          <p className="mt-1 text-xs text-[var(--ink-muted)]">
+            {stats.correct}/{stats.total}
+          </p>
+        </div>
+      </div>
       <div className="flex flex-col gap-2 sm:flex-row">
         <Link to="/" className="btn btn-primary">
           홈으로

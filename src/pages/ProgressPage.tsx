@@ -19,7 +19,6 @@ export function ProgressPage() {
       <header className="page-header">
         <p className="eyebrow">학습 리포트</p>
         <h1 className="page-title">진도 · 분석</h1>
-        <p className="page-description">최근 학습 기록을 바탕으로 점수 흐름과 다음 집중 범위를 보여드립니다.</p>
       </header>
 
       <section className="surface p-5">

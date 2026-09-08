@@ -94,7 +94,6 @@ export function SettingsPage() {
       <header className="page-header">
         <p className="eyebrow">환경 설정</p>
         <h1 className="page-title">학습 설정</h1>
-        <p className="page-description">목표와 하루 학습량을 조정하고 학습 데이터를 관리합니다.</p>
       </header>
 
       <section className="surface p-5">
@@ -186,9 +185,6 @@ export function SettingsPage() {
 
       <section className="surface p-5">
         <h2 className="section-title">학습 데이터</h2>
-        <p className="mt-2 text-[var(--ink-muted)]">
-          IndexedDB 학습 기록을 JSON으로 내보내거나 가져옵니다.
-        </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void onExport()}>
             JSON 내보내기

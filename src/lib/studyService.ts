@@ -48,7 +48,6 @@ export interface TodayPlan {
   planWeeks: number
   completionRate: number
   focusLine: string
-  summaryLine: string
   timeLine: string
   todayDone: boolean
 }
@@ -169,8 +168,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     week,
     planWeeks: settings.planWeeks,
     completionRate,
-    focusLine: `오늘은 ${lesson.title} — ${weakAreas[0] ?? '기초'}를 차분히 구분해봅시다.`,
-    summaryLine: `오늘 흐름: ①카드 복습 ${dueCards.length}장 → ②개념 읽기 → ③맞춤 문제 ${settings.dailyQuestionCount}문항`,
+    focusLine: `${lesson.title} · ${weakAreas[0] ?? '기초'} 집중`,
     timeLine: `예상 소요 시간 ${formatDuration(estimatedMinutes)}`,
     todayDone: Boolean(studyDay?.completed),
   }
