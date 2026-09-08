@@ -84,6 +84,35 @@ describe('buildCardChoiceSet', () => {
     expect(set.choices[set.answerIndex]).toBe('고려 광종')
     expect(set.choices.every((choice) => choice.startsWith('고려 '))).toBe(true)
   })
+
+  it('turns comparison cards into swapped-pair questions instead of restating the title', () => {
+    const target = card({
+      id: 'c-05',
+      front: '광종 vs 성종, 정책 목적 차이',
+      back: '광종: 왕권 강화 / 성종: 유교적 통치 질서·지방 제도 정비',
+      kind: 'concept',
+    })
+    const pool = [
+      target,
+      card({ id: 'c-01', front: '고려 광종', back: '노비안검법, 과거제 도입' }),
+      card({ id: 'c-03', front: '고려 성종', back: '최승로 시무 28조 수용, 12목 설치' }),
+      card({ id: 'c-62', front: '고려 공민왕', back: '반원 정책, 전민변정도감' }),
+      card({ id: 'c-21', front: '조선 태종', back: '사병 혁파, 호패법', era: 'joseon-early' }),
+    ]
+
+    const set = buildCardChoiceSet(target, pool, () => 0.2)
+
+    expect(set.prompt).toBe('광종 · 성종')
+    expect(set.ask).toBe('정책 목적을 바르게 짝지은 것은?')
+    expect(set.kindLabel).toBe('비교')
+    expect(set.prompt).not.toContain('차이')
+    expect(set.choices.every((choice) => choice.includes('광종:') && choice.includes('성종:'))).toBe(
+      true,
+    )
+    expect(set.choices[set.answerIndex]).toContain('광종: 왕권 강화')
+    expect(set.choices[set.answerIndex]).toContain('성종: 유교적 통치 질서')
+    expect(set.choices).toContain('광종: 유교적 통치 질서·지방 제도 정비 / 성종: 왕권 강화')
+  })
 })
 
 describe('ratingFromQuizResult', () => {
