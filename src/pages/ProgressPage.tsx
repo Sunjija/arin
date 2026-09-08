@@ -6,7 +6,7 @@ import {
   formatFullMockAverage,
   formatPracticeAccuracy,
   initialWeakAreas,
-  mockModeLabel,
+  recentMockLine,
   remainingWeakAreas,
 } from '../components/dashboard/progressCopy'
 import { PageHeader } from '../components/ui'
@@ -123,7 +123,7 @@ export function ProgressPage() {
             {recentMocks.map((mock) => (
               <li key={mock.id} className="flex justify-between gap-3 text-sm">
                 <span>
-                  {formatKoreanDate(mock.createdAt.slice(0, 10))} · {mockModeLabel(mock.mode)}
+                  {formatKoreanDate(mock.createdAt.slice(0, 10))} · {recentMockLine(mock)}
                 </span>
                 <span className="tabular-nums">{mock.score}점</span>
               </li>

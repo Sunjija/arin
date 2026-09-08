@@ -114,7 +114,7 @@ describe('home view model — 진행 중 / 당일 완료', () => {
     expect(model.extraReviewCta).toBeNull()
   })
 
-  it('keeps one primary CTA and adds 추가 복습 when today is done', () => {
+  it('uses 추가 복습 as the only CTA when today is done and no session is in progress', () => {
     const model = buildHomeViewModel(
       plan({
         completion: {
@@ -128,8 +128,8 @@ describe('home view model — 진행 중 / 당일 완료', () => {
       }),
       false,
     )
-    expect(model.primaryCta.label).toBe('오늘 학습 시작')
-    expect(model.extraReviewCta).toEqual({ label: '추가 복습', to: '/cards' })
+    expect(model.primaryCta).toEqual({ label: '추가 복습', to: '/cards' })
+    expect(model.extraReviewCta).toBeNull()
   })
 })
 

@@ -67,3 +67,13 @@ export function remainingWeakAreas(areas: WeakArea[], limit = 3): WeakArea[] {
 export function mockModeLabel(mode: 'full' | 'sample'): string {
   return mode === 'full' ? '실전' : '샘플'
 }
+
+export function recentMockLine(mock: {
+  mode: 'full' | 'sample'
+  score: number
+  total: number
+  eligibleForFullStats: boolean
+}): string {
+  const eligibility = mock.eligibleForFullStats ? '통계 포함' : '통계 제외'
+  return `${mockModeLabel(mock.mode)} · ${mock.score}점 · ${mock.total}문항 · ${eligibility}`
+}

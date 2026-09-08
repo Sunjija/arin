@@ -75,15 +75,21 @@ export function buildHomeViewModel(
       estimatedMinutes: plan.estimatedMinutes,
     }),
     guidance: plan.quantity.guidance,
-    primaryCta: {
-      label: hasActiveSession ? '이어서 학습' : '오늘 학습 시작',
-      to: '/study',
-    },
-    extraReviewCta: plan.completion.todayDone
-      ? { label: '추가 복습', to: '/cards' }
-      : null,
+    primaryCta: homePrimaryCta(plan, hasActiveSession),
+    extraReviewCta: homeExtraReviewCta(plan, hasActiveSession),
     recordHint: homeRecordHint(plan),
   }
+}
+
+export function homePrimaryCta(plan: TodayPlan, hasActiveSession: boolean): HomeCta {
+  if (hasActiveSession) return { label: '이어서 학습', to: '/study' }
+  if (plan.completion.todayDone) return { label: '추가 복습', to: '/cards' }
+  return { label: '오늘 학습 시작', to: '/study' }
+}
+
+export function homeExtraReviewCta(plan: TodayPlan, hasActiveSession: boolean): HomeCta | null {
+  if (!plan.completion.todayDone || !hasActiveSession) return null
+  return { label: '추가 복습', to: '/cards' }
 }
 
 export function homeVisibleText(model: HomeViewModel): string {

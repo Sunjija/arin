@@ -10,6 +10,7 @@ import {
   initialWeakAreas,
   measuredWeakAreas,
   mockModeLabel,
+  recentMockLine,
 } from './progressCopy'
 
 function summary(overrides: Partial<ScoreSummary> = {}): ScoreSummary {
@@ -88,6 +89,20 @@ describe('progress copy — practice만 / sample mock만 / full mock', () => {
     expect(fullMockAverageUsedCount(many)).toBe(3)
     expect(formatFullMockAverage(many).detail).toBe('최근 실전 연습 3회 평균')
     expect(mockModeLabel('full')).toBe('실전')
+  })
+})
+
+describe('progress copy — 최근 모의 한 줄', () => {
+  it('shows mode, score, item count, and stats eligibility', () => {
+    expect(recentMockLine(sampleMock(100))).toBe('샘플 · 100점 · 10문항 · 통계 제외')
+    expect(
+      recentMockLine({
+        mode: 'full',
+        score: 88,
+        total: 50,
+        eligibleForFullStats: true,
+      }),
+    ).toBe('실전 · 88점 · 50문항 · 통계 포함')
   })
 })
 
