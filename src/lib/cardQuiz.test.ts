@@ -19,7 +19,7 @@ function card(partial: Partial<FlashcardRecord> & Pick<FlashcardRecord, 'id' | '
 }
 
 describe('buildCardChoiceSet', () => {
-  it('creates 4 choices with exactly one correct answer and a concrete ask', () => {
+  it('creates choices with exactly one correct answer and a concrete ask', () => {
     const target = card({ id: '1', front: '광종', back: '노비안검법' })
     const pool = [
       target,
@@ -29,12 +29,15 @@ describe('buildCardChoiceSet', () => {
       card({ id: '5', front: '대조영', back: '발해 건국' }),
     ]
     const set = buildCardChoiceSet(target, pool, () => 0.2)
-    expect(set.choices).toHaveLength(4)
+    expect(set.mode).toBe('choices')
+    expect(set.choices.length).toBeGreaterThanOrEqual(2)
+    expect(set.choices.length).toBeLessThanOrEqual(4)
     expect(set.choices[set.answerIndex]).toBe('노비안검법')
-    expect(new Set(set.choices).size).toBe(4)
+    expect(new Set(set.choices).size).toBe(set.choices.length)
     expect(set.ask).toContain('업적')
     expect(set.kindLabel).toBe('왕 → 업적')
     expect(set.prompt).toBe('광종')
+    expect(set.answerText).toBe('노비안검법')
   })
 
   it('does not mix person-name answers into a king-to-deed choice set', () => {
@@ -80,6 +83,7 @@ describe('buildCardChoiceSet', () => {
 
     const set = buildCardChoiceSet(target, pool, () => 0.2)
 
+    expect(set.mode).toBe('choices')
     expect(set.ask).toContain('인물')
     expect(set.choices[set.answerIndex]).toBe('고려 광종')
     expect(set.choices.every((choice) => choice.startsWith('고려 '))).toBe(true)
@@ -102,6 +106,7 @@ describe('buildCardChoiceSet', () => {
 
     const set = buildCardChoiceSet(target, pool, () => 0.2)
 
+    expect(set.mode).toBe('choices')
     expect(set.prompt).toBe('광종 · 성종')
     expect(set.ask).toBe('정책 목적을 바르게 짝지은 것은?')
     expect(set.kindLabel).toBe('비교')
@@ -112,6 +117,81 @@ describe('buildCardChoiceSet', () => {
     expect(set.choices[set.answerIndex]).toContain('광종: 왕권 강화')
     expect(set.choices[set.answerIndex]).toContain('성종: 유교적 통치 질서')
     expect(set.choices).toContain('광종: 유교적 통치 질서·지방 제도 정비 / 성종: 왕권 강화')
+  })
+
+  it('prefers same-kind same-era backs and does not take the first three cards of the whole pool', () => {
+    const target = card({ id: '1', front: '광종', back: '노비안검법', era: 'goryeo' })
+    const pool = [
+      target,
+      card({
+        id: 'wrong-kind-1',
+        front: '노비안검법',
+        back: '고려 광종',
+        kind: 'deed-to-king',
+        era: 'goryeo',
+      }),
+      card({
+        id: 'wrong-kind-2',
+        front: '12목',
+        back: '고려 성종',
+        kind: 'deed-to-king',
+        era: 'goryeo',
+      }),
+      card({
+        id: 'wrong-kind-3',
+        front: '훈민정음',
+        back: '세종',
+        kind: 'deed-to-king',
+        era: 'joseon-early',
+      }),
+      card({ id: 'other-era-1', front: '태종', back: '사병 혁파', era: 'joseon-early' }),
+      card({ id: 'other-era-2', front: '세종', back: '훈민정음', era: 'joseon-early' }),
+      card({ id: 'same-era-1', front: '성종', back: '12목 설치', era: 'goryeo' }),
+      card({ id: 'same-era-2', front: '공민왕', back: '전민변정도감', era: 'goryeo' }),
+      card({ id: 'same-era-3', front: '태조', back: '사심관 제도', era: 'goryeo' }),
+    ]
+
+    const set = buildCardChoiceSet(target, pool, () => 0.35)
+
+    expect(set.mode).toBe('choices')
+    expect(set.choices).not.toContain('고려 광종')
+    expect(set.choices).not.toContain('고려 성종')
+    expect(set.choices).not.toContain('세종')
+    const distractors = set.choices.filter((_, index) => index !== set.answerIndex)
+    expect(distractors.sort()).toEqual(['12목 설치', '사심관 제도', '전민변정도감'].sort())
+  })
+
+  it('falls back to recall when there are no real same-kind distractors', () => {
+    const target = card({ id: '1', front: '광종', back: '노비안검법' })
+    const pool = [
+      target,
+      card({
+        id: 'reverse',
+        front: '노비안검법',
+        back: '고려 광종',
+        kind: 'deed-to-king',
+      }),
+    ]
+    const set = buildCardChoiceSet(target, pool, () => 0.2)
+    expect(set.mode).toBe('recall')
+    expect(set.choices).toEqual([])
+    expect(set.answerText).toBe('노비안검법')
+    expect(set.choices.join(' ')).not.toMatch(/같은 시대|다른 인물|정책 \(/)
+  })
+
+  it('does not invent comparison fallback facts when nearby deeds are missing', () => {
+    const target = card({
+      id: 'c-05',
+      front: '광종 vs 성종',
+      back: '광종: 왕권 강화 / 성종: 유교적 통치 질서',
+      kind: 'concept',
+    })
+    const set = buildCardChoiceSet(target, [target], () => 0.2)
+    expect(set.mode).toBe('choices')
+    expect(set.choices).toHaveLength(2)
+    expect(set.choices).toContain('광종: 왕권 강화 / 성종: 유교적 통치 질서')
+    expect(set.choices).toContain('광종: 유교적 통치 질서 / 성종: 왕권 강화')
+    expect(set.choices.join(' ')).not.toMatch(/반원 개혁|탕평책|훈민정음 창제/)
   })
 })
 
