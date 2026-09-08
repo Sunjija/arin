@@ -119,6 +119,47 @@ export function practiceAccuracyFromAttempts(
   }
 }
 
+export const RECENT_ATTEMPT_WINDOW = 40
+export const STABLE_ZONE_STREAK = 3
+
+export function sortAttemptsNewestFirst(attempts: AttemptRecord[]): AttemptRecord[] {
+  return [...attempts].sort((a, b) => {
+    const byTime = b.createdAt.localeCompare(a.createdAt)
+    if (byTime !== 0) return byTime
+    return b.id.localeCompare(a.id)
+  })
+}
+
+/** 홈·진도가 같은 최근 N개 답안 창을 쓰도록 정렬 후 자른다. */
+export function recentAttemptsForEstimate(
+  attempts: AttemptRecord[],
+  limit = RECENT_ATTEMPT_WINDOW,
+): AttemptRecord[] {
+  return sortAttemptsNewestFirst(attempts).slice(0, limit)
+}
+
+/**
+ * 적격 실전 모의고사가 있으면 그 평균, 없으면 최근 40개 답안의 정답률.
+ * 홈 `estimatedScore`와 진도 `estimated`가 이 함수만 사용한다.
+ */
+export function estimatedScoreFromRecords(input: {
+  attempts: AttemptRecord[]
+  mockResultsNewestFirst: MockExamResult[]
+}): number | null {
+  const fromMocks = averageEligibleFullMocks(input.mockResultsNewestFirst)
+  if (fromMocks != null) return fromMocks
+  const recent = recentAttemptsForEstimate(input.attempts)
+  if (recent.length === 0) return null
+  return Math.round((recent.filter((attempt) => attempt.correct).length / recent.length) * 100)
+}
+
+export function isConsecutiveGoalStable(
+  consecutiveHits: number,
+  required = STABLE_ZONE_STREAK,
+): boolean {
+  return consecutiveHits >= required
+}
+
 export function buildScoreSummary(input: {
   attempts: AttemptRecord[]
   mockResultsNewestFirst: MockExamResult[]

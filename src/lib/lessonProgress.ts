@@ -1,4 +1,7 @@
+import { addDays, daysBetween, planWeekNumber } from './dates'
 import type { Lesson, LessonCompletion, StudyDayRecord } from '../types'
+
+export type LessonScheduleKind = 'resume' | 'scheduled' | 'repeat' | 'after-plan'
 
 export function orderedLessons(lessons: Lesson[]): Lesson[] {
   return [...lessons].sort(
@@ -8,6 +11,74 @@ export function orderedLessons(lessons: Lesson[]): Lesson[] {
 
 export function completedLessonIds(completions: LessonCompletion[]): Set<string> {
   return new Set(completions.map((row) => row.lessonId))
+}
+
+export function dayIndexInPlan(startDate: string, today: string): number {
+  return Math.max(0, daysBetween(startDate, today))
+}
+
+export function lessonsForWeek(lessons: Lesson[], week: number): Lesson[] {
+  return orderedLessons(lessons).filter((lesson) => lesson.week === week)
+}
+
+/**
+ * 8주 달력: 해당 주의 dayOrder 순 단원을 주 내 날짜에 배정한다.
+ * 단원이 7일보다 적으면 남은 날은 그 주 단원을 순환(반복 학습일).
+ * 계획 주수가 끝나면 18개 단원 전체를 날짜 기준으로 순환한다.
+ * 활성 세션 lessonId가 있으면 재개 시 바꾸지 않는다.
+ */
+export function selectScheduledLesson(
+  lessons: Lesson[],
+  input: {
+    startDate: string
+    today: string
+    planWeeks: number
+    activeLessonId?: string | null
+  },
+): { lesson: Lesson; kind: LessonScheduleKind } {
+  const ordered = orderedLessons(lessons)
+  if (ordered.length === 0) {
+    throw new Error('학습 단원이 없습니다.')
+  }
+  if (input.activeLessonId) {
+    const active = ordered.find((lesson) => lesson.id === input.activeLessonId)
+    if (active) return { lesson: active, kind: 'resume' }
+  }
+
+  const elapsed = dayIndexInPlan(input.startDate, input.today)
+  const planDays = Math.max(1, input.planWeeks) * 7
+  if (elapsed >= planDays) {
+    return { lesson: ordered[elapsed % ordered.length]!, kind: 'after-plan' }
+  }
+
+  const week = planWeekNumber(input.startDate, input.today, input.planWeeks)
+  const weekLessons = lessonsForWeek(lessons, week)
+  if (weekLessons.length === 0) {
+    return { lesson: ordered[elapsed % ordered.length]!, kind: 'repeat' }
+  }
+  const dayInWeek = elapsed % 7
+  return {
+    lesson: weekLessons[dayInWeek % weekLessons.length]!,
+    kind: dayInWeek >= weekLessons.length ? 'repeat' : 'scheduled',
+  }
+}
+
+export function lessonsAssignedInPlan(
+  lessons: Lesson[],
+  startDate: string,
+  planWeeks: number,
+): string[] {
+  const ids: string[] = []
+  const seen = new Set<string>()
+  for (let day = 0; day < planWeeks * 7; day += 1) {
+    const today = addDays(startDate, day)
+    const id = selectScheduledLesson(lessons, { startDate, today, planWeeks }).lesson.id
+    if (!seen.has(id)) {
+      seen.add(id)
+      ids.push(id)
+    }
+  }
+  return ids
 }
 
 /**

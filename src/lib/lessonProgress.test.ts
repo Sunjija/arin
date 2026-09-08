@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest'
+import { addDays } from './dates'
 import { lessons } from '../data/lessons'
 import {
   canTraverseAllLessons,
   lessonCompletionsFromStudyDays,
+  lessonsAssignedInPlan,
   orderedLessons,
   selectNextLesson,
+  selectScheduledLesson,
 } from './lessonProgress'
 
 describe('lesson progress', () => {
@@ -55,6 +58,58 @@ describe('lesson progress', () => {
 
   it('can walk all 18 lessons by completion', () => {
     expect(canTraverseAllLessons(lessons)).toBe(true)
+  })
+
+  it('assigns every lesson to concept study across the default 8-week calendar', () => {
+    const startDate = '2026-01-05'
+    const assigned = lessonsAssignedInPlan(lessons, startDate, 8)
+    expect(assigned).toHaveLength(18)
+    expect(new Set(assigned)).toEqual(new Set(lessons.map((lesson) => lesson.id)))
+    expect(assigned[0]).toBe('lesson-01')
+    expect(assigned).toContain('lesson-02')
+    expect(assigned).toContain('lesson-18')
+    const firstOfEachWeek = [
+      ...new Set(
+        [1, 2, 3, 4, 5, 6, 7, 8].map(
+          (week) => lessons.find((lesson) => lesson.week === week)?.id,
+        ),
+      ),
+    ]
+    expect(assigned.length).toBeGreaterThan(firstOfEachWeek.length)
+  })
+
+  it('keeps the same lesson on refresh and uses extra weekdays as repeats', () => {
+    const input = { startDate: '2026-01-05', today: '2026-01-08', planWeeks: 8 }
+    const first = selectScheduledLesson(lessons, input)
+    const again = selectScheduledLesson(lessons, input)
+    expect(first.lesson.id).toBe(again.lesson.id)
+    expect(first.kind).toBe('repeat')
+    expect(selectScheduledLesson(lessons, { ...input, today: '2026-01-05' }).lesson.id).toBe(
+      'lesson-01',
+    )
+    expect(selectScheduledLesson(lessons, { ...input, today: '2026-01-06' }).lesson.id).toBe(
+      'lesson-02',
+    )
+  })
+
+  it('keeps an in-progress session lesson instead of the calendar pick', () => {
+    const picked = selectScheduledLesson(lessons, {
+      startDate: '2026-01-05',
+      today: '2026-01-06',
+      planWeeks: 8,
+      activeLessonId: 'lesson-01',
+    })
+    expect(picked).toMatchObject({ kind: 'resume', lesson: { id: 'lesson-01' } })
+  })
+
+  it('cycles all lessons after the plan weeks end', () => {
+    const after = selectScheduledLesson(lessons, {
+      startDate: '2026-01-05',
+      today: addDays('2026-01-05', 56),
+      planWeeks: 8,
+    })
+    expect(after.kind).toBe('after-plan')
+    expect(lessons.some((lesson) => lesson.id === after.lesson.id)).toBe(true)
   })
 
   it('migrates only completed studyDays with lessonId', () => {

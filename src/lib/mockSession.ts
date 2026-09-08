@@ -96,7 +96,7 @@ export async function finalizeMock(input: {
 
     const answers = input.answers ?? current.answers
     const itemElapsedMs = input.itemElapsedMs ?? current.itemElapsedMs
-    const result = gradeActiveMock({ ...current, answers, itemElapsedMs })
+    const result = gradeActiveMock({ ...current, answers, itemElapsedMs }, Date.now())
 
     await db.mockResults.put(result)
     await db.activeMock.put({
@@ -112,7 +112,7 @@ export async function finalizeMock(input: {
   })
 }
 
-export function gradeActiveMock(mock: ActiveMock): MockExamResult {
+export function gradeActiveMock(mock: ActiveMock, nowMs = Date.now()): MockExamResult {
   const graded = mock.questionSnapshots.map((snapshot, index) => {
     const selectedIndex = mock.answers[index] ?? null
     return {
@@ -137,12 +137,11 @@ export function gradeActiveMock(mock: ActiveMock): MockExamResult {
   }
 
   const started = Date.parse(mock.startedAt)
-  const ended = Date.now()
-  const durationSec = Number.isFinite(started) ? Math.max(0, Math.round((ended - started) / 1000)) : 0
+  const durationSec = Number.isFinite(started) ? Math.max(0, Math.round((nowMs - started) / 1000)) : 0
 
   return {
     id: mock.id,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(nowMs).toISOString(),
     mode: mock.mode,
     total: mock.questionSnapshots.length,
     correct: graded.filter((item) => item.correct).length,

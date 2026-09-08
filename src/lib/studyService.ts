@@ -4,12 +4,15 @@ import { cardFingerprint } from './cardFingerprint'
 import { addDays, daysBetween, isDue, planWeekNumber, toDateKey } from './dates'
 import { observedWeakAreas, updateMasteryScore } from './mastery'
 import { selectDailyQuestions } from './questionSelection'
-import { isStableZone } from './scoreEstimate'
-import { buildScoreSummary } from './scoreSummary'
+import {
+  buildScoreSummary,
+  estimatedScoreFromRecords,
+  isConsecutiveGoalStable,
+} from './scoreSummary'
 import { calculateNextInterval } from './spacedRepetition'
 import { MAX_DAILY_CARDS, normalizeDailyCardCount } from './studyLimits'
 import { pickDueCardsForToday, planDailyQuantity, quantitySettingsCopy } from './studyPlan'
-import { selectNextLesson, upsertLessonCompletion } from './lessonProgress'
+import { selectScheduledLesson, upsertLessonCompletion } from './lessonProgress'
 import { db } from '../db/database'
 import type {
   ActiveSession,
@@ -100,22 +103,25 @@ export async function getScoreSummary() {
 }
 
 export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
-  const [settings, cards, meta, studyDay, mocks, attempts, completions, active] =
-    await Promise.all([
-      getSettings(),
-      db.cards.toArray(),
-      db.meta.get('meta'),
-      db.studyDays.get(today),
-      db.mockResults.orderBy('createdAt').reverse().toArray(),
-      db.attempts.toArray(),
-      db.lessonCompletions.toArray(),
-      db.activeSession.toCollection().first(),
-    ])
+  const [settings, cards, meta, studyDay, mocks, attempts, active] = await Promise.all([
+    getSettings(),
+    db.cards.toArray(),
+    db.meta.get('meta'),
+    db.studyDays.get(today),
+    db.mockResults.orderBy('createdAt').reverse().toArray(),
+    db.attempts.toArray(),
+    db.activeSession.toCollection().first(),
+  ])
 
   const week = planWeekNumber(settings.startDate, today, settings.planWeeks)
   const resumeLessonId =
     active && active.date === today && active.step !== 'result' ? active.lessonId : undefined
-  const lesson = selectNextLesson(lessons, completions, resumeLessonId)
+  const lesson = selectScheduledLesson(lessons, {
+    startDate: settings.startDate,
+    today,
+    planWeeks: settings.planWeeks,
+    activeLessonId: resumeLessonId,
+  }).lesson
 
   const dailyCardCount = normalizeDailyCardCount(settings.dailyCardCount)
   const dueAll = cards.filter((c) => isDue(c.nextReviewAt, today))
@@ -136,6 +142,10 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
   const weakAreas = observedWeakAreas(attempts)
   const reviewHasEvidence = weakAreas.length > 0
   const reviewLabel = reviewHasEvidence ? (weakAreas[0]?.label ?? '기초 복습') : '기초 복습'
+  const estimatedScore = estimatedScoreFromRecords({
+    attempts,
+    mockResultsNewestFirst: mocks,
+  })
 
   const completionRate = studyDay
     ? Math.round(
@@ -170,13 +180,11 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     observedWeakAreas: weakAreas,
     weakAreas: weakAreas.map((area) => area.label),
     streak: meta?.streak ?? 0,
-    estimatedScore: scoreSummary.fullMockAverage,
+    estimatedScore,
     scoreIsEstimate: scoreSummary.fullMockAverage == null,
     goalScore: settings.goalScore,
     remainingToGoal:
-      scoreSummary.fullMockAverage == null
-        ? null
-        : Math.max(0, settings.goalScore - scoreSummary.fullMockAverage),
+      estimatedScore == null ? null : Math.max(0, settings.goalScore - estimatedScore),
     focusLine: `오늘 학습: ${lesson.title}`,
     timeLine: quantity.fitsDailyMinutes
       ? `약 ${quantity.estimatedMinutes}분`
@@ -512,11 +520,6 @@ export async function getProgressSnapshot(): Promise<ProgressSnapshot> {
   })
   const weakAreas = observedWeakAreas(attempts)
   const mockScores = mocks.map((m) => m.score)
-  const stable = isStableZone(
-    mocks.filter((m) => m.mode === 'full').map((m) => m.score),
-    settings.goalScore,
-    3,
-  )
 
   return {
     scoreSummary,
@@ -527,10 +530,13 @@ export async function getProgressSnapshot(): Promise<ProgressSnapshot> {
     mastery,
     topCause,
     advice: buildAdvice(weakAreas.map((w) => w.label), topCause, scoreSummary, settings.goalScore),
-    estimated: scoreSummary.fullMockAverage,
+    estimated: estimatedScoreFromRecords({
+      attempts,
+      mockResultsNewestFirst: mocks,
+    }),
     scoreIsEstimate: scoreSummary.fullMockAverage == null,
     streak85: scoreSummary.consecutiveGoalHits,
-    stable,
+    stable: isConsecutiveGoalStable(scoreSummary.consecutiveGoalHits),
     mockScores: mockScores.slice(0, 5),
     accuracy7,
     weak: weakAreas.slice(0, 3).map((w) => w.label),

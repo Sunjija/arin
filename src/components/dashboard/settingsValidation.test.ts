@@ -37,6 +37,12 @@ describe('settings runtime validation', () => {
       '하루 학습 시간',
     )
     expect(validateSettingsForm({ ...base, planWeeks: 3 }).join('\n')).toContain('계획 주수')
+    expect(validateSettingsForm({ ...base, dailyQuestionCount: 0 }).join('\n')).toContain('하루 문제 수')
+    expect(validateSettingsForm({ ...base, dailyQuestionCount: Number.NaN }).join('\n')).toContain('정수')
+    expect(validateSettingsForm({ ...base, dailyQuestionCount: 5 })).toEqual([])
+    expect(validateSettingsForm({ ...base, dailyQuestionCount: 40 })).toEqual([])
+    expect(validateSettingsForm({ ...base, goalScore: 60, planWeeks: 4, dailyMinutes: 30 })).toEqual([])
+    expect(validateSettingsForm({ ...base, goalScore: 100, planWeeks: 16, dailyMinutes: 300 })).toEqual([])
   })
 })
 

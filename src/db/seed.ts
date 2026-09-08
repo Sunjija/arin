@@ -1,5 +1,7 @@
 import { flashcardSeeds } from '../data/cards'
 import { defaultMastery, defaultSettings } from '../data/defaults'
+import { parseMasteryScores } from '../lib/backupValidate'
+import { parseUserSettings } from '../lib/settingsValidation'
 import { cardFingerprint } from '../lib/cardFingerprint'
 import { personKey } from '../lib/cardQuiz'
 import { addDays, toDateKey } from '../lib/dates'
@@ -102,8 +104,12 @@ export async function ensureSeeded(): Promise<void> {
 
   const today = toDateKey()
   const needsContentBump = Boolean(meta) && (meta?.contentVersion ?? 1) < CONTENT_VERSION
+  const { id: _settingsId, ...settingsFields } = settings ?? { id: 'settings' as const }
+  const { id: _masteryId, ...masteryFields } = mastery ?? { id: 'mastery' as const }
+  const settingsValid = Boolean(settings) && parseUserSettings(settingsFields).ok
+  const masteryValid = Boolean(mastery) && parseMasteryScores(masteryFields).ok
   // 부분 손상 복구: meta만 있고 설정/카드가 비어 홈이 멈추는 경우 방지
-  if (meta && settings && mastery && cardCount > 0 && !needsContentBump) return
+  if (meta && settingsValid && masteryValid && cardCount > 0 && !needsContentBump) return
 
   await db.transaction(
     'rw',
@@ -121,8 +127,8 @@ export async function ensureSeeded(): Promise<void> {
       db.lessonCompletions,
     ],
     async () => {
-      if (!settings) await db.settings.put({ id: 'settings', ...defaultSettings() })
-      if (!mastery) await db.mastery.put({ id: 'mastery', ...defaultMastery() })
+      if (!settingsValid) await db.settings.put({ id: 'settings', ...defaultSettings() })
+      if (!masteryValid) await db.mastery.put({ id: 'mastery', ...defaultMastery() })
       if (cardCount === 0) {
         await db.cards.bulkPut(seedCards(today))
       } else if (needsContentBump) {

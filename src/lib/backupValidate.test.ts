@@ -35,4 +35,35 @@ describe('backup validation', () => {
     expect(validateExportPayload({ ...validPayload(), settings: { goalScore: 200 } }).ok).toBe(false)
     expect(validateExportPayload({ ...validPayload(), mockResults: [{ id: 'x' }] }).ok).toBe(false)
   })
+
+  it('rejects empty settings/mastery objects that used to import as success', () => {
+    const emptied = {
+      ...validPayload(),
+      settings: {},
+      mastery: {},
+      attempts: [],
+    }
+    const result = validateExportPayload(emptied)
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.message.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('rejects out-of-range daily question count with the same rule as settings', () => {
+    const result = validateExportPayload({
+      ...validPayload(),
+      settings: { ...defaultSettings(), dailyQuestionCount: 0 },
+    })
+    expect(result.ok).toBe(false)
+    if (!result.ok) expect(result.message).toContain('하루 문제 수')
+  })
+
+  it('rejects mastery records missing era keys', () => {
+    const result = validateExportPayload({
+      ...validPayload(),
+      mastery: { eras: {}, types: {} },
+    })
+    expect(result.ok).toBe(false)
+  })
 })

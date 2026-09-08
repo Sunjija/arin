@@ -11,11 +11,11 @@ import {
   createProgressSaver,
   createSubmitOnce,
   existingProgressCopy,
-  finalizePayload,
   mockAttemptId,
   nextAction,
   resolveActiveMockAction,
   resumeState,
+  snapshotForAutoSubmit,
   type MockView,
 } from '../components/mock/mockExamLogic'
 import {
@@ -279,11 +279,11 @@ export function MockExamPage() {
     setUnansweredOpen(false)
     await saverRef.current?.flush()
     const outcome = await submitLockRef.current.run(async () => {
-      const payload = finalizePayload({
+      const payload = snapshotForAutoSubmit({
         id,
         revision: saverRef.current?.getRevision() ?? 1,
-        answers: answersRef.current,
-        itemElapsedMs: itemElapsedRef.current,
+        getAnswers: () => answersRef.current,
+        getItemElapsedMs: () => itemElapsedRef.current,
       })
       const finalized = await finalizeMock(payload)
       if (finalized.created) {

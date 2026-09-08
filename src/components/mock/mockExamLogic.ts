@@ -316,6 +316,21 @@ export function finalizePayload(input: {
   }
 }
 
+export function snapshotForAutoSubmit(input: {
+  id: string
+  revision: number
+  getAnswers: () => Array<number | null>
+  getItemElapsedMs: () => Array<number | null>
+}) {
+  return finalizePayload({
+    id: input.id,
+    revision: input.revision,
+    answers: input.getAnswers(),
+    itemElapsedMs: input.getItemElapsedMs(),
+  })
+}
+
 export function resultModeLabel(result: Pick<MockExamResult, 'mode'>): string {
   return result.mode === 'full' ? '50문항 실전 연습' : '10문항 연습'
 }
+

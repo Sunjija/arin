@@ -4,7 +4,9 @@ import {
   averageEligibleFullMocks,
   buildScoreSummary,
   consecutiveGoalHits,
+  estimatedScoreFromRecords,
   evaluateFullMockEligibility,
+  isConsecutiveGoalStable,
 } from './scoreSummary'
 
 function mockResult(overrides: Partial<MockExamResult> & Pick<MockExamResult, 'id' | 'mode' | 'score' | 'total'>): MockExamResult {
@@ -111,6 +113,57 @@ describe('buildScoreSummary', () => {
     expect(consecutiveGoalHits(newestFirst, 60)).toBe(4)
     expect(consecutiveGoalHits([fullFifty('x', 100), fullFifty('y', 100), fullFifty('z', 100)], 85)).toBe(3)
   })
+
+  it('needs three consecutive goal hits for the stable zone and a miss breaks the streak', () => {
+    expect(consecutiveGoalHits([fullFifty('a', 100), fullFifty('b', 90)], 85)).toBe(2)
+    expect(isConsecutiveGoalStable(2)).toBe(false)
+    expect(isConsecutiveGoalStable(consecutiveGoalHits([
+      fullFifty('a', 100),
+      fullFifty('b', 100),
+      fullFifty('c', 100),
+    ], 85))).toBe(true)
+    expect(consecutiveGoalHits([
+      fullFifty('now', 100),
+      fullFifty('mid', 70),
+      fullFifty('old', 100),
+    ], 85)).toBe(1)
+  })
+
+  it('does not count the same result id twice when judging consecutive hits', () => {
+    const current = fullFifty('full-now', 100)
+    expect(
+      consecutiveGoalHits([current, current, fullFifty('older', 90)], 85),
+    ).toBe(2)
+    expect(isConsecutiveGoalStable(2)).toBe(false)
+  })
+})
+
+describe('estimatedScoreFromRecords', () => {
+  it('uses the same recent-40 window so home and progress cannot diverge', () => {
+    const olderWrong = Array.from({ length: 40 }, (_, i) =>
+      attemptAt(`old-${i}`, false, `2026-01-01T00:00:${String(i).padStart(2, '0')}.000Z`),
+    )
+    const recentCorrect = Array.from({ length: 40 }, (_, i) =>
+      attemptAt(`new-${i}`, true, `2026-02-01T00:00:${String(i).padStart(2, '0')}.000Z`),
+    )
+    const attempts = [...olderWrong, ...recentCorrect]
+    expect(estimatedScoreFromRecords({ attempts, mockResultsNewestFirst: [] })).toBe(100)
+    expect(
+      Math.round((attempts.filter((row) => row.correct).length / attempts.length) * 100),
+    ).toBe(50)
+  })
+
+  it('prefers eligible full mocks over the practice window', () => {
+    const recentCorrect = Array.from({ length: 40 }, (_, i) =>
+      attemptAt(`new-${i}`, true, `2026-02-01T00:00:${String(i).padStart(2, '0')}.000Z`),
+    )
+    expect(
+      estimatedScoreFromRecords({
+        attempts: recentCorrect,
+        mockResultsNewestFirst: [fullFifty('full-1', 70)],
+      }),
+    ).toBe(70)
+  })
 })
 
 function attempt(source: 'practice' | 'mock', correct: boolean): AttemptRecord {
@@ -124,5 +177,19 @@ function attempt(source: 'practice' | 'mock', correct: boolean): AttemptRecord {
     tags: ['king-figure'],
     createdAt: '2026-09-01T00:00:00.000Z',
     source,
+  }
+}
+
+function attemptAt(id: string, correct: boolean, createdAt: string): AttemptRecord {
+  return {
+    id,
+    questionId: 'q1',
+    correct,
+    selectedIndex: 0,
+    responseMs: 4000,
+    era: 'goryeo',
+    tags: ['king-figure'],
+    createdAt,
+    source: 'practice',
   }
 }

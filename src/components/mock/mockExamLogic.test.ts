@@ -17,6 +17,7 @@ import {
   resolveActiveMockAction,
   resumeState,
   reviewFromSnapshot,
+  snapshotForAutoSubmit,
   shouldFinalizeByDeadline,
   unansweredNumbers,
 } from './mockExamLogic'
@@ -101,13 +102,27 @@ describe('mock exam clock and answers', () => {
     expect(shouldFinalizeByDeadline(deadlineAt, Date.now())).toBe(true)
     expect(remainingMs(deadlineAt, Date.now())).toBe(0)
     expect(
-      finalizePayload({
+      snapshotForAutoSubmit({
         id: 'mock-1',
         revision: 4,
-        answers: buffer.get(),
-        itemElapsedMs: [null, null, null],
+        getAnswers: () => buffer.get(),
+        getItemElapsedMs: () => [null, null, null],
       }).answers,
     ).toEqual([4, null, 1])
+  })
+
+  it('does not reset the deadline when a later answer is chosen', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-09-08T00:00:00.000Z'))
+    const deadlineAt = '2026-09-08T00:16:00.000Z'
+    const buffer = createAnswerBuffer([null, null])
+    const remainingBefore = remainingMs(deadlineAt, Date.now())
+    buffer.select(0, 2)
+    buffer.select(1, 3)
+    expect(remainingMs(deadlineAt, Date.now())).toBe(remainingBefore)
+    vi.advanceTimersByTime(5_000)
+    expect(remainingMs(deadlineAt, Date.now())).toBe(remainingBefore - 5_000)
+    expect(buffer.get()).toEqual([2, 3])
   })
 
   it('formats remaining time from deadlineAt - now without ticking aria text helpers', () => {

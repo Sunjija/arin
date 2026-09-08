@@ -126,14 +126,14 @@ full 적격: `mode=full`, 원본 고유 문항 50, 점수/답안 유효, `__pad`
 
 `buildTodayPlan(today?: string): Promise<TodayPlan>`
 
-- `lesson`: week/dayOrder 완료 기반. 주차 첫 `find` 제거. 활성 세션 `lessonId`는 재개 시 바꾸지 않음.
+- `lesson`: 주 번호 + 주 내 날짜 + `dayOrder`로 예정 단원을 배정한다. 주차 첫 `find`를 쓰지 않는다. 주 내 단원이 7일보다 적으면 남은 날은 그 주 단원을 순환(반복 학습일). 계획 주수가 끝나면 18개 단원 전체를 날짜 기준으로 순환한다. 활성 세션 `lessonId`는 재개 시 바꾸지 않음.
 - `reviewLabel` + `reviewHasEvidence`: 복습 한 줄. 근거 없으면 “기초 복습”.
 - `quantity.selectedCardCount` / `selectedQuestionCount`가 화면에 쓸 실제 수.
 - `dailyQuestionCount` / `dailyCardCount`는 상한. 설명 문구: `quantitySettingsCopy()`.
 - 하루 시간에 최소 학습이 안 되면 `fitsDailyMinutes=false`, `guidance`를 숨기지 않음. 개념 읽기 시간을 0으로 만들지 않음.
 - `completion.todayDone`이면 CTA는 추가 복습. 완료율을 0으로 리셋하지 않음.
 - `weakAreas`: 호환용 라벨 문자열. B는 `observedWeakAreas`(관측된 영역만)를 쓴다. 초기 숙련도 숫자는 진단이 아니다.
-- 호환 필드 `estimatedScore`는 `fullMockAverage`이며 없으면 `null`. B는 `scoreSummary`를 쓴다.
+- 호환 필드 `estimatedScore`/`estimated`는 `estimatedScoreFromRecords`(적격 실전 평균, 없으면 최근 40개 답안 정답률)이며 홈과 진도가 같은 함수를 쓴다. 값이 없으면 `null`. B는 `scoreSummary`를 쓴다.
 
 ### 학습 세션
 
@@ -198,7 +198,7 @@ Dexie v2 업그레이드. DB 삭제/reseed로 migration하지 않는다.
 |---|---|
 | `estimatedScore` / `estimateScoreFromAccuracy(0,0)=40` | `scoreSummary.*` null |
 | `isStableZone` / “1급 안정권” | `consecutiveGoalHits` |
-| `lessons.find(week)` | `selectNextLesson` |
+| `lessons.find(week)` | `selectScheduledLesson` (주+dayOrder, 반복일·계획 종료 후 순환) |
 | `addCardFromContent({ front: stem })` | `createWrongCardFromQuestion` |
 | `saveMockResult` + `responseMs: 20000` | `startMock`/`finalizeMock`, `responseMs: null` |
 | Home `focusLine`에 취약 영역 | `오늘 학습: {lesson.title}` + 별도 `reviewLabel` |
