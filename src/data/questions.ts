@@ -1312,7 +1312,7 @@ const authoredQuestions: Question[] = [
     era: 'joseon-late',
     tags: ['king-figure', 'cultural-heritage', 'source'],
     difficulty: 2,
-    lessonId: 'lesson-11',
+    lessonId: 'lesson-14',
     formatId: 'source-who',
     ...META,
   },
