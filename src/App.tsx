@@ -10,7 +10,7 @@ import { CardsPage } from './pages/CardsPage'
 import { ProgressPage } from './pages/ProgressPage'
 import { MockExamPage } from './pages/MockExamPage'
 import { SettingsPage } from './pages/SettingsPage'
-import { TimelinePage } from './pages/TimelinePage'
+import { LibraryPage } from './pages/LibraryPage'
 
 function Bootstrap({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
@@ -63,7 +63,8 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/study" element={<StudySessionPage />} />
                 <Route path="/cards" element={<CardsPage />} />
-                <Route path="/timeline" element={<TimelinePage />} />
+                <Route path="/timeline" element={<LibraryPage />} />
+                <Route path="/library" element={<LibraryPage />} />
                 <Route path="/wrong" element={<Navigate to="/cards" replace />} />
                 <Route path="/progress" element={<ProgressPage />} />
                 <Route path="/mock" element={<MockExamPage />} />

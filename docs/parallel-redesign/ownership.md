@@ -35,4 +35,4 @@
 | `src/lib/backupValidate.ts` | E |
 | `src/lib/dataErrors.ts` | E |
 
-`/library` 라우트는 F가 `LibraryPage`를 제출한 뒤 A가 `App.tsx`에 연결한다. 지금은 자료실 메뉴가 기존 `/timeline`으로 간다.
+`/library` 라우트는 F 제출 후 A가 `App.tsx`에 연결했다. 자료실 메뉴는 `/library`로 가고, `/timeline`은 같은 `LibraryPage`를 유지한다.

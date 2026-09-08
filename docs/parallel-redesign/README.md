@@ -12,6 +12,6 @@
 - `docs/parallel-redesign/contracts.md`를 먼저 읽는다.
 - 자기 소유 파일만 수정한다. 계약 변경은 총괄 채팅으로.
 - E의 내부 구현(테스트 보강, backup round-trip 등)은 계약 동결 이후 이 브랜치에서 계속할 수 있다.
-- A의 `/library` 연결은 F 제출 후 총괄이 A 후속으로 넣는다.
+- A의 `/library` 연결은 F 제출 후 총괄이 A 후속으로 넣었다 (`LIBRARY_PATH = '/library'`, `/timeline` 호환 유지).
 
 통합 순서: A/E 기반 → B/C/D/F 병합 → `07` 수용 검사.

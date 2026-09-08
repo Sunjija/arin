@@ -1,4 +1,4 @@
-export const LIBRARY_PATH = '/timeline'
+export const LIBRARY_PATH = '/library'
 export const LIBRARY_QUERY_KEYS = {
   tab: 'tab',
   era: 'era',
