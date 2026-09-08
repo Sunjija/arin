@@ -203,10 +203,11 @@ export function QuizStep({
 
   return (
     <div className="surface space-y-4 p-5">
-      <p className="meta-text">
-        문제 {session.questionIndex + 1} / {session.questionIds.length}
-        {revealed ? ` · ${ERA_LABELS[question.era]} · 배점 ${question.difficulty}점` : ''}
-      </p>
+      {revealed ? (
+        <p className="meta-text">
+          {ERA_LABELS[question.era]} · 배점 {question.difficulty}점
+        </p>
+      ) : null}
       {question.passage ? (
         <blockquote className="passage-text rounded-xl bg-[var(--accent-soft)]/50 p-4 whitespace-pre-line">
           {question.passage}
@@ -256,28 +257,30 @@ export function QuizStep({
               <Button variant="secondary" className="w-full" disabled={busy} onClick={() => void addWrongCard()}>
                 카드로 추가
               </Button>
-              {!causeSkipped ? (
-                <>
-                  <p className="font-medium">오답 원인</p>
-                  <p className="meta-text">정답과 해설을 확인한 뒤 고르세요. 풀이 시간에는 더하지 않습니다.</p>
-                  {CAUSE_OPTIONS.map((cause) => (
-                    <Button
-                      key={cause}
-                      variant={currentAnswer?.cause === cause ? 'primary' : 'secondary'}
-                      className="w-full justify-start"
-                      disabled={busy || !currentAnswer?.attemptId}
-                      onClick={() => void applyCause(cause)}
-                    >
-                      {WRONG_CAUSE_LABELS[cause]}
-                    </Button>
-                  ))}
-                  <Button variant="text" className="w-full" disabled={busy} onClick={() => setCauseSkipped(true)}>
-                    원인 건너뛰기
-                  </Button>
-                </>
-              ) : (
-                <p className="meta-text">원인을 건너뛰었습니다. 기록은 미확인으로 남습니다.</p>
-              )}
+              <p className="font-medium">오답 원인</p>
+              <p className="meta-text">정답과 해설을 확인한 뒤 고르세요. 풀이 시간에는 더하지 않습니다.</p>
+              {CAUSE_OPTIONS.map((cause) => (
+                <Button
+                  key={cause}
+                  variant={currentAnswer?.cause === cause ? 'primary' : 'secondary'}
+                  className="w-full justify-start"
+                  disabled={busy || !currentAnswer?.attemptId}
+                  onClick={() => void applyCause(cause)}
+                >
+                  {WRONG_CAUSE_LABELS[cause]}
+                </Button>
+              ))}
+              <Button
+                variant="text"
+                className="w-full"
+                disabled={busy || (currentAnswer?.cause != null && currentAnswer.cause !== 'unknown')}
+                onClick={() => setCauseSkipped(true)}
+              >
+                원인 건너뛰기
+              </Button>
+              {causeSkipped && (currentAnswer?.cause == null || currentAnswer.cause === 'unknown') ? (
+                <p className="meta-text">지금은 미확인입니다. 고르면 같은 기록에 반영됩니다.</p>
+              ) : null}
             </div>
           ) : null}
 
