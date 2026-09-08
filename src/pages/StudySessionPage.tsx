@@ -78,7 +78,9 @@ export function StudySessionPage() {
 
   return (
     <div>
-      <SessionProgress current={session.step} />
+      <section className="surface mb-5 p-4">
+        <SessionProgress current={session.step} />
+      </section>
       {session.step === 'cards' && (
         <CardsStep
           key={`${session.cardIndex}-${cards[session.cardIndex]?.id ?? 'loading'}`}
@@ -236,12 +238,12 @@ function CardsStep({
       </div>
       <div className="space-y-2" role="group" aria-label="선택지">
         {choiceSet.choices.map((choice, index) => {
-          let cls = 'btn btn-secondary w-full justify-start text-left'
-          if (revealed && index === choiceSet.answerIndex) cls = 'btn btn-correct w-full justify-start text-left'
+          let cls = 'btn btn-secondary choice-option'
+          if (revealed && index === choiceSet.answerIndex) cls = 'btn btn-correct choice-option'
           if (revealed && selected === index && index !== choiceSet.answerIndex) {
-            cls = 'btn btn-wrong w-full justify-start text-left'
+            cls = 'btn btn-wrong choice-option'
           }
-          if (!revealed && selected === index) cls = 'btn btn-primary w-full justify-start text-left'
+          if (!revealed && selected === index) cls = 'btn btn-primary choice-option'
           return (
             <button
               key={`${choice}-${index}`}
@@ -251,13 +253,13 @@ function CardsStep({
               onClick={() => void submit(index)}
               aria-label={`${index + 1}번 ${choice}`}
             >
-              <span className="mr-2 font-semibold">{index + 1}.</span>
+              <span className="choice-number">{index + 1}</span>
               <span>{choice}</span>
               {revealed && index === choiceSet.answerIndex ? (
-                <span className="ml-auto text-sm">정답</span>
+                <span className="choice-status">정답</span>
               ) : null}
               {revealed && selected === index && index !== choiceSet.answerIndex ? (
-                <span className="ml-auto text-sm">오답</span>
+                <span className="choice-status">오답</span>
               ) : null}
             </button>
           )
@@ -336,7 +338,7 @@ function ConceptStep({
       <label className="block">
         <span className="text-sm font-medium">교재·강의 범위 메모 (선택)</span>
         <textarea
-          className="mt-1 w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
+          className="field-control mt-1"
           rows={3}
           value={memo}
           onChange={(e) => void onMemo(e.target.value)}
@@ -439,7 +441,7 @@ function QuizStep({
         <label className="block">
           <span className="text-sm font-medium">단서 메모 (선택)</span>
           <input
-            className="mt-1 w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
+            className="field-control mt-1"
             value={session.clueMemo}
             onChange={(e) => void onChange({ ...session, clueMemo: e.target.value })}
             placeholder="예: 노비안검·과거·공복 → 광종"
@@ -454,10 +456,11 @@ function QuizStep({
             <button
               key={choice}
               type="button"
-              className={`btn w-full justify-start ${session.selectedIndex === index ? 'btn-primary' : 'btn-secondary'}`}
+              className={`btn choice-option ${session.selectedIndex === index ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => void onChange({ ...session, selectedIndex: index, quizPhase: 'choices' })}
             >
-              <span className="mr-2 font-semibold">{index + 1}.</span> {choice}
+              <span className="choice-number">{index + 1}</span>
+              <span>{choice}</span>
             </button>
           ))}
           <button

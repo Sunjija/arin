@@ -15,10 +15,16 @@ export function ProgressPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      <header className="page-header">
+        <p className="eyebrow">학습 리포트</p>
+        <h1 className="page-title">진도 · 분석</h1>
+        <p className="page-description">최근 학습 기록을 바탕으로 점수 흐름과 다음 집중 범위를 보여드립니다.</p>
+      </header>
+
       <section className="surface p-5">
-        <h1 className="font-display text-2xl">진도 · 분석</h1>
-        <p className="mt-2 leading-relaxed">{data.advice}</p>
+        <h2 className="section-title">이번 학습 제안</h2>
+        <p className="mt-2 leading-relaxed text-[var(--ink-muted)]">{data.advice}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl bg-[var(--accent-soft)]/60 p-4">
             <p className="text-sm text-[var(--ink-muted)]">예상 시험 점수</p>
@@ -37,7 +43,7 @@ export function ProgressPage() {
       </section>
 
       <section className="surface p-5">
-        <h2 className="font-display text-xl">취약 영역 3개</h2>
+        <h2 className="section-title">취약 영역 3개</h2>
         <ul className="mt-3 space-y-2">
           {data.weak.map((w) => (
             <li key={w}>· {w}</li>
@@ -52,21 +58,21 @@ export function ProgressPage() {
       </section>
 
       <section className="surface space-y-3 p-5">
-        <h2 className="font-display text-xl">시대별 숙련도</h2>
+        <h2 className="section-title">시대별 숙련도</h2>
         {ALL_ERAS.map((era) => (
           <MasteryBar key={era} label={ERA_LABELS[era]} value={data.mastery.eras[era]} />
         ))}
       </section>
 
       <section className="surface space-y-3 p-5">
-        <h2 className="font-display text-xl">유형별 숙련도</h2>
+        <h2 className="section-title">유형별 숙련도</h2>
         {ALL_TYPES.map((type) => (
           <MasteryBar key={type} label={TYPE_LABELS[type]} value={data.mastery.types[type]} />
         ))}
       </section>
 
       <section className="surface p-5">
-        <h2 className="font-display text-xl">최근 모의고사</h2>
+        <h2 className="section-title">최근 모의고사</h2>
         {data.mockScores.length === 0 ? (
           <p className="mt-2 text-[var(--ink-muted)]">아직 모의고사 기록이 없습니다.</p>
         ) : (

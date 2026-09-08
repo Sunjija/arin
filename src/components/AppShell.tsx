@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 const links = [
   { to: '/', label: '오늘', end: true },
@@ -13,14 +13,31 @@ const links = [
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell">
-      <header className="mb-5 flex items-end justify-between gap-3">
-        <div>
-          <p className="font-display text-xl text-[var(--accent)] sm:text-2xl">한사코치</p>
-          <p className="text-sm text-[var(--ink-muted)]">심화 맞춤 학습 · 자체 제작 문항</p>
-        </div>
+      <header className="site-header">
+        <Link to="/" className="brand" aria-label="한사코치 오늘 화면">
+          <span className="brand-mark" aria-hidden>
+            한
+          </span>
+          <span>
+            <strong className="brand-name">한사코치</strong>
+            <span className="brand-copy">한국사 심화 학습</span>
+          </span>
+        </Link>
+        <nav className="desktop-nav" aria-label="주요 메뉴">
+          {links.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) => `desktop-nav-link ${isActive ? 'active' : ''}`}
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
       </header>
-      <main>{children}</main>
-      <nav className="nav-bottom" aria-label="주요 메뉴">
+      <main className="app-main">{children}</main>
+      <nav className="nav-bottom" aria-label="모바일 주요 메뉴">
         <div
           className="nav-bottom-inner"
           style={{ gridTemplateColumns: `repeat(${links.length}, 1fr)` }}

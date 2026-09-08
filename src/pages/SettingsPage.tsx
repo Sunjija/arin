@@ -90,15 +90,20 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <section className="surface p-5">
-        <h1 className="font-display text-2xl">설정</h1>
-        <p className="mt-2 text-[var(--ink-muted)]">목표·일일 분량·데이터 백업을 관리합니다.</p>
+    <div className="space-y-5">
+      <header className="page-header">
+        <p className="eyebrow">환경 설정</p>
+        <h1 className="page-title">학습 설정</h1>
+        <p className="page-description">목표와 하루 학습량을 조정하고 학습 데이터를 관리합니다.</p>
+      </header>
 
-        <div className="mt-4 space-y-3">
+      <section className="surface p-5">
+        <h2 className="section-title">학습 목표</h2>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <Field label="목표 점수">
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2"
+              className="field-control"
               type="number"
               min={60}
               max={100}
@@ -108,7 +113,7 @@ export function SettingsPage() {
           </Field>
           <Field label="하루 문제 수">
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2"
+              className="field-control"
               type="number"
               min={5}
               max={40}
@@ -120,7 +125,7 @@ export function SettingsPage() {
           </Field>
           <Field label="하루 카드 수">
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2"
+              className="field-control"
               type="number"
               min={MIN_DAILY_CARDS}
               max={MAX_DAILY_CARDS}
@@ -135,7 +140,7 @@ export function SettingsPage() {
           </Field>
           <Field label="하루 학습 시간(분)">
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2"
+              className="field-control"
               type="number"
               min={30}
               max={300}
@@ -145,7 +150,7 @@ export function SettingsPage() {
           </Field>
           <Field label="계획 주수">
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2"
+              className="field-control"
               type="number"
               min={4}
               max={16}
@@ -180,7 +185,7 @@ export function SettingsPage() {
       </section>
 
       <section className="surface p-5">
-        <h2 className="font-display text-xl">데이터</h2>
+        <h2 className="section-title">학습 데이터</h2>
         <p className="mt-2 text-[var(--ink-muted)]">
           IndexedDB 학습 기록을 JSON으로 내보내거나 가져옵니다.
         </p>
@@ -249,7 +254,7 @@ export function SettingsPage() {
       </section>
 
       <section className="surface p-5">
-        <h2 className="font-display text-xl">안내</h2>
+        <h2 className="section-title">콘텐츠 안내</h2>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-[var(--ink-muted)]">
           <li>문항·카드는 자체 제작 학습 콘텐츠입니다.</li>
           <li>공식 한국사능력검정시험 기출 문장·이미지를 복사하지 않습니다.</li>

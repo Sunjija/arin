@@ -110,9 +110,16 @@ export function MockExamPage() {
 
   if (mode === 'idle') {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
+        <header className="page-header">
+          <p className="eyebrow">실전 연습</p>
+          <h1 className="page-title">모의고사</h1>
+          <p className="page-description">
+            실제 시험의 시간과 배점 구조에 맞춰 현재 실력을 점검합니다.
+          </p>
+        </header>
         <section className="surface p-5">
-          <h1 className="font-display text-2xl">모의고사</h1>
+          <h2 className="section-title">시험 구성</h2>
           <p className="mt-2 text-[var(--ink-muted)]">
             심화 형식(50문항·80분·1·2·3점 배점)을 지원합니다. 샘플이 부족할 때는 축소 모드를 사용하세요.
             배점 비율은 77~79회 심화 정답표(1점 10·2점 30·3점 10)를 참고합니다.
@@ -126,7 +133,7 @@ export function MockExamPage() {
           </button>
         </section>
         <section className="surface p-5">
-          <h2 className="font-display text-xl">최근 점수</h2>
+          <h2 className="section-title">최근 점수</h2>
           {recent.length === 0 ? (
             <p className="mt-2 text-[var(--ink-muted)]">기록 없음</p>
           ) : (
@@ -150,10 +157,13 @@ export function MockExamPage() {
 
   if (mode === 'result' && result) {
     return (
-      <div className="space-y-4">
-        <section className="surface p-5">
-          <h1 className="font-display text-2xl">채점 결과</h1>
-          <p className="mt-2 text-3xl font-semibold">{result.score}점</p>
+      <div className="space-y-5">
+        <header className="page-header">
+          <p className="eyebrow">시험 결과</p>
+          <h1 className="page-title">채점 결과</h1>
+        </header>
+        <section className="surface p-5 sm:p-6">
+          <p className="text-4xl font-bold tracking-[-0.05em]">{result.score}점</p>
           <p className="text-[var(--ink-muted)]">
             {result.correct}/{result.total} 정답 · {result.mode === 'sample' ? '축소 모드' : '정규 형식'}
           </p>
@@ -260,14 +270,15 @@ export function MockExamPage() {
               <button
                 key={choice}
                 type="button"
-                className={`btn w-full justify-start ${answers[index] === choiceIndex ? 'btn-primary' : 'btn-secondary'}`}
+                className={`btn choice-option ${answers[index] === choiceIndex ? 'btn-primary' : 'btn-secondary'}`}
                 onClick={() => {
                   const next = [...answers]
                   next[index] = choiceIndex
                   setAnswers(next)
                 }}
               >
-                {choiceIndex + 1}. {choice}
+                <span className="choice-number">{choiceIndex + 1}</span>
+                <span>{choice}</span>
               </button>
             ))}
           </div>

@@ -61,11 +61,15 @@ export function CardsPage() {
   }, [cards, tab, era, hardOnly, query, today])
 
   return (
-    <div className="space-y-4">
-      <section className="surface p-5">
-        <h1 className="font-display text-2xl">오답 · 암기카드</h1>
-        <p className="mt-1 text-sm text-[var(--ink-muted)]">복습일과 취약 유형을 한곳에서 관리합니다.</p>
-        <div className="mt-4 flex flex-wrap gap-2">
+    <div className="space-y-5">
+      <header className="page-header">
+        <p className="eyebrow">복습 라이브러리</p>
+        <h1 className="page-title">오답 · 암기카드</h1>
+        <p className="page-description">복습 일정, 직접 만든 카드, 문제에서 저장한 오답을 관리합니다.</p>
+      </header>
+
+      <section className="surface p-2">
+        <div className="flex flex-wrap gap-1">
           {(
             [
               ['due', '오늘 복습'],
@@ -79,7 +83,9 @@ export function CardsPage() {
             <button
               key={id}
               type="button"
-              className={`btn ${tab === id ? 'btn-primary' : 'btn-secondary'}`}
+              className={`btn min-h-10 border-0 px-3 py-2 text-sm shadow-none ${
+                tab === id ? 'btn-primary' : 'btn-ghost'
+              }`}
               onClick={() => setTab(id)}
             >
               {label}
@@ -94,7 +100,7 @@ export function CardsPage() {
             <label className="block">
               <span className="sr-only">검색</span>
               <input
-                className="w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
+                className="field-control"
                 placeholder="카드 검색"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -102,7 +108,7 @@ export function CardsPage() {
             </label>
             <div className="flex flex-wrap gap-2">
               <select
-                className="rounded-xl border border-[var(--line)] bg-white/70 p-3"
+                className="field-control w-auto"
                 value={era}
                 onChange={(e) => setEra(e.target.value as EraId | 'all')}
                 aria-label="시대 필터"
@@ -165,21 +171,24 @@ export function CardsPage() {
           </section>
 
           <section className="surface space-y-3 p-5">
-            <h2 className="font-display text-xl">카드 직접 추가</h2>
+            <div>
+              <p className="eyebrow">새 카드</p>
+              <h2 className="section-title mt-1">카드 직접 추가</h2>
+            </div>
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
+              className="field-control"
               placeholder="앞면"
               value={draft.front}
               onChange={(e) => setDraft({ ...draft, front: e.target.value })}
             />
             <input
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
+              className="field-control"
               placeholder="뒷면"
               value={draft.back}
               onChange={(e) => setDraft({ ...draft, back: e.target.value })}
             />
             <select
-              className="w-full rounded-xl border border-[var(--line)] bg-white/70 p-3"
+              className="field-control"
               value={draft.era}
               onChange={(e) => setDraft({ ...draft, era: e.target.value as EraId })}
               aria-label="시대"
