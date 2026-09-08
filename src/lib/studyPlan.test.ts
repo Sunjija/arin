@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { planDailyQuantity } from './studyPlan'
+import { pickDueCardsForToday, planDailyQuantity } from './studyPlan'
 
 const lesson = { estimatedMinutes: 25, title: '고려 광종과 성종' }
 
@@ -42,5 +42,20 @@ describe('planDailyQuantity', () => {
       lesson,
     })
     expect(plan.selectedCardCount).toBe(2)
+  })
+})
+
+describe('pickDueCardsForToday', () => {
+  it('puts today lesson era first, then date, then id', () => {
+    const picked = pickDueCardsForToday(
+      [
+        { id: 'c-goryeo', era: 'goryeo', nextReviewAt: '2026-09-07' },
+        { id: 'c-pre-b', era: 'prehistoric', nextReviewAt: '2026-09-08' },
+        { id: 'c-pre-a', era: 'prehistoric', nextReviewAt: '2026-09-08' },
+      ],
+      'prehistoric',
+      2,
+    )
+    expect(picked.map((card) => card.id)).toEqual(['c-pre-a', 'c-pre-b'])
   })
 })

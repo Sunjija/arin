@@ -8,7 +8,7 @@ import { isStableZone } from './scoreEstimate'
 import { buildScoreSummary } from './scoreSummary'
 import { calculateNextInterval } from './spacedRepetition'
 import { MAX_DAILY_CARDS, normalizeDailyCardCount } from './studyLimits'
-import { planDailyQuantity, quantitySettingsCopy } from './studyPlan'
+import { pickDueCardsForToday, planDailyQuantity, quantitySettingsCopy } from './studyPlan'
 import { selectNextLesson, upsertLessonCompletion } from './lessonProgress'
 import { db } from '../db/database'
 import type {
@@ -118,10 +118,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
   const lesson = selectNextLesson(lessons, completions, resumeLessonId)
 
   const dailyCardCount = normalizeDailyCardCount(settings.dailyCardCount)
-  const dueAll = cards
-    .filter((c) => isDue(c.nextReviewAt, today))
-    .sort((a, b) => a.nextReviewAt.localeCompare(b.nextReviewAt))
-
+  const dueAll = cards.filter((c) => isDue(c.nextReviewAt, today))
   const quantity = planDailyQuantity({
     dailyMinutes: settings.dailyMinutes,
     dailyQuestionCap: settings.dailyQuestionCount,
@@ -129,7 +126,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     dueCardCount: dueAll.length,
     lesson,
   })
-  const dueCards = dueAll.slice(0, quantity.selectedCardCount)
+  const dueCards = pickDueCardsForToday(dueAll, lesson.era, quantity.selectedCardCount)
 
   const scoreSummary = buildScoreSummary({
     attempts,

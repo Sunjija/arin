@@ -1,5 +1,5 @@
 import { MAX_DAILY_CARDS, MIN_DAILY_CARDS, normalizeDailyCardCount } from './studyLimits'
-import type { Lesson } from '../types'
+import type { EraId, Lesson } from '../types'
 import type { QuantityPlan } from '../types/contracts'
 
 export const MINUTES_PER_CARD = 1.2
@@ -75,4 +75,21 @@ export function planDailyQuantity(input: {
 
 export function quantitySettingsCopy(): string {
   return `하루 시간은 오늘 고르는 카드·개념·문항 수의 실제 상한입니다. 카드 수와 문항 수는 원하는 최대치이고, 시간 안에 들어가면 그 수만큼 제공합니다. 시간이 부족하면 문항을 먼저 줄이고, 그래도 부족하면 카드를 줄입니다. 개념 읽기 시간을 0으로 맞추지는 않습니다. 카드 상한은 ${MIN_DAILY_CARDS}~${MAX_DAILY_CARDS}장입니다.`
+}
+
+/** 오늘 due 카드 중 오늘 단원 시대를 앞에 두고, 같은 날짜면 id 순. */
+export function pickDueCardsForToday<T extends { id: string; era: EraId; nextReviewAt: string }>(
+  dueCards: T[],
+  lessonEra: EraId,
+  limit: number,
+): T[] {
+  return [...dueCards]
+    .sort((a, b) => {
+      const byLesson = Number(b.era === lessonEra) - Number(a.era === lessonEra)
+      if (byLesson !== 0) return byLesson
+      const byDate = a.nextReviewAt.localeCompare(b.nextReviewAt)
+      if (byDate !== 0) return byDate
+      return a.id.localeCompare(b.id)
+    })
+    .slice(0, Math.max(0, limit))
 }
