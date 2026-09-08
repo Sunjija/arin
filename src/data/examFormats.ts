@@ -202,19 +202,19 @@ export const EXAM_FORMAT_BY_ID: Record<ExamFormatId, ExamFormatSpec> = Object.fr
   EXAM_FORMATS.map((f) => [f.id, f]),
 ) as Record<ExamFormatId, ExamFormatSpec>
 
-/** 은행 작성 시 목표 비중(심화 감각, 합≈100) */
+/** 은행 작성 시 목표 비중(심화 감각, 합=100) */
 export const TARGET_FORMAT_MIX: Partial<Record<ExamFormatId, number>> = {
-  'source-who': 12,
+  'source-who': 11,
   'source-what': 10,
-  'source-underline': 8,
-  'chronology-events': 12,
-  'chronology-labeled': 8,
-  'king-policy-match': 12,
-  'king-compare': 6,
-  'policy-name': 6,
-  'policy-content': 8,
-  'wrong-statement': 6,
-  'org-activity': 6,
+  'source-underline': 7,
+  'chronology-events': 11,
+  'chronology-labeled': 7,
+  'king-policy-match': 11,
+  'king-compare': 5,
+  'policy-name': 5,
+  'policy-content': 9,
+  'wrong-statement': 5,
+  'org-activity': 5,
   'heritage-period': 4,
   'cause-effect': 6,
   'map-region': 4,

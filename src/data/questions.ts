@@ -11,7 +11,7 @@ const META = {
  * 자체 제작 학습문항 (공식 기출 문장·이미지 미사용).
  * formatId는 examFormats.ts 기준. 전근대사≈60% / 근현대≈40% 목표.
  */
-export const questions: Question[] = [
+const authoredQuestions: Question[] = [
   // ─── 선사·고조선 ───
   {
     id: 'q-01',
@@ -36,7 +36,8 @@ export const questions: Question[] = [
   {
     id: 'q-02',
     stem: '다음 설명에 해당하는 국가로 옳은 것은?',
-    passage: '중국 군현과 대립·교류하며 성장하였고, 후기에 외부에서 들어온 세력이 왕위를 차지하였다. 사회 질서를 유지하기 위한 법령이 전해진다.',
+    passage:
+      '한의 요동군과 대립·교류하였고, 뒤에는 중국에서 이주해 온 위만이 왕위를 차지하였다. 사회 질서를 보여 주는 8조법의 일부가 전해진다.',
     choices: [
       '부여',
       '고조선',
@@ -45,7 +46,8 @@ export const questions: Question[] = [
       '삼한 소국 연맹',
     ],
     answerIndex: 1,
-    explanation: '후기 외부 세력 집권(위만)·법령 전승(8조법)·군현과의 관계는 고조선입니다. 오답은 인접 초기 국가입니다.',
+    explanation:
+      '요동군과의 관계, 위만의 집권, 8조법은 고조선의 특징입니다. 고조선 멸망 뒤 한은 그 영역 일부에 군현을 설치하였습니다.',
     era: 'prehistoric',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
@@ -428,16 +430,19 @@ export const questions: Question[] = [
   },
   {
     id: 'q-22',
-    stem: '조선 후기 사회 변동을 시기순에 가깝게 배열한 것은?',
+    stem: '(가)~(다)를 일어난 순서대로 바르게 배열한 것은?',
+    passage:
+      '(가) 대동법이 경기도에서 처음 시행되었다.\n(나) 군포 부담을 1년에 1필로 줄인 균역법이 시행되었다.\n(다) 평안도에서 홍경래의 난이 일어났다.',
     choices: [
-      '세도 정치 → 대동법 시행 → 실학의 등장',
-      '대동법의 확대 → 실학의 발달 → 세도 정치와 농민 봉기',
-      '균역법 → 임진왜란 → 대동법',
-      '실학 → 경국대전 완성 → 대동법',
-      '홍경래의 난 → 대동법 → 병자호란',
+      '(가) → (나) → (다)',
+      '(가) → (다) → (나)',
+      '(나) → (가) → (다)',
+      '(나) → (다) → (가)',
+      '(다) → (가) → (나)',
     ],
-    answerIndex: 1,
-    explanation: '대동법 확대·실학 후 세도·민란으로 이어집니다.',
+    answerIndex: 0,
+    explanation:
+      '대동법의 경기도 시행(1608) → 균역법 시행(1750) → 홍경래의 난(1811~1812) 순서입니다.',
     era: 'joseon-late',
     tags: ['chronology'],
     difficulty: 3,
@@ -792,7 +797,7 @@ export const questions: Question[] = [
     era: 'goryeo',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
-    lessonId: 'lesson-13',
+    lessonId: 'lesson-12',
     formatId: 'source-who',
     ...META,
   },
@@ -954,7 +959,7 @@ export const questions: Question[] = [
     era: 'goryeo',
     tags: ['political-system'],
     difficulty: 2,
-    lessonId: 'lesson-13',
+    lessonId: 'lesson-12',
     formatId: 'policy-content',
     ...META,
   },
@@ -962,7 +967,8 @@ export const questions: Question[] = [
   {
     id: 'q-49',
     stem: '다음 문화유산이 조성된 시기로 가장 적절한 것은?',
-    passage: '세계 최초의 금속활자본으로 알려진 불서가 간행되어 인쇄 기술사의 획기적 성과로 평가된다.',
+    passage:
+      '1377년 청주 흥덕사에서 간행된 불서로, 현존하는 세계 최고(最古)의 금속 활자 인쇄본으로 인정받는다.',
     choices: [
       '통일신라',
       '고려',
@@ -971,7 +977,8 @@ export const questions: Question[] = [
       '대한제국',
     ],
     answerIndex: 1,
-    explanation: '직지는 고려 시대입니다.',
+    explanation:
+      '직지는 고려 우왕 때 간행된 현존 세계 최고(最古)의 금속 활자 인쇄본입니다. 기록상 더 이른 금속 활자 인쇄물로는 『상정고금예문』이 있습니다.',
     era: 'culture',
     tags: ['cultural-heritage', 'source'],
     difficulty: 1,
@@ -1023,21 +1030,23 @@ export const questions: Question[] = [
   // ─── 고려 ───
   {
     id: 'q-52',
-    stem: '기인 제도에 대한 설명으로 옳은 것은?',
-    passage: '지방 세력의 자제를 도성에 머물게 하여 중앙이 지방을 견제하려 하였다.',
+    stem: '다음 설명에 해당하는 고려의 제도로 옳은 것은?',
+    passage:
+      '태조는 지방 호족의 자제를 수도에 머물게 하여 출신 지역의 일을 자문하게 하고, 지방 세력을 견제하려 하였다.',
     choices: [
-      '고려의 기인 제도',
-      '신라의 녹읍',
-      '조선의 호패법',
-      '발해의 5경제',
-      '대한제국의 지방대',
+      '기인 제도',
+      '사심관 제도',
+      '음서 제도',
+      '12목 설치',
+      '전시과 제도',
     ],
     answerIndex: 0,
-    explanation: '기인은 고려의 지방 견제 제도입니다.',
+    explanation:
+      '기인 제도는 지방 호족의 자제를 수도에 머물게 한 제도입니다. 사심관 제도는 공신을 출신 지역의 사심관으로 임명한 제도입니다.',
     era: 'goryeo',
     tags: ['political-system', 'source'],
     difficulty: 2,
-    lessonId: 'lesson-13',
+    lessonId: 'lesson-12',
     formatId: 'policy-name',
     ...META,
   },
@@ -1158,7 +1167,7 @@ export const questions: Question[] = [
     era: 'colonial',
     tags: ['political-system', 'chronology'],
     difficulty: 2,
-    lessonId: 'lesson-15',
+    lessonId: 'lesson-17',
     formatId: 'cause-effect',
     ...META,
   },
@@ -1199,7 +1208,7 @@ export const questions: Question[] = [
     era: 'joseon-early',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
-    lessonId: 'lesson-14',
+    lessonId: 'lesson-06',
     formatId: 'source-who',
     ...META,
   },
@@ -1207,16 +1216,18 @@ export const questions: Question[] = [
   {
     id: 'q-61',
     stem: '다음 사건이 일어난 배경으로 적절한 것은?',
-    passage: '평안도 지역에서 대규모 농민 봉기가 일어나 세도 정치기 사회 모순을 드러냈다.',
+    passage:
+      '평안도에서 몰락 양반 홍경래를 중심으로 상인·광산 노동자·농민 등이 봉기하여 한때 청천강 이북 지역을 장악하였다.',
     choices: [
-      '삼정의 문란과 지역 차별에 대한 불만',
-      '갑신정변의 성공',
-      '대동법의 전국 시행 직후 반발',
-      '경국대전 반포에 대한 반발',
-      '임진왜란 직후의 왜군 잔당',
+      '세도 정치기의 수탈과 평안도 지역에 대한 차별',
+      '별무반 편성에 따른 농민의 군역 부담',
+      '신분제 폐지를 요구한 급진 개화파의 정변',
+      '일제의 토지 조사 사업에 따른 토지 상실',
+      '군국기무처가 추진한 조세 금납화에 대한 반발',
     ],
     answerIndex: 0,
-    explanation: '홍경래의 난은 세도·삼정·지역 모순과 연결됩니다.',
+    explanation:
+      '홍경래의 난은 세도 정치기의 수탈, 평안도 지역 차별, 상공업·광산 발달 속에서 성장한 세력의 불만 등이 결합해 일어났습니다.',
     era: 'joseon-late',
     tags: ['chronology', 'political-system'],
     difficulty: 2,
@@ -1381,7 +1392,7 @@ export const questions: Question[] = [
     era: 'modern',
     tags: ['political-system', 'chronology'],
     difficulty: 2,
-    lessonId: 'lesson-16',
+    lessonId: 'lesson-10',
     formatId: 'policy-content',
     ...META,
   },
@@ -1470,16 +1481,19 @@ export const questions: Question[] = [
   // ─── 일제강점 ───
   {
     id: 'q-74',
-    stem: '의열단과 실력 양성 운동을 비교한 것으로 적절한 것은?',
+    stem: '(가), (나)의 독립운동 노선을 비교한 설명으로 옳은 것은?',
+    passage:
+      '(가) 김원봉 등이 조직하였으며, 신채호가 작성한 「조선 혁명 선언」을 활동 지침으로 삼았다.\n(나) 민립 대학 설립과 물산 장려를 통해 민족의 실력을 기르려 하였다.',
     choices: [
-      '의열단은 의열 투쟁, 실력 양성은 교육·산업 등에 비중을 두었다.',
-      '둘 다 갑신정변을 지도하였다.',
-      '둘 다 통감부 설치를 지지하였다.',
-      '의열단은 외교만, 실력 양성은 무장만 하였다.',
-      '둘 다 6월 항쟁을 주도하였다.',
+      '(가)는 일제 기관 파괴와 요인 처단을, (나)는 교육·산업 진흥을 중시하였다.',
+      '(가)는 외교 독립 청원을, (나)는 국외 독립군 기지 건설을 중시하였다.',
+      '(가)는 민족 유일당 결성을, (나)는 즉각적인 무장 봉기를 공통으로 추진하였다.',
+      '(가)는 자치론을 수용하였고, (나)는 일제의 황민화 정책에 협력하였다.',
+      '(가)와 (나)는 모두 대한민국 임시정부의 정규군으로 편성되었다.',
     ],
     answerIndex: 0,
-    explanation: '독립운동 노선 구분입니다.',
+    explanation:
+      '(가)는 의열단의 의열 투쟁, (나)는 교육과 산업을 통한 실력 양성 운동입니다.',
     era: 'colonial',
     tags: ['independence-org'],
     difficulty: 3,
@@ -1531,7 +1545,7 @@ export const questions: Question[] = [
   // ─── 문화사 ───
   {
     id: 'q-77',
-    stem: '밑줄 친 ㉠ 시기의 문화로 적절한 것은?',
+    stem: '밑줄 친 ㉠에 해당하는 시대로 옳은 것은?',
     passage: '㉠ 시대에는 청자가 발달하고 대장경 판각이 이루어졌다.',
     choices: [
       '고구려',
@@ -1565,7 +1579,7 @@ export const questions: Question[] = [
     era: 'goryeo',
     tags: ['chronology', 'source'],
     difficulty: 2,
-    lessonId: 'lesson-13',
+    lessonId: 'lesson-12',
     formatId: 'source-what',
     ...META,
   },
@@ -1616,15 +1630,15 @@ export const questions: Question[] = [
     id: 'q-81',
     stem: '신문왕 대의 제도 개혁과 관련된 설명으로 옳은 것은?',
     choices: [
-      '관료전을 지급하며 녹읍을 억제하려 한 흐름과 대비된다.',
-      '녹읍을 영구히 부활시켜 진골만 수조권을 주었다.',
-      '민정문서를 폐지하고 호구 파악을 중단하였다.',
-      '골품제를 폐지하여 6두품의 재상 진출을 허용하였다.',
-      '과거제를 도입하여 신진을 등용하였다.',
+      '관료전을 지급하고 녹읍을 폐지하여 귀족의 경제 기반을 약화하려 하였다.',
+      '독서삼품과를 실시하여 골품에 관계없이 관리를 선발하였다.',
+      '정전 지급을 폐지하고 귀족에게 식읍을 확대하였다.',
+      '화백 회의를 폐지하고 6두품만으로 집사부를 구성하였다.',
+      '지방의 5소경을 없애고 수도에만 주민을 거주하게 하였다.',
     ],
     answerIndex: 0,
     explanation:
-      '통일신라 신문왕 대 관료전·녹읍 억제 흐름입니다. 오답은 남북국·신라 제도 혼동입니다.',
+      '신문왕은 관료전을 지급하고 녹읍을 폐지하여 귀족 세력을 억제하고 왕권을 강화하려 하였습니다. 독서삼품과는 원성왕 때 실시되었습니다.',
     era: 'north-south',
     tags: ['political-system'],
     difficulty: 3,
@@ -1635,17 +1649,19 @@ export const questions: Question[] = [
   // ─── 일제강점 ───
   {
     id: 'q-82',
-    stem: '다음 단체가 추구한 노선으로 적절한 것은?',
-    passage: '무장 독립군을 조직하고 국내 진공 작전 등을 준비하며 광복군과 연계된 항일 투쟁을 이어갔다.',
+    stem: '다음 부대의 활동으로 옳은 것은?',
+    passage:
+      '대한민국 임시정부의 정규군으로 창설되었으며, 연합군과 공동 작전을 전개하고 국내 진공 작전을 준비하였다.',
     choices: [
-      '무장 투쟁 노선',
-      '개화 정변 노선',
-      '통감부 협력 노선',
-      '위정척사만의 노선',
-      '경제개발계획 노선',
+      '일부 대원이 인도·미얀마 전선에서 영국군과 공동 작전을 수행하였다.',
+      '홍범도의 지휘 아래 봉오동 전투에서 일본군을 격파하였다.',
+      '김좌진의 지휘 아래 청산리 일대에서 일본군과 교전하였다.',
+      '조선 총독부에 폭탄을 투척하는 의열 투쟁만을 전개하였다.',
+      '조선어 학회 사건을 계기로 우리말 큰사전 편찬을 중단하였다.',
     ],
     answerIndex: 0,
-    explanation: '광복군·독립군은 무장 투쟁 노선입니다.',
+    explanation:
+      '한국광복군은 연합군과 협력하였고, 인도·미얀마 전선에 공작대를 파견했으며 국내 진공 작전을 준비하였습니다.',
     era: 'colonial',
     tags: ['independence-org', 'source'],
     difficulty: 2,
@@ -1711,7 +1727,7 @@ export const questions: Question[] = [
     era: 'goryeo',
     tags: ['political-system', 'chronology'],
     difficulty: 2,
-    lessonId: 'lesson-13',
+    lessonId: 'lesson-12',
     formatId: 'policy-content',
     ...META,
   },
@@ -1793,7 +1809,7 @@ export const questions: Question[] = [
     era: 'colonial',
     tags: ['political-system'],
     difficulty: 2,
-    lessonId: 'lesson-15',
+    lessonId: 'lesson-17',
     formatId: 'policy-content',
     ...META,
   },
@@ -1814,7 +1830,7 @@ export const questions: Question[] = [
     era: 'colonial',
     tags: ['chronology', 'source'],
     difficulty: 3,
-    lessonId: 'lesson-15',
+    lessonId: 'lesson-17',
     formatId: 'chronology-labeled',
     ...META,
   },
@@ -1822,18 +1838,19 @@ export const questions: Question[] = [
     id: 'q-91',
     stem: '산미 증식 계획의 영향으로 적절한 것은?',
     choices: [
-      '미곡 수탈이 강화되어 농민 생활이 어려워지는 측면이 있었다.',
-      '한국인 지주에게만 유리한 토지 개혁이 완성되었다.',
-      '을사늑약이 즉시 폐기되었다.',
-      '갑오개혁이 다시 시작되었다.',
-      '임시정부가 국내에 합법 이전하였다.',
+      '증산량을 웃도는 쌀이 일본으로 반출되고 수리 조합 비용 등이 농민에게 전가되었다.',
+      '무상 토지 분배가 실시되어 자작농이 크게 늘어났다.',
+      '회사령이 강화되어 한국인의 기업 설립이 전면 금지되었다.',
+      '농촌 진흥 운동이 중단되고 모든 소작료가 법으로 폐지되었다.',
+      '일본인의 쌀 소비가 줄면서 조선의 쌀값이 장기간 안정되었다.',
     ],
     answerIndex: 0,
-    explanation: '산미 증식 계획은 식민지 미곡 수탈과 연결됩니다.',
+    explanation:
+      '산미 증식 계획 아래 쌀의 일본 반출이 크게 늘었고, 수리 조합비와 비료 대금 등의 부담이 농민에게 전가되어 생활이 악화되었습니다.',
     era: 'colonial',
     tags: ['political-system', 'chronology'],
     difficulty: 2,
-    lessonId: 'lesson-15',
+    lessonId: 'lesson-17',
     formatId: 'cause-effect',
     ...META,
   },
@@ -1890,7 +1907,7 @@ export const questions: Question[] = [
     era: 'modern',
     tags: ['political-system', 'chronology'],
     difficulty: 1,
-    lessonId: 'lesson-16',
+    lessonId: 'lesson-10',
     formatId: 'policy-content',
     ...META,
   },
@@ -1994,14 +2011,15 @@ export const questions: Question[] = [
     id: 'q-100',
     stem: '제헌 헌법에 대한 설명으로 옳은 것은?',
     choices: [
-      '1948년 정부 수립과 함께 제정된 헌법이다.',
+      '1948년 7월 17일 공포되었고, 이에 따라 같은 해 8월 15일 정부 수립이 선포되었다.',
       '1987년 직선제 개헌으로 처음 제정되었다.',
       '을사늑약과 동시에 반포되었다.',
       '경국대전의 다른 이름이다.',
       '대한국 국제를 계승한 황실 헌법이다.',
     ],
     answerIndex: 0,
-    explanation: '제헌 헌법은 1948년 정부 수립과 연결됩니다.',
+    explanation:
+      '제헌 헌법은 1948년 7월 17일 공포되었고, 이를 토대로 8월 15일 대한민국 정부 수립이 선포되었습니다.',
     era: 'modern',
     tags: ['political-system', 'chronology'],
     difficulty: 1,
@@ -2011,6 +2029,23 @@ export const questions: Question[] = [
   },
 
 ]
+
+/**
+ * 저작 단계의 정답 위치 편향이 풀이 단서가 되지 않도록 문항 ID 순서대로
+ * 정답을 1~5번에 균등 배치한다. 선지 내용과 정답 자체는 바꾸지 않는다.
+ */
+function balanceAnswerPosition(question: Question, targetIndex: number): Question {
+  if (question.answerIndex === targetIndex) return question
+  const answer = question.choices[question.answerIndex]
+  if (answer == null) return question
+  const choices = question.choices.filter((_, index) => index !== question.answerIndex)
+  choices.splice(targetIndex, 0, answer)
+  return { ...question, choices, answerIndex: targetIndex }
+}
+
+export const questions: Question[] = authoredQuestions.map((question, index) =>
+  balanceAnswerPosition(question, index % 5),
+)
 
 export function difficultyDistribution(list: Question[] = questions) {
   const counts = { 1: 0, 2: 0, 3: 0 }

@@ -6,7 +6,7 @@ import type { FlashcardRecord } from '../types'
 import { db } from './database'
 
 /** 카드·단원 확장 시 올려 기존 IndexedDB에 새 카드를 보강한다 */
-export const CONTENT_VERSION = 2
+export const CONTENT_VERSION = 3
 
 export function seedCards(today = toDateKey()): FlashcardRecord[] {
   return flashcardSeeds.map((seed, index) => {
@@ -24,6 +24,22 @@ export function seedCards(today = toDateKey()): FlashcardRecord[] {
       fromWrongAnswer: false,
     }
   })
+}
+
+/** 시드 문구는 갱신하되 사용자의 복습 일정과 성취 기록은 보존한다. */
+export function mergeSeedCard(
+  existing: FlashcardRecord,
+  seeded: FlashcardRecord,
+): FlashcardRecord {
+  return {
+    ...existing,
+    front: seeded.front,
+    back: seeded.back,
+    kind: seeded.kind,
+    era: seeded.era,
+    tags: seeded.tags,
+    fingerprint: seeded.fingerprint,
+  }
 }
 
 export async function ensureSeeded(): Promise<void> {
@@ -58,9 +74,12 @@ export async function ensureSeeded(): Promise<void> {
       if (cardCount === 0) {
         await db.cards.bulkPut(seedCards(today))
       } else if (needsContentBump) {
-        const existing = new Set((await db.cards.toArray()).map((c) => c.id))
-        const fresh = seedCards(today).filter((c) => !existing.has(c.id))
-        if (fresh.length) await db.cards.bulkPut(fresh)
+        const existing = new Map((await db.cards.toArray()).map((card) => [card.id, card]))
+        const refreshed = seedCards(today).map((seeded) => {
+          const current = existing.get(seeded.id)
+          return current ? mergeSeedCard(current, seeded) : seeded
+        })
+        await db.cards.bulkPut(refreshed)
       }
       if (!meta) {
         await db.meta.put({

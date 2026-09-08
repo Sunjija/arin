@@ -4,6 +4,8 @@ import {
   questions,
   validateQuestionBank,
 } from '../data/questions'
+import { flashcardSeeds } from './cards'
+import { lessons } from './lessons'
 
 describe('question bank quality', () => {
   it('has at least 80 items with 5 choices and valid answers', () => {
@@ -44,5 +46,36 @@ describe('question bank quality', () => {
     expect(tags.filter((t) => t === 'chronology').length).toBeGreaterThanOrEqual(8)
     expect(tags.filter((t) => t === 'king-figure').length).toBeGreaterThanOrEqual(10)
     expect(tags.filter((t) => t === 'source').length).toBeGreaterThanOrEqual(10)
+  })
+
+  it('distributes correct answers evenly across all five positions', () => {
+    const counts = Array.from({ length: 5 }, () => 0)
+    questions.forEach((question) => {
+      counts[question.answerIndex] += 1
+    })
+    expect(counts).toEqual([20, 20, 20, 20, 20])
+  })
+
+  it('connects every question to a lesson from the same era', () => {
+    const lessonById = new Map(lessons.map((lesson) => [lesson.id, lesson]))
+    questions.forEach((question) => {
+      const lesson = question.lessonId ? lessonById.get(question.lessonId) : undefined
+      expect(lesson, `${question.id} lesson`).toBeDefined()
+      expect(lesson?.era, `${question.id} era`).toBe(question.era)
+    })
+  })
+
+  it('keeps corrected historical wording in critical content', () => {
+    const q49 = questions.find((question) => question.id === 'q-49')
+    const q81 = questions.find((question) => question.id === 'q-81')
+    const q100 = questions.find((question) => question.id === 'q-100')
+    const c91 = flashcardSeeds.find((card) => card.id === 'c-91')
+
+    expect(q49?.passage).toContain('현존')
+    expect(q49?.passage).not.toContain('세계 최초')
+    expect(q81?.choices[q81.answerIndex]).toContain('녹읍을 폐지')
+    expect(q100?.choices[q100.answerIndex]).toContain('7월 17일')
+    expect(c91?.back).not.toContain('한국전쟁 종료')
+    expect(c91?.back).toContain('정전 체제')
   })
 })

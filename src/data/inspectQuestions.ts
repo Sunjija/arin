@@ -5,6 +5,7 @@ import {
   type ExamFormatId,
   type ExamFormatSpec,
 } from './examFormats'
+import { lessons } from './lessons'
 import { questions as bank } from './questions'
 
 export type Severity = 'error' | 'warn' | 'info'
@@ -22,6 +23,7 @@ export interface InspectionReport {
   total: number
   findings: InspectionFinding[]
   formatCounts: Partial<Record<ExamFormatId, number>>
+  answerPositionCounts: number[]
   summary: {
     errors: number
     warns: number
@@ -214,11 +216,78 @@ export function inspectQuestion(q: Question, format?: ExamFormatSpec): Inspectio
 export function inspectQuestionBank(list: Question[] = bank): InspectionReport {
   const findings: InspectionFinding[] = []
   const formatCounts: Partial<Record<ExamFormatId, number>> = {}
+  const answerPositionCounts = Array.from({ length: 5 }, () => 0)
+  const lessonById = new Map(lessons.map((lesson) => [lesson.id, lesson]))
+  const seenPrompts = new Map<string, string>()
 
   for (const q of list) {
     const guess = guessFormat(q)
     formatCounts[guess] = (formatCounts[guess] ?? 0) + 1
+    if (q.answerIndex >= 0 && q.answerIndex < answerPositionCounts.length) {
+      answerPositionCounts[q.answerIndex] += 1
+    }
     findings.push(...inspectQuestion(q))
+
+    const lesson = q.lessonId ? lessonById.get(q.lessonId) : undefined
+    if (!q.lessonId || !lesson) {
+      findings.push({
+        questionId: q.id,
+        severity: 'error',
+        code: 'LESSON_NOT_FOUND',
+        message: `연결 단원 ${q.lessonId ?? '(없음)'}을 찾을 수 없음`,
+        formatGuess: guess,
+      })
+    } else if (lesson.era !== q.era) {
+      findings.push({
+        questionId: q.id,
+        severity: 'error',
+        code: 'LESSON_ERA_MISMATCH',
+        message: `문항 시대(${q.era})와 단원 시대(${lesson.era})가 다름`,
+        formatGuess: guess,
+      })
+    }
+
+    const promptKey = normalize(`${q.stem}\n${q.passage ?? ''}`).replace(/[.,!?'"“”‘’·~()㉠-㉿]/g, '')
+    const duplicateOf = seenPrompts.get(promptKey)
+    if (duplicateOf) {
+      findings.push({
+        questionId: q.id,
+        severity: 'warn',
+        code: 'DUPLICATE_PROMPT',
+        message: `${duplicateOf}와 질문·지문이 중복됨`,
+        formatGuess: guess,
+      })
+    } else {
+      seenPrompts.set(promptKey, q.id)
+    }
+  }
+
+  const targetTotal = Object.values(TARGET_FORMAT_MIX).reduce(
+    (sum, target) => sum + (target ?? 0),
+    0,
+  )
+  if (targetTotal !== 100) {
+    findings.push({
+      questionId: 'BANK',
+      severity: 'error',
+      code: 'TARGET_MIX_TOTAL',
+      message: `포맷 목표 합계가 ${targetTotal}임 (100 필요)`,
+    })
+  }
+
+  const idealAnswersPerPosition = list.length / answerPositionCounts.length
+  const answerPositionTolerance = Math.max(2, Math.ceil(list.length * 0.05))
+  if (
+    answerPositionCounts.some(
+      (count) => Math.abs(count - idealAnswersPerPosition) > answerPositionTolerance,
+    )
+  ) {
+    findings.push({
+      questionId: 'BANK',
+      severity: 'error',
+      code: 'ANSWER_POSITION_SKEW',
+      message: `정답 위치 분포가 치우침 (${answerPositionCounts.join('/')})`,
+    })
   }
 
   const errors = findings.filter((f) => f.severity === 'error').length
@@ -228,7 +297,7 @@ export function inspectQuestionBank(list: Question[] = bank): InspectionReport {
 
   const recommendations: string[] = []
   if (errors > 0) {
-    recommendations.push('PASSAGE_COPY / NAME_IN_PASSAGE 오류 문항을 우선 재작성할 것')
+    recommendations.push('error 등급 문항·은행 무결성 문제를 우선 수정할 것')
   }
   recommendations.push('신규 문항은 examFormats.ts의 formatId를 먼저 고른 뒤 작성할 것')
   recommendations.push('오답은 인접 시대·유사 제도·혼동 인물로만 구성할 것')
@@ -247,6 +316,7 @@ export function inspectQuestionBank(list: Question[] = bank): InspectionReport {
     total: list.length,
     findings,
     formatCounts,
+    answerPositionCounts,
     summary: { errors, warns, infos, aiSmellScore },
     recommendations: [...new Set(recommendations)],
   }
@@ -265,6 +335,11 @@ export function formatReportText(report: InspectionReport): string {
   for (const [id, count] of Object.entries(report.formatCounts).sort()) {
     lines.push(`- ${id}: ${count}`)
   }
+  lines.push('')
+  lines.push('## 정답 위치 분포')
+  report.answerPositionCounts.forEach((count, index) => {
+    lines.push(`- ${index + 1}번: ${count}`)
+  })
   lines.push('')
   lines.push('## 파인딩')
   if (report.findings.length === 0) lines.push('- (없음)')

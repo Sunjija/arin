@@ -53,7 +53,7 @@ export const flashcardSeeds: FlashcardSeed[] = [
   {
     id: 'c-07',
     front: '삼별초',
-    back: '대몽항쟁 군사. 개경 환도에 반대하여 항쟁',
+    back: '최우 정권의 군사 조직에서 출발. 개경 환도에 반대하여 진도·제주로 이동하며 항쟁',
     kind: 'concept',
     era: 'goryeo',
     tags: ['chronology'],
@@ -367,7 +367,7 @@ export const flashcardSeeds: FlashcardSeed[] = [
   {
     id: 'c-46',
     front: '부여·옥저·동예·삼한',
-    back: '초기국가·연맹체. 소도·제가 등 지역 사회 특징',
+    back: '부여=사출도·영고 / 옥저=민며느리제 / 동예=책화·무천 / 삼한=소도·천군',
     kind: 'concept',
     era: 'prehistoric',
     tags: ['political-system'],
@@ -709,7 +709,7 @@ export const flashcardSeeds: FlashcardSeed[] = [
   {
     id: 'c-87',
     front: '산미증식계획',
-    back: '일제 식량·토지 수탈 정책 (문화통치기~)',
+    back: '쌀 증산을 내세웠으나 일본 반출과 수리 조합비·소작 부담이 늘어 농민 생활 악화',
     kind: 'concept',
     era: 'colonial',
     tags: ['political-system'],
@@ -743,7 +743,7 @@ export const flashcardSeeds: FlashcardSeed[] = [
   {
     id: 'c-91',
     front: '6·25전쟁 → 휴전협정(1953)',
-    back: '한국전쟁 종료. 분단 고착화',
+    back: '전투 중지와 정전 체제 성립. 평화 조약이 아니므로 전쟁이 법적으로 종결된 것은 아님',
     kind: 'chronology',
     era: 'modern',
     tags: ['chronology'],

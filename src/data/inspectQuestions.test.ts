@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { writeFileSync, mkdirSync } from 'node:fs'
-import { EXAM_FORMATS } from './examFormats'
+import { EXAM_FORMATS, TARGET_FORMAT_MIX } from './examFormats'
 import { formatReportText, inspectQuestionBank } from './inspectQuestions'
 
 describe('exam format catalog', () => {
@@ -14,15 +14,22 @@ describe('exam format catalog', () => {
 describe('question inspection agent', () => {
   it('produces a report and writes artifacts', () => {
     const report = inspectQuestionBank()
-    expect(report.total).toBeGreaterThanOrEqual(30)
-    expect(report.summary).toBeDefined()
+    expect(report.total).toBeGreaterThanOrEqual(100)
+    expect(report.findings.filter((finding) => finding.severity === 'error')).toEqual([])
+    expect(report.answerPositionCounts).toEqual([20, 20, 20, 20, 20])
 
     mkdirSync('artifacts', { recursive: true })
     const text = formatReportText(report)
     writeFileSync('artifacts/question-inspection-report.md', text)
     writeFileSync('artifacts/question-inspection-report.json', JSON.stringify(report, null, 2))
 
-    // 검사 파이프라인 자체는 통과. 품질 이슈는 리포트로 추적.
-    expect(report.findings.length).toBeGreaterThanOrEqual(0)
+  })
+
+  it('uses a format target mix that totals 100 percent', () => {
+    const total = Object.values(TARGET_FORMAT_MIX).reduce(
+      (sum, target) => sum + (target ?? 0),
+      0,
+    )
+    expect(total).toBe(100)
   })
 })
