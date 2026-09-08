@@ -55,6 +55,12 @@ export function unansweredNumbers(answers: Array<number | null>): number[] {
   return unansweredIndexes(answers).map((index) => index + 1)
 }
 
+export function nextAction(currentIndex: number, total: number): 'confirm' | { index: number } {
+  if (total <= 0) return 'confirm'
+  if (currentIndex >= total - 1) return 'confirm'
+  return { index: currentIndex + 1 }
+}
+
 export function applyChoice(
   answers: Array<number | null>,
   index: number,
