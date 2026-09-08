@@ -44,14 +44,16 @@ export function buildCardChoiceSet(
   const distractors = uniqueStrings(
     pool
       .filter((c) => c.id !== card.id)
-      .filter((c) => c.kind === card.kind || c.era === card.era)
+      // 뒷면이 같은 의미 단위인 카드만 사용한다.
+      // 같은 시대라는 이유로 왕 이름과 업적 문구를 한 선택지 세트에 섞지 않는다.
+      .filter((c) => c.kind === card.kind)
       .map((c) => c.back.trim())
       .filter((text) => text.length > 0 && normalize(text) !== normalize(correct)),
   )
 
   if (distractors.length < 3) {
     for (const c of pool) {
-      if (c.id === card.id) continue
+      if (c.id === card.id || c.kind !== card.kind) continue
       const text = c.back.trim()
       if (!text || normalize(text) === normalize(correct)) continue
       if (!distractors.some((d) => normalize(d) === normalize(text))) {
@@ -113,11 +115,16 @@ function normalize(text: string): string {
 }
 
 function fallbackDistractor(card: FlashcardRecord, index: number): string {
-  const samples = [
-    '다른 시대의 유사 제도·인물',
-    '순서가 바뀐 사건 설명',
-    '이름이 비슷한 다른 왕·인물',
-    '목적만 같고 정책은 다른 사례',
-  ]
-  return `${samples[index % samples.length]} (${card.era})`
+  const samples: Record<CardKind, string[]> = {
+    'king-to-deed': [
+      '같은 시대 다른 인물의 정책',
+      '목적은 비슷하지만 다른 제도',
+      '시기가 다른 대표 업적',
+    ],
+    'deed-to-king': ['같은 시대의 다른 왕', '정책을 건의한 다른 인물', '시기가 다른 군주'],
+    chronology: ['앞뒤가 바뀐 사건 순서', '중간 사건이 빠진 순서', '시기가 다른 사건 흐름'],
+    concept: ['적용 시기가 다른 제도', '목적이 다른 유사 개념', '결과가 다른 정책 설명'],
+  }
+  const options = samples[card.kind]
+  return `${options[index % options.length]} (${card.era})`
 }

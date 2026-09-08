@@ -36,6 +36,54 @@ describe('buildCardChoiceSet', () => {
     expect(set.kindLabel).toBe('왕 → 업적')
     expect(set.prompt).toBe('광종')
   })
+
+  it('does not mix person-name answers into a king-to-deed choice set', () => {
+    const target = card({ id: '1', front: '고려 성종', back: '12목 설치' })
+    const pool = [
+      target,
+      card({
+        id: 'reverse',
+        front: '노비안검법',
+        back: '고려 광종',
+        kind: 'deed-to-king',
+      }),
+      card({ id: '2', front: '고려 광종', back: '노비안검법' }),
+      card({ id: '3', front: '고려 공민왕', back: '전민변정도감 설치' }),
+      card({ id: '4', front: '고려 태조', back: '사심관 제도 실시' }),
+    ]
+
+    const set = buildCardChoiceSet(target, pool, () => 0.2)
+
+    expect(set.ask).toContain('대표 업적')
+    expect(set.choices).not.toContain('고려 광종')
+    expect(set.choices.every((choice) => choice !== '고려 광종')).toBe(true)
+  })
+
+  it('keeps deed-to-king choices as person names', () => {
+    const target = card({
+      id: '1',
+      front: '노비안검법 · 과거제',
+      back: '고려 광종',
+      kind: 'deed-to-king',
+    })
+    const pool = [
+      target,
+      card({ id: '2', front: '12목 설치', back: '고려 성종', kind: 'deed-to-king' }),
+      card({
+        id: '3',
+        front: '전민변정도감',
+        back: '고려 공민왕',
+        kind: 'deed-to-king',
+      }),
+      card({ id: '4', front: '훈요 10조', back: '고려 태조', kind: 'deed-to-king' }),
+    ]
+
+    const set = buildCardChoiceSet(target, pool, () => 0.2)
+
+    expect(set.ask).toContain('인물')
+    expect(set.choices[set.answerIndex]).toBe('고려 광종')
+    expect(set.choices.every((choice) => choice.startsWith('고려 '))).toBe(true)
+  })
 })
 
 describe('ratingFromQuizResult', () => {
