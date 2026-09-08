@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { db } from '../db/database'
 import { downloadJson, exportAllData, importAllData } from '../db/backup'
 import { clearAllLearningData, restoreSampleData } from '../db/seed'
+import { MAX_DAILY_CARDS, MIN_DAILY_CARDS, normalizeDailyCardCount } from '../lib/studyLimits'
 import {
   ALL_TYPES,
   TYPE_LABELS,
@@ -10,6 +11,10 @@ import {
   type UserSettings,
 } from '../types'
 import { toDateKey } from '../lib/dates'
+
+function settingsForForm(settings: UserSettings): UserSettings {
+  return { ...settings, dailyCardCount: normalizeDailyCardCount(settings.dailyCardCount) }
+}
 
 export function SettingsPage() {
   const [settings, setSettings] = useState<UserSettings | null>(null)
@@ -20,7 +25,7 @@ export function SettingsPage() {
     void db.settings.get('settings').then((row) => {
       if (!row) return
       const { id: _id, ...rest } = row
-      setSettings(rest)
+      setSettings(settingsForForm(rest))
     })
   }, [])
 
@@ -28,7 +33,9 @@ export function SettingsPage() {
     if (!settings) return
     setBusy(true)
     try {
-      await db.settings.put({ id: 'settings', ...settings })
+      const normalized = settingsForForm(settings)
+      await db.settings.put({ id: 'settings', ...normalized })
+      setSettings(normalized)
       setMessage('설정을 저장했습니다.')
     } finally {
       setBusy(false)
@@ -68,7 +75,7 @@ export function SettingsPage() {
       const row = await db.settings.get('settings')
       if (row) {
         const { id: _id, ...rest } = row
-        setSettings(rest)
+        setSettings(settingsForForm(rest))
       }
       setMessage('가져오기가 완료되었습니다.')
     } catch (e) {
@@ -115,10 +122,15 @@ export function SettingsPage() {
             <input
               className="w-full rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2"
               type="number"
-              min={3}
-              max={30}
+              min={MIN_DAILY_CARDS}
+              max={MAX_DAILY_CARDS}
               value={settings.dailyCardCount}
-              onChange={(e) => setSettings({ ...settings, dailyCardCount: Number(e.target.value) })}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  dailyCardCount: normalizeDailyCardCount(Number(e.target.value)),
+                })
+              }
             />
           </Field>
           <Field label="하루 학습 시간(분)">
@@ -201,7 +213,7 @@ export function SettingsPage() {
                 const row = await db.settings.get('settings')
                 if (row) {
                   const { id: _id, ...rest } = row
-                  setSettings(rest)
+                  setSettings(settingsForForm(rest))
                 }
                 setMessage('샘플 데이터로 복원했습니다.')
               } finally {
@@ -223,7 +235,7 @@ export function SettingsPage() {
                 const row = await db.settings.get('settings')
                 if (row) {
                   const { id: _id, ...rest } = row
-                  setSettings(rest)
+                  setSettings(settingsForForm(rest))
                 }
                 setMessage('학습 데이터를 초기화했습니다.')
               } finally {

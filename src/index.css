@@ -204,6 +204,12 @@ select {
   color: var(--accent);
 }
 
+.progress-step.locked {
+  opacity: 0.62;
+  border: 1px dashed var(--line);
+  background: transparent;
+}
+
 .flashcard {
   min-height: 220px;
   display: flex;

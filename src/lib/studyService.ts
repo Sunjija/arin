@@ -11,6 +11,7 @@ import {
   isStableZone,
 } from './scoreEstimate'
 import { calculateNextInterval } from './spacedRepetition'
+import { MAX_DAILY_CARDS, normalizeDailyCardCount } from './studyLimits'
 import { db } from '../db/database'
 import type {
   ActiveSession,
@@ -52,6 +53,41 @@ export interface TodayPlan {
   todayDone: boolean
 }
 
+export function normalizeResumedSession(session: ActiveSession): ActiveSession {
+  let normalized = session
+
+  if (session.step === 'cards' && session.cardIds.length > MAX_DAILY_CARDS) {
+    const remainingCardIds = session.cardIds.slice(
+      session.cardIndex,
+      session.cardIndex + MAX_DAILY_CARDS,
+    )
+    normalized = {
+      ...normalized,
+      step: remainingCardIds.length > 0 ? 'cards' : 'concept',
+      cardIds: remainingCardIds,
+      cardIndex: 0,
+    }
+  }
+
+  if (
+    normalized.step === 'quiz' &&
+    (normalized.quizPhase === 'stem' ||
+      normalized.quizPhase === 'era' ||
+      normalized.quizPhase === 'clue')
+  ) {
+    normalized = {
+      ...normalized,
+      quizPhase: 'choices',
+      revealedChoices: true,
+    }
+  }
+
+  if (normalized !== session) {
+    normalized.updatedAt = new Date().toISOString()
+  }
+  return normalized
+}
+
 export async function getSettings(): Promise<UserSettings> {
   const row = await db.settings.get('settings')
   if (!row) throw new Error('설정이 없습니다.')
@@ -83,10 +119,11 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     lessons[Math.min(week - 1, lessons.length - 1)] ??
     lessons[0]
 
+  const dailyCardCount = normalizeDailyCardCount(settings.dailyCardCount)
   const dueCards = cards
     .filter((c) => isDue(c.nextReviewAt, today))
     .sort((a, b) => a.nextReviewAt.localeCompare(b.nextReviewAt))
-    .slice(0, settings.dailyCardCount)
+    .slice(0, dailyCardCount)
 
   const mockScores = mocks.map((m) => m.score)
   const fromMocks = estimateScoreFromMocks(mockScores)
@@ -109,7 +146,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
 
   const parts = [
     studyDay?.conceptDone ? 1 : 0,
-    studyDay ? Math.min(1, studyDay.cardsReviewed / Math.max(1, settings.dailyCardCount)) : 0,
+    studyDay ? Math.min(1, studyDay.cardsReviewed / dailyCardCount) : 0,
     studyDay
       ? Math.min(1, studyDay.questionsAnswered / Math.max(1, settings.dailyQuestionCount))
       : 0,
@@ -142,20 +179,11 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
 export async function startOrResumeSession(today = toDateKey()): Promise<ActiveSession> {
   const existing = await db.activeSession.toCollection().first()
   if (existing && existing.date === today && existing.step !== 'result') {
-    if (
-      existing.step === 'quiz' &&
-      (existing.quizPhase === 'stem' || existing.quizPhase === 'era' || existing.quizPhase === 'clue')
-    ) {
-      const normalized = {
-        ...existing,
-        quizPhase: 'choices' as const,
-        revealedChoices: true,
-        updatedAt: new Date().toISOString(),
-      }
+    const normalized = normalizeResumedSession(existing)
+    if (normalized !== existing) {
       await db.activeSession.put(normalized)
-      return normalized
     }
-    return existing
+    return normalized
   }
 
   const plan = await buildTodayPlan(today)

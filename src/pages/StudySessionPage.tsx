@@ -14,8 +14,9 @@ import {
   sessionAnswerStats,
   startOrResumeSession,
 } from '../lib/studyService'
+import { MAX_DAILY_CARDS } from '../lib/studyLimits'
 import { db } from '../db/database'
-import type { ActiveSession, FlashcardRecord } from '../types'
+import type { ActiveSession, CardRating, FlashcardRecord } from '../types'
 
 export function StudySessionPage() {
   const [session, setSession] = useState<ActiveSession | null>(null)
@@ -88,7 +89,7 @@ export function StudySessionPage() {
             if (!card) return
             await rateCard(card.id, rating)
             let nextIds = [...session.cardIds]
-            if (requeue) {
+            if (requeue && nextIds.length < MAX_DAILY_CARDS) {
               const rest = nextIds.slice(session.cardIndex + 1)
               const insertAt = Math.min(rest.length, 2)
               rest.splice(insertAt, 0, card.id)
@@ -156,6 +157,11 @@ function CardsStep({
   const [choiceSet, setChoiceSet] = useState<CardChoiceSet | null>(null)
   const [selected, setSelected] = useState<number | null>(null)
   const [revealed, setRevealed] = useState(false)
+  const [pendingReview, setPendingReview] = useState<{
+    rating: CardRating
+    requeue: boolean
+  } | null>(null)
+  const [advancing, setAdvancing] = useState(false)
   const startedAt = useRef(Date.now())
 
   useEffect(() => {
@@ -166,6 +172,8 @@ function CardsStep({
     setChoiceSet(buildCardChoiceSet(card, pool.length ? pool : cards))
     setSelected(null)
     setRevealed(false)
+    setPendingReview(null)
+    setAdvancing(false)
     startedAt.current = Date.now()
   }, [card, pool, cards, session.cardIndex])
 
@@ -175,9 +183,7 @@ function CardsStep({
     setRevealed(true)
     const correct = index === choiceSet.answerIndex
     const rating = ratingFromQuizResult(correct, Date.now() - startedAt.current)
-    window.setTimeout(() => {
-      void onAdvance(rating, !correct)
-    }, 900)
+    setPendingReview({ rating, requeue: !correct })
   }
 
   useEffect(() => {
@@ -206,9 +212,30 @@ function CardsStep({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-[var(--ink-muted)]">
-        카드 {session.cardIndex + 1} / {session.cardIds.length} · {ERA_LABELS[card.era]} · {choiceSet.kindLabel}
-      </p>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3 text-sm text-[var(--ink-muted)]">
+          <span>
+            카드 {session.cardIndex + 1} / {session.cardIds.length}
+          </span>
+          <span>
+            {ERA_LABELS[card.era]} · {choiceSet.kindLabel}
+          </span>
+        </div>
+        <div
+          className="meter"
+          role="progressbar"
+          aria-label="카드 복습 진행률"
+          aria-valuemin={0}
+          aria-valuemax={session.cardIds.length}
+          aria-valuenow={session.cardIndex}
+        >
+          <span
+            style={{
+              width: `${Math.round((session.cardIndex / Math.max(1, session.cardIds.length)) * 100)}%`,
+            }}
+          />
+        </div>
+      </div>
       <div className="surface p-5">
         <p className="mb-2 text-sm font-medium text-[var(--accent)]">{choiceSet.ask}</p>
         <h1 className="font-display text-xl leading-relaxed sm:text-2xl">{choiceSet.prompt}</h1>
@@ -242,13 +269,36 @@ function CardsStep({
           )
         })}
       </div>
-      <p className="text-sm text-[var(--ink-muted)]">
+      <p className="text-sm text-[var(--ink-muted)]" aria-live="polite">
         {revealed
           ? selected === choiceSet.answerIndex
-            ? '정답입니다. 다음 카드로 이동합니다.'
-            : '틀렸습니다. 잠시 뒤 다시 같은 카드가 나옵니다.'
+            ? '정답입니다. 아래 버튼을 눌러 다음 카드로 이동하세요.'
+            : session.cardIds.length < MAX_DAILY_CARDS
+              ? '틀렸습니다. 이 세션 뒤쪽에서 한 번 더 확인합니다.'
+              : '틀렸습니다. 복습 일정에 다시 반영합니다.'
           : '번호 키(1–4)로도 고를 수 있습니다. 맞으면 간격이 늘고, 틀리면 곧 다시 복습합니다.'}
       </p>
+      {revealed && pendingReview ? (
+        <button
+          type="button"
+          className="btn btn-primary w-full"
+          disabled={advancing}
+          onClick={async () => {
+            setAdvancing(true)
+            try {
+              await onAdvance(pendingReview.rating, pendingReview.requeue)
+            } finally {
+              setAdvancing(false)
+            }
+          }}
+        >
+          {advancing
+            ? '저장 중…'
+            : session.cardIndex + 1 >= session.cardIds.length && !pendingReview.requeue
+              ? '카드 완료 · 개념 읽기로'
+              : '다음 카드'}
+        </button>
+      ) : null}
     </div>
   )
 }

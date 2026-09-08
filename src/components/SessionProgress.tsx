@@ -14,9 +14,15 @@ export function SessionProgress({ current }: { current: SessionStep }) {
     <div className="mb-4 space-y-2">
       <ol className="progress-rail" aria-label="학습 단계">
         {STEPS.map((step, i) => {
-          const state = i < idx ? 'done' : i === idx ? 'current' : ''
+          const state = i < idx ? 'done' : i === idx ? 'current' : 'locked'
           return (
-            <li key={step.id} className={`progress-step ${state}`}>
+            <li
+              key={step.id}
+              className={`progress-step ${state}`}
+              aria-current={i === idx ? 'step' : undefined}
+              aria-disabled={i > idx ? true : undefined}
+            >
+              {i < idx ? '✓ ' : i > idx ? '🔒 ' : ''}
               {step.label}
             </li>
           )
@@ -27,6 +33,11 @@ export function SessionProgress({ current }: { current: SessionStep }) {
         {' — '}
         {currentStep.hint}
       </p>
+      {idx < STEPS.length - 1 ? (
+        <p className="text-xs text-[var(--ink-muted)]">
+          학습 단계는 위 순서대로 완료하면 자동으로 열립니다.
+        </p>
+      ) : null}
     </div>
   )
 }
