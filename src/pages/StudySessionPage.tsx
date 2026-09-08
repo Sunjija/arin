@@ -81,6 +81,7 @@ export function StudySessionPage() {
       <SessionProgress current={session.step} />
       {session.step === 'cards' && (
         <CardsStep
+          key={`${session.cardIndex}-${cards[session.cardIndex]?.id ?? 'loading'}`}
           session={session}
           cards={cards}
           pool={allCards}
@@ -154,7 +155,9 @@ function CardsStep({
   onSkipToConcept: () => Promise<void>
 }) {
   const card = cards[session.cardIndex]
-  const [choiceSet, setChoiceSet] = useState<CardChoiceSet | null>(null)
+  const [choiceSet] = useState<CardChoiceSet | null>(() =>
+    card ? buildCardChoiceSet(card, pool.length ? pool : cards) : null,
+  )
   const [selected, setSelected] = useState<number | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [pendingReview, setPendingReview] = useState<{
@@ -162,20 +165,11 @@ function CardsStep({
     requeue: boolean
   } | null>(null)
   const [advancing, setAdvancing] = useState(false)
-  const startedAt = useRef(Date.now())
+  const startedAt = useRef(0)
 
   useEffect(() => {
-    if (!card) {
-      setChoiceSet(null)
-      return
-    }
-    setChoiceSet(buildCardChoiceSet(card, pool.length ? pool : cards))
-    setSelected(null)
-    setRevealed(false)
-    setPendingReview(null)
-    setAdvancing(false)
     startedAt.current = Date.now()
-  }, [card, pool, cards, session.cardIndex])
+  }, [])
 
   const submit = async (index: number) => {
     if (!choiceSet || revealed) return

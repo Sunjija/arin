@@ -30,7 +30,18 @@ export function CardsPage() {
   }
 
   useEffect(() => {
-    void load()
+    let active = true
+    void Promise.all([
+      db.cards.toArray(),
+      db.wrongAnswers.orderBy('createdAt').reverse().toArray(),
+    ]).then(([loadedCards, loadedWrong]) => {
+      if (!active) return
+      setCards(loadedCards)
+      setWrong(loadedWrong)
+    })
+    return () => {
+      active = false
+    }
   }, [])
 
   const today = toDateKey()
