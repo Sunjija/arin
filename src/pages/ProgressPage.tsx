@@ -1,101 +1,150 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { MasteryBar } from '../components/MasteryBar'
+import {
+  formatConsecutiveGoal,
+  formatFullMockAverage,
+  formatPracticeAccuracy,
+  initialWeakAreas,
+  mockModeLabel,
+  remainingWeakAreas,
+} from '../components/dashboard/progressCopy'
+import { PageHeader } from '../components/ui'
 import { getProgressSnapshot } from '../lib/studyService'
-import { ALL_ERAS, ALL_TYPES, ERA_LABELS, TYPE_LABELS, WRONG_CAUSE_LABELS, type WrongCause } from '../types'
+import { formatKoreanDate } from '../lib/dates'
+import type { ProgressSnapshot } from '../types'
 
 export function ProgressPage() {
-  const [data, setData] = useState<Awaited<ReturnType<typeof getProgressSnapshot>> | null>(null)
+  const [data, setData] = useState<ProgressSnapshot | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    void getProgressSnapshot().then(setData)
+    let alive = true
+    void getProgressSnapshot()
+      .then((snapshot) => {
+        if (alive) setData(snapshot)
+      })
+      .catch((e: unknown) => {
+        if (alive) setError(e instanceof Error ? e.message : '불러오기 실패')
+      })
+    return () => {
+      alive = false
+    }
   }, [])
 
-  if (!data) {
-    return <div className="surface p-5 text-[var(--ink-muted)]">진도를 불러오는 중…</div>
+  if (error) {
+    return (
+      <div className="surface p-5">
+        <p role="alert">{error}</p>
+      </div>
+    )
   }
 
+  if (!data) {
+    return <div className="surface p-5 text-[var(--ink-muted)]">기록을 불러오는 중…</div>
+  }
+
+  const summary = data.scoreSummary
+  const practice = formatPracticeAccuracy(summary)
+  const mockAverage = formatFullMockAverage(summary)
+  const consecutive = formatConsecutiveGoal(summary)
+  const weakOnScreen = initialWeakAreas(data.weakAreas)
+  const weakRest = remainingWeakAreas(data.weakAreas)
+  const recentMocks = summary.recentMocks.slice(0, 5)
+
   return (
-    <div className="space-y-5">
-      <header className="page-header">
-        <p className="eyebrow">학습 리포트</p>
-        <h1 className="page-title">진도 · 분석</h1>
-      </header>
+    <div className="max-w-[720px] space-y-4">
+      <PageHeader title="내 기록">
+        <p className="mt-3">
+          <Link to="/settings" className="btn btn-text">
+            설정
+          </Link>
+        </p>
+      </PageHeader>
 
       <section className="surface p-5">
-        <h2 className="section-title">이번 학습 제안</h2>
-        <p className="mt-2 leading-relaxed text-[var(--ink-muted)]">{data.advice}</p>
+        <h2 className="section-title">성적</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-xl bg-[var(--accent-soft)]/60 p-4">
-            <p className="text-sm text-[var(--ink-muted)]">예상 시험 점수</p>
-            <p className="text-2xl font-semibold">
-              {data.estimated}점
-              {data.scoreIsEstimate ? <span className="ml-2 text-sm font-normal">(연습 기반 추정)</span> : null}
-            </p>
-          </div>
-          <div className="rounded-xl bg-white/50 p-4">
-            <p className="text-sm text-[var(--ink-muted)]">85점 이상 연속</p>
-            <p className="text-2xl font-semibold">
-              {data.streak85}회{data.stable ? ' · 1급 안정권' : ''}
-            </p>
-          </div>
+          <MetricCard metric={practice} />
+          <MetricCard metric={mockAverage} />
+        </div>
+        <div className="mt-3 rounded-xl border border-[var(--line)] p-4">
+          <p className="meta-text">{consecutive.label}</p>
+          <p className="mt-1 text-xl font-semibold tracking-[-0.03em]">
+            {consecutive.value}
+            <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">{consecutive.detail}</span>
+          </p>
         </div>
       </section>
 
       <section className="surface p-5">
-        <h2 className="section-title">취약 영역 3개</h2>
-        <ul className="mt-3 space-y-2">
-          {data.weak.map((w) => (
-            <li key={w}>· {w}</li>
-          ))}
-        </ul>
-        <p className="mt-3 text-sm text-[var(--ink-muted)]">
-          최근 7일 정답률 {data.accuracy7}%
-          {data.topCause
-            ? ` · 잦은 오답 원인: ${WRONG_CAUSE_LABELS[data.topCause as WrongCause] ?? data.topCause}`
-            : ''}
-        </p>
-      </section>
-
-      <section className="surface space-y-3 p-5">
-        <h2 className="section-title">시대별 숙련도</h2>
-        {ALL_ERAS.map((era) => (
-          <MasteryBar key={era} label={ERA_LABELS[era]} value={data.mastery.eras[era]} />
-        ))}
-      </section>
-
-      <section className="surface space-y-3 p-5">
-        <h2 className="section-title">유형별 숙련도</h2>
-        {ALL_TYPES.map((type) => (
-          <MasteryBar key={type} label={TYPE_LABELS[type]} value={data.mastery.types[type]} />
-        ))}
-      </section>
-
-      <section className="surface p-5">
-        <h2 className="section-title">최근 모의고사</h2>
-        {data.mockScores.length === 0 ? (
-          <p className="mt-2 text-[var(--ink-muted)]">아직 모의고사 기록이 없습니다.</p>
+        <h2 className="section-title">취약 영역</h2>
+        {weakOnScreen.length === 0 ? (
+          <p className="mt-3 text-[var(--ink-muted)]">아직 기록 없음</p>
         ) : (
-          <ol className="mt-3 space-y-1">
-            {data.mockScores.map((score, i) => (
-              <li key={`${score}-${i}`}>
-                {i + 1}회차 전: {score}점
-              </li>
-            ))}
-          </ol>
-        )}
-        <h3 className="mt-4 font-semibold">최근 학습량</h3>
-        {data.recentStudy.length === 0 ? (
-          <p className="text-[var(--ink-muted)]">기록 없음</p>
-        ) : (
-          <ul className="mt-2 space-y-1 text-sm">
-            {data.recentStudy.slice(0, 7).map((d) => (
-              <li key={d.date}>
-                {d.date}: 문제 {d.questionsAnswered} · 카드 {d.cardsReviewed} · {d.minutesSpent}분
+          <ul className="mt-4 space-y-3">
+            {weakOnScreen.map((area) => (
+              <li key={`${area.kind}-${area.key}`}>
+                <MasteryBar
+                  label={area.label}
+                  value={area.accuracy ?? 0}
+                  detail={`${area.attemptCount}회`}
+                />
               </li>
             ))}
           </ul>
         )}
+        {weakRest.length > 0 ? (
+          <details className="mt-3">
+            <summary className="cursor-pointer text-sm font-semibold text-[var(--accent)]">
+              측정된 영역 더 보기
+            </summary>
+            <ul className="mt-3 space-y-3">
+              {weakRest.map((area) => (
+                <li key={`${area.kind}-${area.key}`}>
+                  <MasteryBar
+                    label={area.label}
+                    value={area.accuracy ?? 0}
+                    detail={`${area.attemptCount}회`}
+                  />
+                </li>
+              ))}
+            </ul>
+          </details>
+        ) : null}
       </section>
+
+      <section className="surface p-5">
+        <h2 className="section-title">최근 실전 연습</h2>
+        {recentMocks.length === 0 ? (
+          <p className="mt-2 text-[var(--ink-muted)]">아직 기록 없음</p>
+        ) : (
+          <ol className="mt-3 space-y-2">
+            {recentMocks.map((mock) => (
+              <li key={mock.id} className="flex justify-between gap-3 text-sm">
+                <span>
+                  {formatKoreanDate(mock.createdAt.slice(0, 10))} · {mockModeLabel(mock.mode)}
+                </span>
+                <span className="tabular-nums">{mock.score}점</span>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+    </div>
+  )
+}
+
+function MetricCard({
+  metric,
+}: {
+  metric: { label: string; value: string; detail: string | null }
+}) {
+  return (
+    <div className="rounded-xl border border-[var(--line)] p-4">
+      <p className="meta-text">{metric.label}</p>
+      <p className="mt-1 text-2xl font-semibold tracking-[-0.04em]">{metric.value}</p>
+      {metric.detail ? <p className="mt-1 text-sm text-[var(--ink-muted)]">{metric.detail}</p> : null}
     </div>
   )
 }
