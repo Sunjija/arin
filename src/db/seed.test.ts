@@ -94,6 +94,8 @@ describe('seed content migration', () => {
       true,
     )
     expect(due.some((item) => item.id === 'c-01')).toBe(false)
+    expect(due.some((item) => item.id === 'c-16')).toBe(true)
+    expect(due.some((item) => item.id === 'c-44')).toBe(false)
     expect(seeded.filter((item) => item.nextReviewAt > today)).toHaveLength(flashcardSeeds.length - 12)
   })
 })

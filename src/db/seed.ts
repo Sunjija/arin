@@ -1,23 +1,41 @@
 import { flashcardSeeds } from '../data/cards'
 import { defaultMastery, defaultSettings } from '../data/defaults'
 import { cardFingerprint } from '../lib/cardFingerprint'
+import { personKey } from '../lib/cardQuiz'
 import { addDays, toDateKey } from '../lib/dates'
-import type { EraId, FlashcardRecord } from '../types'
+import type { EraId, FlashcardRecord, FlashcardSeed } from '../types'
 import { db } from './database'
 
 /** 카드 일정 시드를 고치면 올려 기존 IndexedDB의 미복습 카드 일정을 맞춘다 */
-export const CONTENT_VERSION = 4
+export const CONTENT_VERSION = 5
 
 /** 첫날 복습이 비지 않을 만큼만 오늘 due로 둔다. */
 export const INITIAL_DUE_COUNT = 12
 const INITIAL_DUE_ERAS: EraId[] = ['prehistoric', 'three-kingdoms']
 
 export function initialDueSeedIds(
-  seeds: Array<{ id: string; era: EraId }> = flashcardSeeds,
+  seeds: Array<Pick<FlashcardSeed, 'id' | 'era' | 'kind' | 'front' | 'back'>> = flashcardSeeds,
 ): Set<string> {
-  const preferred = seeds.filter((seed) => INITIAL_DUE_ERAS.includes(seed.era))
-  const rest = seeds.filter((seed) => !INITIAL_DUE_ERAS.includes(seed.era))
-  return new Set([...preferred, ...rest].slice(0, INITIAL_DUE_COUNT).map((seed) => seed.id))
+  const ordered = [
+    ...seeds.filter((seed) => INITIAL_DUE_ERAS.includes(seed.era)),
+    ...seeds.filter((seed) => !INITIAL_DUE_ERAS.includes(seed.era)),
+  ]
+  const picked: typeof ordered = []
+  const seenPeople = new Set<string>()
+  for (const seed of ordered) {
+    if (picked.length >= INITIAL_DUE_COUNT) break
+    const person = personKeyForSeed(seed)
+    if (person && seenPeople.has(person)) continue
+    picked.push(seed)
+    if (person) seenPeople.add(person)
+  }
+  return new Set(picked.map((seed) => seed.id))
+}
+
+function personKeyForSeed(seed: Pick<FlashcardSeed, 'kind' | 'front' | 'back'>): string | null {
+  if (seed.kind === 'king-to-deed') return personKey(seed.front)
+  if (seed.kind === 'deed-to-king') return personKey(seed.back)
+  return null
 }
 
 export function seedCards(today = toDateKey()): FlashcardRecord[] {

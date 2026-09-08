@@ -57,16 +57,61 @@ export function buildCardChoiceSet(
 
   const correct = card.back.trim()
   const copy = KIND_COPY[card.kind]
+  const prompt = resolvePrompt(card, pool)
+  const ask = card.kind === 'deed-to-king' && prompt !== card.front.trim()
+    ? '다음 설명에 해당하는 인물은?'
+    : copy.ask
+
+  if (promptLeaksAnswer(prompt, correct)) {
+    return {
+      prompt,
+      ask,
+      kindLabel: copy.kindLabel,
+      mode: 'recall',
+      choices: [],
+      answerIndex: 0,
+      answerText: correct,
+    }
+  }
+
   const distractors = collectKindBacks(card, pool, random)
 
   return assembleChoices({
-    prompt: card.front,
-    ask: copy.ask,
+    prompt,
+    ask,
     kindLabel: copy.kindLabel,
     correct,
     distractors,
     random,
   })
+}
+
+/** 업적→왕 카드는 짝이 되는 왕→업적 뒷면(설명)을 문항으로 쓴다. */
+export function resolvePrompt(card: FlashcardRecord, pool: FlashcardRecord[]): string {
+  if (card.kind !== 'deed-to-king') return card.front.trim()
+  const pair = pool.find(
+    (item) =>
+      item.id !== card.id &&
+      item.kind === 'king-to-deed' &&
+      personKey(item.front) === personKey(card.back),
+  )
+  const fromPair = pair?.back.trim() ?? ''
+  if (fromPair.length > card.front.trim().length) return fromPair
+  return card.front.trim()
+}
+
+export function promptLeaksAnswer(prompt: string, answer: string): boolean {
+  const key = personKey(answer)
+  if (key.length < 2) return false
+  return normalize(prompt).includes(key)
+}
+
+export function personKey(text: string): string {
+  return text
+    .replace(/\(.*?\)/g, '')
+    .replace(/고려|조선|신라|고구려|백제|발해|후기/g, '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
 }
 
 export function parseComparison(card: FlashcardRecord): ComparisonPair | null {

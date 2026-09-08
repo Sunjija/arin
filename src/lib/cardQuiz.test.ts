@@ -89,6 +89,66 @@ describe('buildCardChoiceSet', () => {
     expect(set.choices.every((choice) => choice.startsWith('고려 '))).toBe(true)
   })
 
+  it('uses the paired king-to-deed description instead of a leaked cue like 위만조선 집권', () => {
+    const target = card({
+      id: 'c-44',
+      front: '위만조선 집권',
+      back: '위만',
+      kind: 'deed-to-king',
+      era: 'prehistoric',
+    })
+    const pool = [
+      target,
+      card({
+        id: 'c-16',
+        front: '위만',
+        back: '고조선 후기 집권. 중계 무역으로 세력 확대',
+        era: 'prehistoric',
+      }),
+      card({
+        id: 'c-09',
+        front: '불교 공인 (신라)',
+        back: '법흥왕',
+        kind: 'deed-to-king',
+        era: 'three-kingdoms',
+      }),
+      card({
+        id: 'c-19',
+        front: '발해 건국',
+        back: '대조영',
+        kind: 'deed-to-king',
+        era: 'north-south',
+      }),
+      card({
+        id: 'c-61',
+        front: '고려 건국',
+        back: '왕건',
+        kind: 'deed-to-king',
+      }),
+    ]
+
+    const set = buildCardChoiceSet(target, pool, () => 0.2)
+    expect(set.mode).toBe('choices')
+    expect(set.prompt).toBe('고조선 후기 집권. 중계 무역으로 세력 확대')
+    expect(set.prompt).not.toContain('위만')
+    expect(set.ask).toBe('다음 설명에 해당하는 인물은?')
+    expect(set.choices[set.answerIndex]).toBe('위만')
+  })
+
+  it('falls back to recall when the cue still names the answer', () => {
+    const target = card({
+      id: 'leaky',
+      front: '위만조선 집권',
+      back: '위만',
+      kind: 'deed-to-king',
+      era: 'prehistoric',
+    })
+    const set = buildCardChoiceSet(target, [target], () => 0.2)
+    expect(set.mode).toBe('recall')
+    expect(set.prompt).toBe('위만조선 집권')
+    expect(set.choices).toEqual([])
+  })
+
   it('turns comparison cards into swapped-pair questions instead of restating the title', () => {
     const target = card({
       id: 'c-05',
