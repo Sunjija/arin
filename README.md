@@ -3,6 +3,12 @@
 한 사람을 위한 **한국사능력검정시험 심화** 맞춤 학습 MVP입니다.  
 브라우저 IndexedDB에 학습 기록이 저장되며, 공식 기출 문장·이미지를 복사하지 않은 **자체 제작 학습문항**만 사용합니다.
 
+## 1차 개편 (진행 중)
+
+공통 UI·데이터 계약은 [`docs/parallel-redesign/contracts.md`](docs/parallel-redesign/contracts.md)를 따른다. 페이지 담당 지시문은 [`docs/parallel-redesign/README.md`](docs/parallel-redesign/README.md).
+
+전역 메뉴는 오늘 / 복습 / 자료실 / 실전 / 내 기록 5개다. 화면 숫자는 연습 정답률과 최근 실전 연습 평균으로 분리하며, 측정 전이면 비운다.
+
 ## 실행
 
 ```bash
