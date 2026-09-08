@@ -5,6 +5,7 @@ const links = [
   { to: '/', label: '오늘', end: true },
   { to: '/study', label: '학습' },
   { to: '/cards', label: '카드' },
+  { to: '/timeline', label: '연표' },
   { to: '/progress', label: '진도' },
   { to: '/mock', label: '모의' },
   { to: '/settings', label: '설정' },
