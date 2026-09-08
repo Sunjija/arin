@@ -7,9 +7,9 @@ export function LibraryPage() {
   const [query, update] = useLibraryQuery()
 
   return (
-    <div className="space-y-3 [&_.page-header]:mb-2">
+    <div className="space-y-2 [&_.page-header]:mb-0">
       <PageHeader title="자료실">
-        <div role="tablist" aria-label="자료실 구분" className="mt-3 flex gap-1">
+        <div role="tablist" aria-label="자료실 구분" className="mt-1 flex gap-1">
           <TabButton
             selected={query.tab === 'timeline'}
             onClick={() => update({ tab: 'timeline' })}
@@ -64,7 +64,9 @@ function TabButton({
       type="button"
       role="tab"
       aria-selected={selected}
-      className={`btn btn-text px-3 ${selected ? 'font-bold text-[var(--ink)]' : ''}`}
+      className={`btn btn-text rounded-none px-3 ${
+        selected ? 'font-bold text-[var(--accent)] shadow-[inset_0_-2px_0_0_var(--accent)]' : ''
+      }`}
       onClick={onClick}
     >
       {children}

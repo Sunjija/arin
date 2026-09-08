@@ -28,18 +28,18 @@ export function TimelineExplorer({
   const events = filterTimelineEvents(eventsByEra('all'), era, q, sort)
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <LibraryFilters
         era={era}
         q={q}
         sort={sort}
         searchLabel="연표 검색"
         searchPlaceholder="사건·연도 검색"
+        resultCount={events.length}
         onEraChange={onEraChange}
         onQueryChange={onQueryChange}
         onSortChange={onSortChange}
       />
-      <p className="meta-text">{events.length}건</p>
       {events.length === 0 ? (
         <EmptyResults
           title="해당하는 사건이 없습니다."

@@ -7,6 +7,7 @@ export function LibraryFilters({
   sort,
   searchLabel,
   searchPlaceholder,
+  resultCount,
   onEraChange,
   onQueryChange,
   onSortChange,
@@ -16,20 +17,26 @@ export function LibraryFilters({
   sort: LibrarySort
   searchLabel: string
   searchPlaceholder: string
+  resultCount: number
   onEraChange: (era: EraFilter) => void
   onQueryChange: (q: string) => void
   onSortChange: (sort: LibrarySort) => void
 }) {
   return (
     <div className="space-y-2">
-      <input
-        type="search"
-        className="field-control"
-        value={q}
-        onChange={(event) => onQueryChange(event.target.value)}
-        placeholder={searchPlaceholder}
-        aria-label={searchLabel}
-      />
+      <div className="flex items-center gap-2">
+        <input
+          type="search"
+          className="field-control min-w-0 flex-1"
+          value={q}
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder={searchPlaceholder}
+          aria-label={searchLabel}
+        />
+        <p className="meta-text shrink-0" aria-live="polite">
+          {resultCount}건
+        </p>
+      </div>
       <div className="grid grid-cols-2 gap-2 md:hidden">
         <select
           className="field-control"
