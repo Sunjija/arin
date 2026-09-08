@@ -72,7 +72,7 @@ export function ProgressPage() {
           <p className="meta-text">{consecutive.label}</p>
           <p className="mt-1 text-xl font-semibold tracking-[-0.03em]">
             {consecutive.value}
-            <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">{consecutive.detail}</span>
+            <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]"> · {consecutive.detail}</span>
           </p>
         </div>
       </section>
