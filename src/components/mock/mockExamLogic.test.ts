@@ -11,6 +11,7 @@ import {
   formatRemaining,
   fullMockAverageFromSummary,
   missedReviewIndexes,
+  nextAction,
   recentMocksForDisplay,
   remainingMs,
   resolveActiveMockAction,
@@ -120,6 +121,11 @@ describe('mock exam clock and answers', () => {
   it('lists unanswered numbers for jump navigation', () => {
     expect(unansweredNumbers([0, null, 2, null])).toEqual([2, 4])
     expect(applyChoice([null, null], 1, 3)).toEqual([null, 3])
+  })
+
+  it('uses the latest index when deciding confirm vs next', () => {
+    expect(nextAction(8, 10)).toEqual({ index: 9 })
+    expect(nextAction(9, 10)).toBe('confirm')
   })
 })
 

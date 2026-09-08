@@ -13,6 +13,7 @@ import {
   existingProgressCopy,
   finalizePayload,
   mockAttemptId,
+  nextAction,
   resolveActiveMockAction,
   resumeState,
   type MockView,
@@ -330,6 +331,21 @@ export function MockExamPage() {
     persistProgress()
   }
 
+  function goNext() {
+    const action = nextAction(currentIndexRef.current, snapshotsRef.current.length)
+    if (action === 'confirm') {
+      flushItemTime()
+      persistProgress()
+      setView('confirm')
+      return
+    }
+    goToIndex(action.index)
+  }
+
+  function goPrev() {
+    goToIndex(currentIndexRef.current - 1)
+  }
+
   async function closeRunning() {
     persistProgress()
     await saverRef.current?.flush()
@@ -407,16 +423,8 @@ export function MockExamPage() {
           confirming={view === 'confirm'}
           saveError={saveError}
           onSelect={selectChoice}
-          onPrev={() => goToIndex(currentIndex - 1)}
-          onNext={() => {
-            if (currentIndex >= snapshots.length - 1) {
-              flushItemTime()
-              persistProgress()
-              setView('confirm')
-              return
-            }
-            goToIndex(currentIndex + 1)
-          }}
+          onPrev={goPrev}
+          onNext={goNext}
           onJump={goToIndex}
           onClose={() => void closeRunning()}
           onRetrySave={() => persistProgress()}
