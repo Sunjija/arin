@@ -29,18 +29,18 @@ export function ConceptExplorer({
   const groups = groupLessonsByEra(filtered)
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <LibraryFilters
         era={era}
         q={q}
         sort={sort}
         searchLabel="개념 검색"
         searchPlaceholder="단원·키워드 검색"
+        resultCount={filtered.length}
         onEraChange={onEraChange}
         onQueryChange={onQueryChange}
         onSortChange={onSortChange}
       />
-      <p className="meta-text">{filtered.length}건</p>
       {filtered.length === 0 ? (
         <EmptyResults
           title="해당하는 단원이 없습니다."
