@@ -832,8 +832,8 @@ button:not(:disabled), summary { cursor: pointer; }
 .library-page .page-header { margin-bottom: 12px; }
 .library-page .field-control[type='search'] { background: #EFEEE8; border-color: transparent; padding: 14px 16px; }
 .library-filters { margin: 22px 0 28px; }
-.era-chips { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 6px; scrollbar-width: thin; }
-.era-chips .btn { white-space: nowrap; border-radius: 30px; background: #EFEEE8; font-size: 12px; min-height: 40px; }
+.era-chips { display: flex; min-width: 0; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 2px 1px 8px; scrollbar-width: thin; }
+.era-chips .btn { flex: 0 0 auto; width: max-content; min-width: max-content; white-space: nowrap; border-radius: 30px; background: #EFEEE8; font-size: 12px; min-height: 40px; }
 .era-chips .btn[aria-pressed='true'] { background: var(--ink); color: white; }
 .history-timeline { position: relative; margin-top: 28px; padding-left: 20px; }
 .history-timeline:before { content: ''; width: 2px; background: var(--line); position: absolute; top: 18px; bottom: 24px; left: 5px; }
