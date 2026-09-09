@@ -2,13 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Dialog, EmptyState, InlineStatus, PageHeader } from '../components/ui'
 import { db } from '../db/database'
-import { isDue, toDateKey } from '../lib/dates'
-import { addCardFromContent, startOrResumeSession } from '../lib/studyService'
+import { addDays, isDue, toDateKey } from '../lib/dates'
+import { addCardFromContent, buildTodayPlan, startOrResumeSession } from '../lib/studyService'
 import { createWrongCardFromQuestion, updateCardContent } from '../lib/wrongCard'
 import {
   ALL_ERAS,
   ERA_LABELS,
   WRONG_CAUSE_LABELS,
+  type ActiveSession,
+  type TodayPlan,
   type EraId,
   type FlashcardRecord,
   type WrongAnswerRecord,
@@ -32,6 +34,20 @@ export function CardsPage() {
   const [draft, setDraft] = useState({ front: '', back: '', era: 'goryeo' as EraId })
   const [editing, setEditing] = useState<{ id: string; front: string; back: string } | null>(null)
   const [starting, setStarting] = useState(false)
+  const [plan, setPlan] = useState<TodayPlan | null>(null)
+  const [activeSession, setActiveSession] = useState<ActiveSession | undefined>()
+  const [weekDays, setWeekDays] = useState(0)
+
+  useEffect(() => {
+    let alive = true
+    void Promise.all([buildTodayPlan(), db.activeSession.toCollection().first(), db.studyDays.toArray()])
+      .then(([nextPlan, active, days]) => {
+        if (!alive) return
+        setPlan(nextPlan); setActiveSession(active)
+        setWeekDays(days.filter(day => day.date >= addDays(toDateKey(), -6) && day.date <= toDateKey() && (day.cardsReviewed > 0 || day.questionsAnswered > 0 || day.conceptDone)).length)
+      }).catch(() => { if (alive) { setMessage('복습 계획을 불러오지 못했습니다. 새로고침해 주세요.'); setMessageTone('error') } })
+    return () => { alive = false }
+  }, [])
 
   const load = async () => {
     const [loadedCards, loadedWrong] = await Promise.all([
@@ -144,17 +160,22 @@ export function CardsPage() {
     }
   }
 
+  const ongoing = activeSession?.date === today && activeSession.step !== 'result' ? activeSession : null
+  const sessionCards = ongoing ? ongoing.cardIds.slice(ongoing.cardIndex).flatMap(id => { const c = cards.find(item => item.id === id); return c ? [c] : [] }) : plan?.dueCards ?? []
+  const selectedCount = ongoing ? Math.max(0, ongoing.cardIds.length - ongoing.cardIndex) : sessionCards.length
+  const bundleEras = ALL_ERAS.filter(id => sessionCards.some(c => c.era === id))
+
   return (
-    <div className="space-y-5">
-      <PageHeader eyebrow="복습" title="암기카드">
-        <p className="mt-2 text-[var(--ink-muted)]">오늘 복습 목록을 보거나, 카드를 골라 학습을 시작하세요.</p>
+    <div className="review-page space-y-5">
+      <PageHeader title="기억을 오래 남기는 복습">
+        <p className="mt-2 text-[var(--ink-muted)]">잊기 전에, 필요한 개념부터 다시 만나요.</p>
       </PageHeader>
 
-      <section className="surface p-2">
-        <div className="flex flex-wrap gap-1" role="tablist" aria-label="복습 목록">
+      <section>
+        <div className="editorial-tabs" role="tablist" aria-label="복습 목록">
           {(
             [
-              ['due', '오늘 복습'],
+              ['due', '오늘'],
               ['all', '전체 카드'],
               ['wrong', '오답 기록'],
             ] as const
@@ -178,25 +199,31 @@ export function CardsPage() {
       {message ? <InlineStatus tone={messageTone}>{message}</InlineStatus> : null}
 
       {tab === 'due' ? (
-        <section className="surface space-y-3 p-4">
-          <div>
-            <h2 className="section-title">오늘 복습 목록</h2>
-            <p className="meta-text mt-1">
-              {dueCards.length}장입니다. 이 화면은 목록이며, 학습은 아래 버튼으로 시작합니다.
-            </p>
+        <section className="review-overview">
+          <div className="review-summary">
+            <div><p className="meta-text">오늘 복습할 카드</p><p className="review-count">{plan ? selectedCount : '—'}<small>장</small></p></div>
+            <div className="week-ring" aria-label={`최근 7일 중 ${weekDays}일 학습`}>
+              <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--line)" strokeWidth="5"/><circle cx="40" cy="40" r="35" fill="none" stroke="var(--correct)" strokeWidth="5" strokeDasharray={`${220 * weekDays / 7} 220`} transform="rotate(-90 40 40)" strokeLinecap="round" /></svg>
+              <strong>{weekDays}/7</strong><span>주간 학습일</span>
+            </div>
           </div>
-          {dueCards.length > 0 ? (
-            <Button className="w-full" disabled={starting} onClick={() => void startReview()}>
-              {starting ? '시작하는 중…' : `오늘 복습 시작 · ${dueCards.length}장`}
-            </Button>
-          ) : (
-            <EmptyState title="오늘 복습할 카드 없음">나중에 복습할 카드가 쌓이면 여기에 목록이 생깁니다.</EmptyState>
-          )}
+          <p className="meta-text">{ongoing ? `진행 중인 학습 · 남은 카드 ${selectedCount}장` : `복습 대기 ${dueCards.length}장 중 오늘의 분량 ${selectedCount}장`}</p>
+          {ongoing || selectedCount > 0 ? <Button className="hero-cta" disabled={starting || !plan} onClick={() => void startReview()}>
+            {starting ? '시작하는 중…' : ongoing ? '진행 중인 학습 이어가기' : `${selectedCount}장 복습 시작`}
+          </Button> : <EmptyState title={plan ? '오늘 복습을 모두 마쳤어요' : '복습 계획을 불러오는 중…'}>{plan ? '다음 복습일이 되면 필요한 카드가 여기에 모입니다.' : ''}</EmptyState>}
+          {bundleEras.length > 0 && <div className="mt-8">
+            <div className="section-heading"><h2>오늘의 복습 묶음</h2><span>시대별 카드</span></div>
+            {bundleEras.map((id, index) => <div className="review-bundle" key={id}>
+              <span className="bundle-index">{String(index + 1).padStart(2, '0')}</span>
+              <div><h3>{ERA_LABELS[id]}</h3><p>{sessionCards.some(c => c.era === id && c.fromWrongAnswer) ? '오답에서 다시 만나는 개념' : '이전 학습의 핵심 내용'}</p></div>
+              <strong>{sessionCards.filter(c => c.era === id).length}장</strong>
+            </div>)}
+          </div>}
         </section>
       ) : null}
 
       {tab !== 'wrong' && (
-        <>
+        <details className="card-management" open={tab === 'all' ? true : undefined}><summary>카드 검색 · 관리</summary>
           <section className="surface space-y-3 p-4">
             <label className="block">
               <span className="sr-only">검색</span>
@@ -254,7 +281,7 @@ export function CardsPage() {
             ) : null}
           </section>
 
-          <section className="space-y-3" aria-label={tab === 'due' ? '오늘 복습 카드 목록' : '전체 카드 목록'}>
+          <section className="card-list space-y-3" aria-label={tab === 'due' ? '오늘 복습 카드 목록' : '전체 카드 목록'}>
             {filtered.length === 0 ? (
               <EmptyState title="해당하는 카드가 없습니다." />
             ) : (
@@ -290,7 +317,7 @@ export function CardsPage() {
               ))
             )}
           </section>
-        </>
+        </details>
       )}
 
       {tab === 'all' ? (

@@ -13,7 +13,7 @@ export function ConceptStep({
   onDone: () => Promise<void>
 }) {
   return (
-    <div className="surface space-y-4 p-5">
+    <div className="concept-content space-y-4">
       <div>
         <p className="meta-text">
           {ERA_LABELS[lesson.era]} · 오늘 단원 읽기 (약 {lesson.estimatedMinutes}분)

@@ -20,7 +20,6 @@ export function StudySessionPage() {
   const location = useLocation()
   const [session, setSession] = useState<ActiveSession | null>(null)
   const [cards, setCards] = useState<FlashcardRecord[]>([])
-  const [allCards, setAllCards] = useState<FlashcardRecord[]>([])
   const [error, setError] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [closing, setClosing] = useState(false)
@@ -29,9 +28,8 @@ export function StudySessionPage() {
   useFocusLayout(focused)
 
   const refreshCards = useCallback(async (ids: string[]) => {
-    const [selected, every] = await Promise.all([db.cards.bulkGet(ids), db.cards.toArray()])
+    const selected = await db.cards.bulkGet(ids)
     setCards(selected.filter(Boolean) as FlashcardRecord[])
-    setAllCards(every)
   }, [])
 
   useEffect(() => {
@@ -74,7 +72,7 @@ export function StudySessionPage() {
     try {
       await saveSession(session)
       setSaveError(null)
-      navigate('/')
+      navigate(session.entryMode === 'review' ? '/cards' : '/')
     } catch {
       setSaveError('진행을 저장하지 못했습니다. 이 화면에 머무릅니다.')
       setClosing(false)
@@ -133,7 +131,6 @@ export function StudySessionPage() {
           key={`${session.cardIndex}-${cards[session.cardIndex]?.id ?? 'loading'}`}
           session={session}
           cards={cards}
-          pool={allCards}
           onAdvance={async (rating, requeue) => {
             const card = cards[session.cardIndex]
             if (!card) return

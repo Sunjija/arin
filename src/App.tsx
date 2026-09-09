@@ -44,7 +44,7 @@ function Bootstrap({ children }: { children: ReactNode }) {
   if (!ready) {
     return (
       <div className="surface p-5 text-[var(--ink-muted)]" aria-live="polite">
-        한사코치를 준비하는 중…
+        arin을 준비하는 중…
       </div>
     )
   }

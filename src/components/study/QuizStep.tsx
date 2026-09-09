@@ -202,97 +202,46 @@ export function QuizStep({
   }
 
   return (
-    <div className="surface space-y-4 p-5">
-      {revealed ? (
-        <p className="meta-text">
-          {ERA_LABELS[question.era]} · 배점 {question.difficulty}점
-        </p>
-      ) : null}
-      {question.passage ? (
-        <blockquote className="passage-text rounded-xl bg-[var(--accent-soft)]/50 p-4 whitespace-pre-line">
-          {question.passage}
-        </blockquote>
-      ) : null}
-      <h1 className="text-lg font-semibold leading-relaxed">{question.stem}</h1>
-
-      <div className="space-y-2" role="group" aria-label="선택지">
-        {question.choices.map((choice, index) => (
-          <ChoiceOption
-            key={`${choice}-${index}`}
-            index={index}
-            label={choice}
-            state={choiceState({
-              index,
-              selected: selectedIndex ?? null,
-              revealed,
-              answerIndex: question.answerIndex,
-            })}
-            onSelect={() => selectChoice(index)}
-          />
-        ))}
-      </div>
-
-      {!revealed ? (
-        <div className="cta-dock">
-          <Button
-            className="w-full"
-            disabled={session.selectedIndex == null || busy}
-            onClick={() => void submit()}
-          >
-            {busy ? '제출 중…' : '정답 제출'}
-          </Button>
+    <div className="quiz-content">
+      {!revealed ? <>
+        <span className="pill blue">핵심 문제 · {question.difficulty}점</span>
+        <h1>{question.stem}</h1>
+        {question.passage && <blockquote className="passage-text mb-5 whitespace-pre-line">{question.passage}</blockquote>}
+        <div className="space-y-2" role="group" aria-label="선택지">
+          {question.choices.map((choice, index) => <ChoiceOption key={`${question.id}-${index}`} index={index} label={choice}
+            state={choiceState({index, selected: selectedIndex ?? null, revealed, answerIndex: question.answerIndex})}
+            onSelect={() => selectChoice(index)} />)}
         </div>
-      ) : (
-        <div className="space-y-3">
-          <p className={`font-semibold ${correct ? 'text-[var(--correct)]' : 'text-[var(--wrong)]'}`}>
-            {correct ? '정답입니다' : '오답입니다'}
-            <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">
-              (정답: {question.answerIndex + 1}번)
-            </span>
-          </p>
-          <p className="passage-text leading-relaxed">{question.explanation}</p>
-
-          {!correct ? (
-            <div className="space-y-2">
-              <Button variant="secondary" className="w-full" disabled={busy} onClick={() => void addWrongCard()}>
-                카드로 추가
-              </Button>
-              <p className="font-medium">오답 원인</p>
-              <p className="meta-text">정답과 해설을 확인한 뒤 고르세요. 풀이 시간에는 더하지 않습니다.</p>
-              {CAUSE_OPTIONS.map((cause) => (
-                <Button
-                  key={cause}
-                  variant={currentAnswer?.cause === cause ? 'primary' : 'secondary'}
-                  className="w-full justify-start"
-                  disabled={busy || !currentAnswer?.attemptId}
-                  onClick={() => void applyCause(cause)}
-                >
-                  {WRONG_CAUSE_LABELS[cause]}
-                </Button>
-              ))}
-              <Button
-                variant="text"
-                className="w-full"
-                disabled={busy || (currentAnswer?.cause != null && currentAnswer.cause !== 'unknown')}
-                onClick={() => setCauseSkipped(true)}
-              >
-                원인 건너뛰기
-              </Button>
-              {causeSkipped && (currentAnswer?.cause == null || currentAnswer.cause === 'unknown') ? (
-                <p className="meta-text">지금은 미확인입니다. 고르면 같은 기록에 반영됩니다.</p>
-              ) : null}
-            </div>
-          ) : null}
-
-          {message ? <InlineStatus tone={messageTone}>{message}</InlineStatus> : null}
-
-          <div className="cta-dock">
-            <Button className="w-full" disabled={busy} onClick={() => void goNext()}>
-              {session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'}
-            </Button>
+        <p className="meta-text text-center mt-5">판단한 근거를 떠올린 뒤 확인해 보세요.</p>
+        {message && <InlineStatus tone={messageTone}>{message}</InlineStatus>}
+        <div className="cta-dock"><Button className="w-full" disabled={session.selectedIndex == null || busy} onClick={() => void submit()}>{busy ? '제출 중…' : '선택한 답 확인'}</Button></div>
+      </> : <section className="quiz-feedback">
+        <span className={`pill ${correct ? 'green' : 'coral'}`}>{correct ? '정답입니다' : '다시 연결해 볼까요?'}</span>
+        <h1>{correct ? '핵심을 잘 짚었어요.' : '어떤 단서가 있었는지 다시 살펴보세요.'}</h1>
+        <p className="meta-text mb-5">{ERA_LABELS[question.era]} · {question.stem}</p>
+        {!correct && <><p className="meta-text text-[var(--wrong)]">내 답</p><p className="answer-review wrong">✕ {selectedIndex != null ? `${selectedIndex + 1}. ${question.choices[selectedIndex]}` : '선택 없음'}</p></>}
+        <p className="meta-text text-[var(--correct)]">정답</p>
+        <p className="answer-review correct">✓ {question.answerIndex + 1}. {question.choices[question.answerIndex]}</p>
+        <h2 className="section-title">왜 이 답일까요?</h2>
+        <p className="feedback-explanation whitespace-pre-line">{question.explanation}</p>
+        <details className="mb-5"><summary className="meta-text touch-target">문제와 전체 선지 다시 보기</summary>
+          {question.passage && <blockquote className="passage-text mb-4 whitespace-pre-line">{question.passage}</blockquote>}
+          <div className="space-y-2">{question.choices.map((choice, index) => <ChoiceOption key={index} index={index} label={choice}
+            state={choiceState({index, selected: selectedIndex ?? null, revealed: true, answerIndex: question.answerIndex})} onSelect={() => {}} />)}</div>
+        </details>
+        {!correct && <div className="flat-section">
+          <h2 className="section-title">어디에서 헷갈렸나요?</h2>
+          <div className="cause-options" role="group" aria-label="오답 원인">
+            {CAUSE_OPTIONS.map(cause => <Button key={cause} variant={currentAnswer?.cause === cause ? 'primary' : 'secondary'}
+              aria-pressed={currentAnswer?.cause === cause} disabled={busy || !currentAnswer?.attemptId} onClick={() => void applyCause(cause)}>{WRONG_CAUSE_LABELS[cause]}</Button>)}
           </div>
-        </div>
-      )}
+          <Button variant="text" className="mt-2" disabled={busy || (currentAnswer?.cause != null && currentAnswer.cause !== 'unknown')} onClick={() => setCauseSkipped(true)}>원인 건너뛰기</Button>
+          {causeSkipped && (!currentAnswer?.cause || currentAnswer.cause === 'unknown') && <p className="meta-text">원인은 미확인으로 남습니다.</p>}
+          <Button variant="secondary" className="w-full mt-3" disabled={busy} onClick={() => void addWrongCard()}>이 개념을 복습 카드로 추가</Button>
+        </div>}
+        {message && <InlineStatus tone={messageTone}>{message}</InlineStatus>}
+        <div className="cta-dock"><Button className="w-full" disabled={busy} onClick={() => void goNext()}>{session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'}</Button></div>
+      </section>}
     </div>
   )
 }

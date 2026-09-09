@@ -7,9 +7,10 @@ export function LibraryPage() {
   const [query, update] = useLibraryQuery()
 
   return (
-    <div className="space-y-2 [&_.page-header]:mb-0">
-      <PageHeader title="자료실">
-        <div role="tablist" aria-label="자료실 구분" className="mt-1 flex gap-1">
+    <div className="library-page space-y-2">
+      <PageHeader title="흐름으로 읽는 한국사">
+        <p>시대와 사건을 연결해 보세요.</p>
+        <div role="tablist" aria-label="자료실 구분" className="editorial-tabs mt-6">
           <TabButton
             selected={query.tab === 'timeline'}
             onClick={() => update({ tab: 'timeline' })}

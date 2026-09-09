@@ -31,7 +31,7 @@ describe('LibraryPage', () => {
   it('exports a single 자료실 header and shares it with /timeline', () => {
     const { unmount } = renderAt('/library')
     expect(screen.getAllByRole('heading', { level: 1 }).map((node) => node.textContent)).toEqual([
-      '자료실',
+      '흐름으로 읽는 한국사',
     ])
     expect(screen.getByRole('tab', { name: '연표' })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByRole('tab', { name: '개념' })).toHaveAttribute('aria-selected', 'false')
@@ -40,7 +40,7 @@ describe('LibraryPage', () => {
 
     renderAt('/timeline', createElement(TimelinePage))
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('자료실')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('흐름으로 읽는 한국사')
     expect(screen.getByText('기원전 2333')).toBeTruthy()
   })
 

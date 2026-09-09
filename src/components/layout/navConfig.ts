@@ -26,18 +26,14 @@ export const NAV_ITEMS: NavItem[] = [
     match: (pathname) => pathname === '/cards' || pathname === '/wrong',
   },
   {
-    to: LIBRARY_PATH,
-    label: '자료실',
-    match: (pathname) => pathname === '/timeline' || pathname === '/library',
+    to: '/mock', label: '실전', match: (pathname) => pathname === '/mock',
   },
   {
-    to: '/mock',
-    label: '실전',
-    match: (pathname) => pathname === '/mock',
+    to: LIBRARY_PATH, label: '자료실', match: (pathname) => pathname === '/timeline' || pathname === '/library',
   },
   {
     to: '/progress',
-    label: '내 기록',
+    label: '기록',
     match: (pathname) => pathname === '/progress' || pathname === '/settings',
   },
 ]

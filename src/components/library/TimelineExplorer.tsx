@@ -1,3 +1,4 @@
+import { Dolmen } from '../DesignArtwork'
 import { useState } from 'react'
 import { eventsByEra } from '../../data/timeline'
 import type { TimelineEvent } from '../../data/timeline'
@@ -48,7 +49,7 @@ export function TimelineExplorer({
           onReset={onReset}
         />
       ) : (
-        <ol className="divide-y divide-[var(--line)]">
+        <ol className="history-timeline">
           {events.map((event, index) => (
             <TimelineItem
               key={event.id}
@@ -76,7 +77,7 @@ function TimelineItem({
   onToggle: () => void
 }) {
   return (
-    <li>
+    <li className={`history-event${open ? ' open' : ''}`}>
       <button
         type="button"
         className="flex w-full min-h-11 flex-col gap-1 py-2 text-left"
@@ -84,14 +85,10 @@ function TimelineItem({
         data-library-first-event={first ? 'true' : undefined}
         onClick={onToggle}
       >
-        <span className="flex w-full items-start gap-3">
-          <span className="w-[5.5rem] shrink-0 text-right text-[0.78rem] font-bold leading-snug text-[var(--accent)]">
-            {event.yearLabel}
-          </span>
-          <span className="min-w-0 flex-1 font-bold leading-snug">{event.title}</span>
-          <Chevron open={open} />
-        </span>
-        {open ? <span className="meta-text pl-[calc(5.5rem+0.75rem)]">{event.detail}</span> : null}
+        <span className="event-year">{event.yearLabel}</span>
+        <span className="event-title">{event.title}<Chevron open={open} /></span>
+        {open && <span className="event-detail">{event.detail}</span>}
+        {open && /청동기|고인돌/.test(event.title + event.detail) && <span className="timeline-art"><Dolmen /><span>돌에 남은 권력<br />청동기 사회를 읽다</span></span>}
       </button>
     </li>
   )

@@ -23,7 +23,7 @@ export function LibraryFilters({
   onSortChange: (sort: LibrarySort) => void
 }) {
   return (
-    <div className="space-y-2">
+    <div className="library-filters space-y-3">
       <div className="flex items-center gap-2">
         <input
           type="search"
@@ -61,8 +61,8 @@ export function LibraryFilters({
           <option value="desc">최근 순</option>
         </select>
       </div>
-      <div className="hidden md:flex md:flex-col md:gap-2">
-        <div className="flex flex-wrap gap-1">
+      <div className="flex flex-col gap-2">
+        <div className="era-chips">
           <EraChip selected={era === 'all'} onClick={() => onEraChange('all')}>
             전체
           </EraChip>
@@ -72,7 +72,7 @@ export function LibraryFilters({
             </EraChip>
           ))}
         </div>
-        <div className="flex gap-1">
+        <div className="hidden md:flex gap-1">
           <EraChip selected={sort === 'asc'} onClick={() => onSortChange('asc')}>
             오래된 순
           </EraChip>

@@ -29,10 +29,9 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M12 8v4l3 2" />
     </svg>
   ),
-  '내 기록': (
+  기록: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-      <path d="M5 19V8l7-4 7 4v11" />
-      <path d="M9 19v-6h6v6" />
+      <path d="M4 20V12M10 20V4M16 20V9M22 20H2" />
     </svg>
   ),
 }
@@ -44,14 +43,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className={`app-shell${focused ? ' is-focus' : ''}`}>
       <header className="site-header">
-        <Link to="/" className="brand" aria-label="한사코치 오늘 화면">
-          <span className="brand-mark" aria-hidden>
-            한
-          </span>
-          <span>
-            <strong className="brand-name">한사코치</strong>
-            <span className="brand-copy">한국사 심화 학습</span>
-          </span>
+        <Link to="/" className="brand" aria-label="arin 오늘 화면">
+          <strong className="brand-name">arin</strong>
+          <span className="brand-copy">한국사 · 심화</span>
         </Link>
         <nav className="desktop-nav" aria-label="주요 메뉴">
           {NAV_ITEMS.map((link) => (
@@ -67,6 +61,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             </NavLink>
           ))}
         </nav>
+        <Link to="/settings" className="settings-link touch-target" aria-label="설정">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="m9 3 1-1h4l1 3 3 2 3 1v8l-3 1-3 2-1 3h-4l-1-3-3-2-3-1V8l3-1 3-2Z" /><circle cx="12" cy="12" r="3.5" /></svg>
+        </Link>
       </header>
       <main className="app-main">{children}</main>
       <nav className="nav-bottom" aria-label="모바일 주요 메뉴">
