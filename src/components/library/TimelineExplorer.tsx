@@ -86,7 +86,10 @@ function TimelineItem({
         onClick={onToggle}
       >
         <span className="event-year">{event.yearLabel}</span>
-        <span className="event-title">{event.title}<Chevron open={open} /></span>
+        <span className="event-title">
+          <span className="event-title-text">{event.title}</span>
+          <span className="event-chevron" aria-hidden="true"><Chevron open={open} /></span>
+        </span>
         {open && <span className="event-detail">{event.detail}</span>}
         {open && /청동기|고인돌/.test(event.title + event.detail) && <span className="timeline-art"><Dolmen /><span>돌에 남은 권력<br />청동기 사회를 읽다</span></span>}
       </button>
