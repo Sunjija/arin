@@ -366,6 +366,7 @@ export function MockExamPage() {
 
   useAppPause(() => {
     persistProgress()
+    void saverRef.current?.flush()
   })
   useHardwareBack(focused, () => {
     void closeRunning()

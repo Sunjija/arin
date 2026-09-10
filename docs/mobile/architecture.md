@@ -75,7 +75,7 @@ Android 로컬 스킴은 공식 기본값 `https`를 유지한다. Chrome 117 �
 | 플랫폼 | 이 환경에서 | 필요한 추가 환경 | 미완료 범위 |
 |---|---|---|---|
 | 웹 (브라우저 미리보기) | 가능 | 없음 | 없음 |
-| Android debug APK | 가능 (SDK command-line tools + Gradle) | 로컬에서는 Android Studio Otter(2025.2.1+) 권장. Capacitor 8 공식 요구 | 실기기·에뮬레이터는 KVM/USB 없으면 설치만 검증 |
+| Android debug APK | 가능 (SDK command-line tools + Gradle) | 로컬에서는 Android Studio Otter(2025.2.1+) 권장. Capacitor 8 공식 요구 | **이 환경에서 AVD `arin_dev`(API 36) 설치·실행까지 확인.** 실기기 USB는 없음 |
 | Android Play 서명 릴리스 | 하지 않음 | 업로드 키·Play Console | 스토어 제출 금지 |
 | iOS 시뮬레이터/IPA | **불가** (Xcode 없음) | macOS, **Xcode 26.0+** (Capacitor 8), Apple Developer 팀, 서명 인증서, 프로비저닝 | `npx cap add ios` 프로젝트만 생성. `xcodebuild` 미실행. 서명·아이콘 슬롯 확인은 로컬 Mac |
 
@@ -95,7 +95,7 @@ Capacitor 8 Android 공식 요구 요약: minSdk 24, compile/target SDK 36, Grad
 
 **저장 방식은 바꾸지 않는다.** 학습 기록은 계속 Dexie다. 계정 토큰만 Preferences.
 
-검증: `src/platform/storageProbe.ts`가 부팅 시 `db.meta` 존재 여부와 Preferences 프로브 키를 기록한다. 앱에서 프로브가 사라지면 E(데이터)에 IndexedDB 백업/복원 또는 SQLite 이전을 요청한다. 모바일 담당이 DB를 교체하지 않는다.
+검증: `src/platform/storageProbe.ts`가 부팅 시 `db.meta` 존재 여부와 Preferences 프로브 키를 기록한다. Android 에뮬레이터에서 강제 종료 후 `previousProbeAt`과 진행 중 모의고사가 남았다. 앱에서 프로브가 사라지면 E(데이터)에 IndexedDB 백업/복원 또는 SQLite 이전을 요청한다. 모바일 담당이 DB를 교체하지 않는다.
 
 공식 Preferences 문서: Preferences는 로컬 DB가 아니다. 대용량·복잡한 조회는 Dexie 유지.
 

@@ -1,43 +1,58 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { App } from '@capacitor/app'
 import { getAccountSyncPort } from '../../platform/accountSync'
 import { parseDeepLink, toRouterLocation } from '../../platform/deepLinks'
+import { consumeLaunchUrlOnce, markNativeUrlHandled } from '../../platform/launchUrl'
 import { isNativeRuntime } from '../../platform/runtime'
 
 export function AppUrlListener() {
   const navigate = useNavigate()
+  const navigateRef = useRef(navigate)
 
   useEffect(() => {
-    const port = getAccountSyncPort()
+    navigateRef.current = navigate
+  }, [navigate])
+
+  useEffect(() => {
+    if (!isNativeRuntime()) return
 
     const open = async (raw: string | undefined) => {
       const intent = parseDeepLink(raw)
       if (intent.kind === 'ignored') return
       if (intent.kind === 'auth-callback') {
-        await port.completeFromCallback(intent.url)
-        navigate('/', { replace: true })
+        await getAccountSyncPort().completeFromCallback(intent.url)
+        navigateRef.current('/', { replace: true })
         return
       }
-      navigate(toRouterLocation(intent), { replace: true })
+      navigateRef.current(toRouterLocation(intent), { replace: true })
     }
 
-    if (!isNativeRuntime()) return
+    let cancelled = false
+    let handle: { remove: () => Promise<void> } | undefined
 
-    let remove: (() => void) | undefined
     void App.addListener('appUrlOpen', (event) => {
+      markNativeUrlHandled()
       void open(event.url)
-    }).then((handle) => {
-      remove = () => {
-        void handle.remove()
+    }).then((value) => {
+      if (cancelled) {
+        void value.remove()
+        return
       }
-    })
-    void App.getLaunchUrl().then((launch) => {
-      if (launch?.url) void open(launch.url)
+      handle = value
     })
 
-    return () => remove?.()
-  }, [navigate])
+    void App.getLaunchUrl().then((launch) => {
+      if (cancelled) return
+      const url = consumeLaunchUrlOnce(launch?.url)
+      if (url) void open(url)
+    })
+
+    return () => {
+      cancelled = true
+      void handle?.remove()
+    }
+  }, [])
 
   return null
 }

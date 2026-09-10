@@ -1082,6 +1082,9 @@ body:has(.review-page), body:has(.library-page), body:has(.progress-page) { back
 }
 
 .app-shell.is-focus .offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   margin-top: env(safe-area-inset-top);
 }
 

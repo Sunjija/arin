@@ -59,3 +59,25 @@ D가 확인/보강할 점:
 ## 결제
 
 `src/platform/billing/port.ts`가 `not-wired`를 반환한다. SDK는 `android/app/src/main/java/app/arin/dev/billing/` · `ios/App/App/Billing/` README를 따른다.
+
+## 검증에서 발견한 것 (2026-09-10, Android 에뮬레이터 16)
+
+실행한 것: 홈 키 복귀, 화면 잠금 복귀, 하드웨어 뒤로 가기(제출 아님), 강제 종료 후 이어서 풀기, 비행기 모드 배너, `arin://auth/callback`.
+
+D에 남는 확인:
+
+1. pause에서 모바일은 `persistProgress()` 다음 기존 `saver.flush()`를 호출한다. 응답을 고른 뒤 즉시 강제 종료할 때 revision이 남는지 D가 재현하면 된다.
+2. 16분 만료 자동 제출은 이 환경에서 기다리지 않았다. 타이머 표시만 확인했다.
+
+```
+기기/OS: Android Emulator 16 / sdk_gphone64_x86_64
+앱 빌드: app.arin.dev debug 0.1.0
+절차:
+1. 실전 → 10문항 연습 시작
+2. (확인하려는 이벤트)
+기대: 진행이 IndexedDB `activeMock`에 남고 제출되지 않음(뒤로 가기). 만료 시 기존 finalizeMock.
+실제: docs/mobile/verification.md
+로그: adb logcat / chrome://inspect WebView
+필요한 플랫폼 이벤트: pause | resume | backButton | networkStatusChange
+```
+

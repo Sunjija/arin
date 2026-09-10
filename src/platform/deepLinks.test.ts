@@ -9,6 +9,18 @@ describe('parseDeepLink', () => {
       search: '?mode=sample',
       hash: '',
     })
+    expect(parseDeepLink('arin://app/settings')).toEqual({
+      kind: 'app-route',
+      pathname: '/settings',
+      search: '',
+      hash: '',
+    })
+    expect(toRouterLocation({
+      kind: 'app-route',
+      pathname: '/cards',
+      search: '',
+      hash: '',
+    })).toBe('/cards')
   })
 
   it('treats arin://auth/callback as a login return', () => {

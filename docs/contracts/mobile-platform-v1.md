@@ -76,6 +76,8 @@ https://<운영도메인>/auth/callback
 4. 그 외 `arin://app/...`이면 React Router `navigate(pathname + search + hash)`
 5. 파싱 실패 시 무시하고 현재 화면 유지. 인증 UI를 새로 만들지 않는다
 
+`getLaunchUrl()`은 프로세스당 한 번만 적용한다. 이후 `appUrlOpen`이 우선이다. 런치 URL을 effect마다 다시 적용하면 `arin://app/` 같은 이전 주소가 이후 딥링크를 덮어쓴다.
+
 ---
 
 ## 3. 외부 로그인 후 앱 복귀

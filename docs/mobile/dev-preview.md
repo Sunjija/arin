@@ -36,6 +36,20 @@ npm run mobile:android:apk
 
 휴대폰: USB 디버깅 후 `adb install -r artifacts/mobile/arin-dev-debug.apk`. 패키지 `app.arin.dev`.
 
+에뮬레이터 (Android SDK + KVM):
+
+```bash
+export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$PATH"
+emulator -avd arin_dev -gpu swiftshader_indirect
+adb install -r artifacts/mobile/arin-dev-debug.apk
+adb shell am start -n app.arin.dev/.MainActivity
+```
+
+딥링크 확인: `adb shell am start -a android.intent.action.VIEW -d 'arin://app/mock' -n app.arin.dev/.MainActivity`  
+로그인 복귀: `adb shell am start -a android.intent.action.VIEW -d 'arin://auth/callback?code=preview' -n app.arin.dev/.MainActivity`
+
+
 ## 2. 개발 서버 모드 (Vite에 연결)
 
 앱 WebView가 로컬 Vite를 연다. 배너는 **개발 서버 · Vite** (`VITE_RUNTIME_MODE=live`).
