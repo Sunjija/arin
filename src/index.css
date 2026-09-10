@@ -961,3 +961,27 @@ body:has(.review-page), body:has(.library-page), body:has(.progress-page) { back
   .learning-sequence li { min-height: 68px; }
   .learning-sequence li > div { padding: 12px 0; }
 }
+
+/* 개념 자료실: 단원 탐색과 읽기 영역 */
+.concept-browser { display: grid; grid-template-columns: minmax(210px, .8fr) minmax(0, 2fr); gap: 32px; margin-top: 24px; align-items: start; }
+.concept-index { min-width: 0; }
+.concept-index section + section { margin-top: 24px; }
+.concept-index h2 { font-size: .875rem; color: var(--ink-muted); padding: 0 12px; margin-bottom: 8px; }
+.concept-index button { display: flex; justify-content: space-between; gap: 12px; width: 100%; padding: 13px 12px; text-align: left; font-size: 1rem; line-height: 1.5; border-radius: 10px; overflow-wrap: anywhere; }
+.concept-index button[aria-current="true"] { background: var(--accent-soft, #fff0eb); color: var(--accent); font-weight: 700; }
+.concept-index button:hover { background: var(--accent-soft, #fff0eb); }
+.concept-reader { min-width: 0; background: white; padding: clamp(20px, 4vw, 40px); border: 1px solid var(--line); border-radius: 20px; overflow-wrap: anywhere; }
+.concept-reader h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 750; line-height: 1.4; margin: 10px 0 16px; }
+.concept-summary { font-size: 1rem; line-height: 1.9; max-width: 65ch; }
+.concept-reader section { margin-top: 32px; }
+.concept-reader h3 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+.concept-keywords ul { display: flex; flex-wrap: wrap; gap: 8px; }
+.concept-keywords li { padding: 7px 12px; background: var(--accent-soft, #fff0eb); border-radius: 8px; font-size: .875rem; line-height: 1.5; }
+.concept-points li { display: flex; align-items: baseline; gap: 16px; border-top: 1px solid var(--line); padding: 20px 0; }
+.concept-point-number { color: var(--accent); font-size: .875rem; font-weight: 700; flex-shrink: 0; }
+.concept-points h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.concept-points p { font-size: 1rem; line-height: 1.85; }
+@media (max-width: 700px) {
+  .concept-browser { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .concept-index { max-height: 240px; overflow-y: auto; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+}

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { lessons } from '../../data/lessons'
 import { ERA_LABELS } from '../../types'
 import { EmptyResults } from './EmptyResults'
-import { Chevron } from './Chevron'
 import { LibraryFilters } from './LibraryFilters'
 import { filterLessons, groupLessonsByEra } from './libraryFilter'
 import type { EraFilter, LibrarySort } from './libraryQuery'
@@ -27,6 +26,7 @@ export function ConceptExplorer({
   const [openId, setOpenId] = useState<string | null>(null)
   const filtered = filterLessons(lessons, era, q, sort)
   const groups = groupLessonsByEra(filtered)
+  const selected = filtered.find((lesson) => lesson.id === openId) ?? filtered[0]
 
   return (
     <div className="space-y-2">
@@ -49,53 +49,44 @@ export function ConceptExplorer({
           onReset={onReset}
         />
       ) : (
-        <div className="space-y-5">
-          {groups.map((group) => (
-            <section key={group.era} className="space-y-1">
-              <h2 className="section-title">{ERA_LABELS[group.era]}</h2>
-              <ul className="divide-y divide-[var(--line)]">
-                {group.lessons.map((lesson) => {
-                  const open = openId === lesson.id
-                  return (
-                    <li key={lesson.id}>
-                      <button
-                        type="button"
-                        className="flex w-full min-h-11 flex-col gap-2 py-2 text-left"
-                        aria-expanded={open}
-                        onClick={() =>
-                          setOpenId((current) => (current === lesson.id ? null : lesson.id))
-                        }
-                      >
-                        <span className="flex w-full items-start gap-3">
-                          <span className="min-w-0 flex-1 font-bold leading-snug">{lesson.title}</span>
-                          <Chevron open={open} />
-                        </span>
-                        {open ? (
-                          <span className="space-y-2">
-                            <span className="block text-[var(--ink)]">{lesson.summary}</span>
-                            <span className="block">
-                              <span className="meta-text">핵심어</span>
-                              <span className="mt-1 block">{lesson.keywords.join(' · ')}</span>
-                            </span>
-                            <span className="block">
-                              <span className="meta-text">확인 포인트</span>
-                              <span className="mt-1 block">
-                                {lesson.checkpoints.map((point) => (
-                                  <span key={point} className="block">
-                                    {point}
-                                  </span>
-                                ))}
-                              </span>
-                            </span>
-                          </span>
-                        ) : null}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
+        <div className="concept-browser">
+          <nav className="concept-index" aria-label="개념 단원 목록">
+            {groups.map((group) => (
+              <section key={group.era}>
+                <h2>{ERA_LABELS[group.era]}</h2>
+                {group.lessons.map((lesson) => (
+                  <button key={lesson.id} type="button"
+                    aria-current={selected.id === lesson.id ? 'true' : undefined}
+                    onClick={() => setOpenId(lesson.id)}>
+                    <span>{lesson.title}</span><span aria-hidden="true">→</span>
+                  </button>
+                ))}
+              </section>
+            ))}
+          </nav>
+          <article className="concept-reader" aria-label={selected.title}>
+            <header>
+              <p className="meta-text">{ERA_LABELS[selected.era]} · 핵심 개념</p>
+              <h2>{selected.title}</h2>
+              <p className="concept-summary">{selected.summary}</p>
+            </header>
+            <section className="concept-keywords">
+              <h3>기억할 핵심어</h3>
+              <ul>{selected.keywords.map((word) => <li key={word}>{word}</li>)}</ul>
             </section>
-          ))}
+            <section>
+              <h3>이렇게 구분하세요</h3>
+              <ol className="concept-points">
+                {selected.checkpoints.map((point, index) => {
+                  const separator = point.indexOf(':')
+                  return <li key={point}>
+                    <span className="concept-point-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                    <div>{separator > 0 ? <><h4>{point.slice(0, separator)}</h4><p>{point.slice(separator + 1).trim()}</p></> : <p>{point}</p>}</div>
+                  </li>
+                })}
+              </ol>
+            </section>
+          </article>
         </div>
       )}
     </div>

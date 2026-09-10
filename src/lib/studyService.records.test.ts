@@ -1,8 +1,10 @@
 import 'fake-indexeddb/auto'
 import { afterEach, describe, expect, it } from 'vitest'
+import { questions } from '../data/questions'
+import { flashcardSeeds } from '../data/cards'
 import { lessons } from '../data/lessons'
 import { addDays } from './dates'
-import { buildTodayPlan, getProgressSnapshot } from './studyService'
+import { buildTodayPlan, getProgressSnapshot, startOrResumeSession } from './studyService'
 import { db } from '../db/database'
 import { practiceAttempt, resetAppDb, seedCore } from '../test/idb'
 import type { ActiveSession } from '../types'
@@ -45,6 +47,26 @@ describe('today plan lessons and estimated scores', () => {
     await db.activeSession.put(session)
     const resumed = await buildTodayPlan('2026-01-06')
     expect(resumed.lesson.id).toBe('lesson-01')
+  })
+
+  it('keeps daily questions and cards in the lesson era, including an old mixed session', async () => {
+    await resetAppDb()
+    await seedCore({ dailyMinutes: 120 })
+    await db.cards.bulkPut(flashcardSeeds.map((card) => ({ ...card, fingerprint: card.id, createdAt: '2026-01-05', updatedAt: '2026-01-05', nextReviewAt: '2026-01-05', intervalDays: 0, easeStreak: 0, lapses: 0 })))
+    const session = await startOrResumeSession('2026-01-05')
+    const era = lessons.find((lesson) => lesson.id === session.lessonId)!.era
+    expect(session.questionIds.length).toBeGreaterThan(0)
+    expect(session.questionIds.every((id) => questions.find((q) => q.id === id)?.era === era)).toBe(true)
+    expect((await db.cards.bulkGet(session.cardIds)).every((card) => card?.era === era)).toBe(true)
+    const foreign = questions.find((q) => q.era !== era)!
+    await db.activeSession.put({ ...session, questionIds: [foreign.id, ...session.questionIds], selectedIndex: 3, step: 'quiz' })
+    const resumed = await startOrResumeSession('2026-01-05')
+    expect(resumed.questionIds.every((id) => questions.find((q) => q.id === id)?.era === era)).toBe(true)
+    expect(resumed.selectedIndex).toBeUndefined()
+    expect((await startOrResumeSession('2026-01-05')).questionIds).toEqual(resumed.questionIds)
+    await db.activeSession.clear()
+    const review = await startOrResumeSession({ today: '2026-01-05', entryMode: 'review' })
+    expect((await db.cards.bulkGet(review.cardIds)).some((card) => card?.era !== era)).toBe(true)
   })
 
   it('uses the same estimated score on home and progress for the same records', async () => {

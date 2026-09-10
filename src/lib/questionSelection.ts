@@ -19,7 +19,8 @@ export interface SelectionContext {
 /**
  * 오늘의 맞춤 문제 선택.
  *
- * 구성 비율:
+ * 오늘 단원 시대 안에서만 선택하며, 부족해도 다른 시대에서 보충하지 않는다.
+ * 범위 내 구성 비율:
  * - 40% 가장 취약한 영역
  * - 30% 최근 오답·복습 도래
  * - 20% 오늘 새 학습 범위
@@ -33,7 +34,9 @@ export function selectDailyQuestions(ctx: SelectionContext): Question[] {
   const boostMultiplier = ctx.boostMultiplier ?? 1.5
   const exclude = new Set(ctx.excludeIds ?? [])
   const used = new Set<string>()
-  const pool = ctx.questions.filter((q) => !exclude.has(q.id))
+  const pool = ctx.questions.filter((q) =>
+    !exclude.has(q.id) && (!ctx.todayLessonEra || q.era === ctx.todayLessonEra),
+  )
 
   const quotas = splitQuotas(ctx.count)
   const picked: Question[] = []
@@ -83,7 +86,7 @@ export function selectDailyQuestions(ctx: SelectionContext): Question[] {
     }
   }
 
-  // 부족분은 전체 풀에서 가중 보충
+  // 부족분은 같은 시대의 풀 안에서만 가중 보충
   if (picked.length < ctx.count) {
     const rest = weightedShuffle(
       pool.filter((q) => !used.has(q.id)),

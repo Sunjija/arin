@@ -127,12 +127,12 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
   const dueAll = cards.filter((c) => isDue(c.nextReviewAt, today))
   const quantity = planDailyQuantity({
     dailyMinutes: settings.dailyMinutes,
-    dailyQuestionCap: settings.dailyQuestionCount,
+    dailyQuestionCap: Math.min(settings.dailyQuestionCount, questions.filter((q) => q.era === lesson.era).length),
     dailyCardCap: dailyCardCount,
-    dueCardCount: dueAll.length,
+    dueCardCount: dueAll.filter((card) => card.era === lesson.era).length,
     lesson,
   })
-  const dueCards = pickDueCardsForToday(dueAll, lesson.era, quantity.selectedCardCount)
+  const dueCards = pickDueCardsForToday(dueAll.filter((card) => card.era === lesson.era), lesson.era, quantity.selectedCardCount)
 
   const scoreSummary = buildScoreSummary({
     attempts,
@@ -167,7 +167,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     dueCards,
     quantity,
     reviewCardCount: dueCards.length,
-    questionCount: quantity.selectedQuestionCount,
+    questionCount: Math.min(quantity.selectedQuestionCount, questions.filter((q) => q.era === lesson.era).length),
     estimatedMinutes: quantity.estimatedMinutes,
     completion: {
       todayDone: Boolean(studyDay?.completed),
@@ -204,7 +204,27 @@ export async function startOrResumeSession(
 
   const existing = await db.activeSession.toCollection().first()
   if (existing && existing.date === today && existing.step !== 'result') {
-    const normalized = normalizeResumedSession(existing)
+    let normalized = normalizeResumedSession(existing)
+    const lesson = lessons.find((item) => item.id === normalized.lessonId)
+    if (normalized.entryMode !== 'review' && lesson) {
+      const currentId = normalized.questionIds[normalized.questionIndex]
+      const wrongScope = normalized.questionIds.slice(normalized.questionIndex)
+        .some((id) => !questions.some((q) => q.id === id && q.era === lesson.era))
+      if (wrongScope) {
+        const currentAnswered = normalized.answered.some((answer) => answer.questionId === currentId)
+        const priorIds = normalized.questionIds.slice(0, normalized.questionIndex + Number(currentAnswered))
+        const answeredIds = new Set([...priorIds, ...normalized.answered.map((answer) => answer.questionId)])
+        const remainingIds = questions.filter((q) => q.era === lesson.era && !answeredIds.has(q.id))
+          .slice(0, Math.max(0, normalized.questionIds.length - priorIds.length)).map((q) => q.id)
+        normalized = { ...normalized, questionIds: [...priorIds, ...remainingIds], questionIndex: priorIds.length,
+          selectedIndex: undefined, quizPhase: 'choices', revealedChoices: true, clueMemo: '' }
+      }
+      const priorCards = normalized.cardIds.slice(0, normalized.cardIndex)
+      const remainingCards = await db.cards.bulkGet(normalized.cardIds.slice(normalized.cardIndex))
+      const nextCards = [...priorCards, ...remainingCards.filter((card) => card?.era === lesson.era).map((card) => card!.id)]
+      normalized = { ...normalized, cardIds: nextCards }
+      if (normalized.step === 'cards' && normalized.cardIndex >= nextCards.length) normalized.step = 'concept'
+    }
     if (normalized !== existing) {
       await db.activeSession.put(normalized)
     }
@@ -232,12 +252,16 @@ export async function startOrResumeSession(
           boostTypes: settings.focusTypes,
         })
 
+  const sessionCards = entryMode === 'review'
+    ? pickDueCardsForToday((await db.cards.toArray()).filter((card) => isDue(card.nextReviewAt, today)), plan.lesson.era, normalizeDailyCardCount(settings.dailyCardCount))
+    : plan.dueCards
+
   const session: ActiveSession = {
     id: `session-${today}-${Date.now()}`,
     date: today,
-    step: plan.dueCards.length > 0 ? 'cards' : entryMode === 'review' ? 'result' : 'concept',
+    step: sessionCards.length > 0 ? 'cards' : entryMode === 'review' ? 'result' : 'concept',
     lessonId: plan.lesson.id,
-    cardIds: plan.dueCards.map((c) => c.id),
+    cardIds: sessionCards.map((c) => c.id),
     cardIndex: 0,
     conceptDone: false,
     conceptMemo: '',

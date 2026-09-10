@@ -57,8 +57,19 @@ describe('selectDailyQuestions', () => {
       count: 15,
     })
     expect(selected).toHaveLength(15)
+    expect(selected.every((question) => question.era === 'goryeo')).toBe(true)
     expect(ensureUnique(selected)).toHaveLength(15)
     expect(new Set(selected.map((x) => x.id)).size).toBe(15)
+  })
+
+  it('does not fill a small era pool with unrelated review or weak-area questions', () => {
+    const selected = selectDailyQuestions({
+      questions: [q({ id: 'pre', era: 'prehistoric', tags: ['source'] }), ...pool],
+      masteryEras: {} as never, masteryTypes: {} as never,
+      recentWrongIds: ['q1'], dueReviewQuestionIds: ['q2'],
+      todayLessonEra: 'prehistoric', count: 15,
+    })
+    expect(selected.map((question) => question.id)).toEqual(['pre'])
   })
 
   it('비율 합이 전체 개수와 같다', () => {
