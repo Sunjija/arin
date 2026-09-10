@@ -11,9 +11,16 @@ import {
   type UserSettings,
 } from '../types'
 import { toDateKey } from '../lib/dates'
+import { persistClockOverride, readPersistedClockOverride, resetClock, setClockToDate } from '../lib/clock'
+import { GRADE_CUTOFF, normalizeSettings } from '../lib/settingsNormalize'
+import { GOAL_GRADE_LABELS } from '../types'
+import type { ExperienceLevel, GoalGrade } from '../types/dailyLearning'
 
 function settingsForForm(settings: UserSettings): UserSettings {
-  return { ...settings, dailyCardCount: normalizeDailyCardCount(settings.dailyCardCount) }
+  return normalizeSettings({
+    ...settings,
+    dailyCardCount: normalizeDailyCardCount(settings.dailyCardCount),
+  })
 }
 
 export function SettingsPage() {
@@ -33,7 +40,7 @@ export function SettingsPage() {
     if (!settings) return
     setBusy(true)
     try {
-      const normalized = settingsForForm(settings)
+      const normalized = normalizeSettings(settingsForForm(settings))
       await db.settings.put({ id: 'settings', ...normalized })
       setSettings(normalized)
       setMessage('설정을 저장했습니다.')
@@ -100,6 +107,50 @@ export function SettingsPage() {
         <h2 className="section-title">학습 목표</h2>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <fieldset className="border-0 p-0 sm:col-span-2">
+            <legend className="mb-2 font-semibold">목표 급수</legend>
+            <div className="flex flex-wrap gap-2">
+              {([1, 2] as GoalGrade[]).map((grade) => (
+                <button
+                  key={grade}
+                  type="button"
+                  className={`btn ${settings.goalGrade === grade ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() =>
+                    setSettings({
+                      ...settings,
+                      goalGrade: grade,
+                      goalScore: GRADE_CUTOFF[grade],
+                    })
+                  }
+                >
+                  {GOAL_GRADE_LABELS[grade]}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          <Field label="응시 예정일 (비우면 미정)">
+            <input
+              className="field-control"
+              type="date"
+              value={settings.examDate ?? ''}
+              onChange={(e) => setSettings({ ...settings, examDate: e.target.value || null })}
+            />
+          </Field>
+          <Field label="학습 경험 (자기평가, 검증된 실력 아님)">
+            <select
+              className="field-control"
+              value={settings.experienceLevel ?? 'first-time'}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  experienceLevel: e.target.value as ExperienceLevel,
+                })
+              }
+            >
+              <option value="first-time">처음 공부해요</option>
+              <option value="has-experience">어느 정도 공부해 봤어요</option>
+            </select>
+          </Field>
           <Field label="목표 점수">
             <input
               className="field-control"
@@ -250,11 +301,46 @@ export function SettingsPage() {
       </section>
 
       <section className="surface p-5">
+        <h2 className="section-title">학습일 미리보기 (검증용)</h2>
+        <p className="mt-2 text-sm text-[var(--ink-muted)]">
+          학습일은 기기 로컬 날짜(YYYY-MM-DD)입니다. 이 칸은 날짜 변경 테스트용이며 실제 시험 일정이 아닙니다.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <input
+            className="field-control max-w-xs"
+            type="date"
+            defaultValue={readPersistedClockOverride()?.slice(0, 10) ?? ''}
+            onChange={(e) => {
+              const value = e.target.value
+              if (!value) {
+                persistClockOverride(null)
+                resetClock()
+                return
+              }
+              persistClockOverride(value)
+              setClockToDate(value)
+            }}
+          />
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              persistClockOverride(null)
+              resetClock()
+              setMessage('학습일 미리보기를 해제했습니다. 홈을 새로고침하세요.')
+            }}
+          >
+            실제 오늘로
+          </button>
+        </div>
+      </section>
+
+      <section className="surface p-5">
         <h2 className="section-title">콘텐츠 안내</h2>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-[var(--ink-muted)]">
           <li>문항·카드는 자체 제작 학습 콘텐츠입니다.</li>
           <li>공식 한국사능력검정시험 기출 문장·이미지를 복사하지 않습니다.</li>
-          <li>데이터는 이 브라우저의 IndexedDB에만 저장됩니다.</li>
+          <li>데이터는 이 브라우저의 IndexedDB에만 저장됩니다. 계정 동기화가 생기면 같은 학습 기록을 이어서 올립니다.</li>
         </ul>
       </section>
 

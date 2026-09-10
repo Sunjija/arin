@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { applyClockFromSearch } from '../lib/clock'
 import { ensureSeeded } from '../db/seed'
-import { buildTodayPlan, type TodayPlan } from '../lib/studyService'
-import { formatMinutes } from '../lib/dates'
+import { getTodayView } from '../lib/dailyLearningService'
+import type { TodayView } from '../types/dailyLearning'
 
 export function HomePage() {
-  const [plan, setPlan] = useState<TodayPlan | null>(null)
+  const location = useLocation()
+  const [view, setView] = useState<TodayView | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    applyClockFromSearch(location.search)
     let alive = true
     ;(async () => {
       try {
         await ensureSeeded()
-        const p = await buildTodayPlan()
-        if (alive) setPlan(p)
+        const next = await getTodayView()
+        if (alive) setView(next)
       } catch (e: unknown) {
         if (alive) setError(e instanceof Error ? e.message : '불러오기 실패')
       }
@@ -22,7 +25,7 @@ export function HomePage() {
     return () => {
       alive = false
     }
-  }, [])
+  }, [location.search])
 
   if (error) {
     return (
@@ -32,7 +35,7 @@ export function HomePage() {
     )
   }
 
-  if (!plan) {
+  if (!view) {
     return (
       <div className="surface p-5 text-[var(--ink-muted)]" aria-live="polite">
         오늘의 학습을 준비하는 중…
@@ -40,119 +43,110 @@ export function HomePage() {
     )
   }
 
+  const startTo =
+    view.primaryAction === 'setup'
+      ? '/setup'
+      : view.primaryAction === 'review-more'
+        ? '/cards'
+        : '/study'
+
   return (
     <div className="space-y-6">
       <header className="page-header">
-        <p className="eyebrow">
-          계획 {plan.week}주차 · 오늘의 학습
-        </p>
-        <h1 className="page-title">{plan.focusLine}</h1>
+        <p className="eyebrow">오늘 학습</p>
+        <h1 className="page-title">{view.headline}</h1>
+        <p className="mt-2 text-[var(--ink-muted)]">{view.reasonLine}</p>
       </header>
+
+      {view.demoContent ? (
+        <p className="surface p-4 text-sm text-[var(--ink-muted)]" role="note">
+          지금 보이는 카드·문항은 샘플 학습 콘텐츠입니다. 실제 사용자 기록이나 운영 통계와 섞이지 않습니다.
+        </p>
+      ) : null}
 
       <section className="grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]">
         <article className="surface p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="eyebrow">오늘 범위</p>
-              <h2 className="mt-1 text-xl font-bold tracking-[-0.025em]">{plan.lesson.title}</h2>
+              <p className="eyebrow">오늘 구성</p>
+              <h2 className="mt-1 text-xl font-bold tracking-[-0.025em]">
+                새 개념 {view.plan.composition.newConcept} · 복습{' '}
+                {view.plan.composition.reviewDue + view.plan.composition.recentWeak} · 적용{' '}
+                {view.plan.composition.transfer}
+              </h2>
             </div>
             <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-bold text-[var(--accent)]">
-              {plan.timeLine}
+              {view.timeLine}
             </span>
           </div>
 
-          <ol className="mt-5 grid gap-2 sm:grid-cols-3">
-            <RoutineStep number="1" label="카드 복습" value={`${plan.reviewCardCount}장`} />
-            <RoutineStep number="2" label="핵심 개념" value="요약 읽기" />
-            <RoutineStep number="3" label="맞춤 문제" value={`${plan.questionCount}문항`} />
-          </ol>
+          <ul className="mt-5 space-y-2">
+            {view.plan.items.slice(0, 6).map((item) => (
+              <li key={item.id} className="rounded-xl border border-[var(--line)] p-3">
+                <p className="text-sm font-semibold">{item.conceptTitle}</p>
+                <p className="mt-1 text-sm text-[var(--ink-muted)]">{item.reason}</p>
+                {item.sourceNote === 'reuse' ? (
+                  <p className="mt-1 text-xs text-[var(--ink-muted)]">기존 문항 재복습</p>
+                ) : null}
+                {item.sourceNote === 'not-ready' ? (
+                  <p className="mt-1 text-xs text-[var(--ink-muted)]">적용 평가 준비되지 않음</p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
 
           <Link
-            to="/study"
+            to={startTo}
             className="btn btn-primary mt-5 w-full text-base sm:w-auto sm:min-w-[220px]"
-            aria-label="오늘 학습 시작"
+            aria-label={view.primaryLabel}
           >
-            {plan.todayDone ? '이어서 복습하기' : '오늘 학습 시작'}
+            {view.primaryLabel}
           </Link>
+          {view.shortReviewAvailable ? (
+            <Link to="/study?mode=short-review" className="btn btn-secondary mt-3 w-full sm:ml-2 sm:w-auto">
+              짧게 복습하기
+            </Link>
+          ) : null}
+          {view.todayShortDone && !view.todayFullDone ? (
+            <p className="mt-3 text-sm text-[var(--ink-muted)]">
+              짧은 복습은 마쳤습니다. 오늘의 전체 학습은 아직 남아 있습니다.
+            </p>
+          ) : null}
         </article>
 
         <aside className="surface p-5 sm:p-6">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <p className="metric-label">오늘 완료율</p>
-              <p className="mt-1 text-4xl font-bold tracking-[-0.05em]">{plan.completionRate}%</p>
-            </div>
-            <p className="text-right text-sm text-[var(--ink-muted)]">
-              예상 점수
-              <strong className="mt-0.5 block text-lg text-[var(--ink)]">
-                {plan.estimatedScore}점
-              </strong>
+          <p className="metric-label">안내</p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">{view.readinessNote}</p>
+          {view.plan.examPressure ? (
+            <p className="mt-4 border-t border-[var(--line)] pt-4 text-sm leading-relaxed">
+              {view.plan.examPressure.message}
             </p>
-          </div>
-          <div
-            className="meter mt-4"
-            role="meter"
-            aria-label="오늘 학습 완료율"
-            aria-valuenow={plan.completionRate}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <span style={{ width: `${plan.completionRate}%` }} />
-          </div>
-          <p className="mt-4 border-t border-[var(--line)] pt-4 text-sm leading-relaxed text-[var(--ink-muted)]">
-            목표 {plan.goalScore}점 · <strong className="text-[var(--ink)]">차이 {plan.remainingToGoal}점</strong>
-          </p>
+          ) : null}
+          {view.nextReviewHint ? (
+            <p className="mt-4 text-sm text-[var(--ink-muted)]">{view.nextReviewHint}</p>
+          ) : null}
+          {!view.onboardingCompleted ? (
+            <Link to="/setup" className="btn btn-secondary mt-4 w-full">
+              목표·응시일 설정
+            </Link>
+          ) : (
+            <Link to="/settings" className="btn btn-ghost mt-4 w-full">
+              목표 수정
+            </Link>
+          )}
         </aside>
       </section>
 
-      <section>
-        <h2 className="section-title">학습 현황</h2>
-        <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <Stat label="예상 학습 시간" value={formatMinutes(plan.estimatedMinutes)} />
-          <Stat label="연속 학습" value={`${plan.streak}일`} />
-          <Stat label="진행 주차" value={`${plan.planWeeks}주 중 ${plan.week}주차`} />
-          <Stat label="맞춤 문제" value={`${plan.questionCount}문항`} />
-        </div>
-      </section>
-
-      {plan.streak > 0 || plan.completionRate > 0 ? (
+      {view.plan.warnings.length > 0 || view.plan.contentNotes.length > 0 ? (
         <section className="surface p-5 sm:p-6">
-          <h2 className="section-title">집중할 영역</h2>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {plan.weakAreas.map((area) => (
-              <li
-                key={area}
-                className="rounded-full border border-[var(--line)] bg-[var(--bg)] px-3 py-1.5 text-sm"
-              >
-                {area}
-              </li>
+          <h2 className="section-title">오늘 구성의 한계</h2>
+          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-[var(--ink-muted)]">
+            {[...view.plan.warnings, ...view.plan.contentNotes].map((note) => (
+              <li key={note}>{note}</li>
             ))}
           </ul>
         </section>
       ) : null}
     </div>
-  )
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="metric-card">
-      <p className="metric-label">{label}</p>
-      <p className="metric-value">{value}</p>
-    </div>
-  )
-}
-
-function RoutineStep({ number, label, value }: { number: string; label: string; value: string }) {
-  return (
-    <li className="rounded-xl border border-[var(--line)] p-3">
-      <div className="flex items-center gap-2">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-[var(--accent-soft)] text-xs font-bold text-[var(--accent)]">
-          {number}
-        </span>
-        <span className="text-sm font-semibold">{label}</span>
-      </div>
-      <p className="mt-2 text-sm text-[var(--ink-muted)]">{value}</p>
-    </li>
   )
 }

@@ -1,14 +1,14 @@
 import { flashcardSeeds } from '../data/cards'
 import { defaultMastery, defaultSettings } from '../data/defaults'
 import { cardFingerprint } from '../lib/cardFingerprint'
-import { toDateKey } from '../lib/dates'
+import { todayKey } from '../lib/clock'
 import type { FlashcardRecord } from '../types'
 import { db } from './database'
 
 /** 카드·단원 확장 시 올려 기존 IndexedDB에 새 카드를 보강한다 */
 export const CONTENT_VERSION = 3
 
-export function seedCards(today = toDateKey()): FlashcardRecord[] {
+export function seedCards(today = todayKey()): FlashcardRecord[] {
   return flashcardSeeds.map((seed, index) => {
     // 초반 일부는 오늘 복습 대상으로 두어 첫 세션이 비지 않게 함
     const dueToday = index < 12
@@ -50,7 +50,7 @@ export async function ensureSeeded(): Promise<void> {
     db.cards.count(),
   ])
 
-  const today = toDateKey()
+  const today = todayKey()
   const needsContentBump = Boolean(meta) && (meta?.contentVersion ?? 1) < CONTENT_VERSION
   // 부분 손상 복구: meta만 있고 설정/카드가 비어 홈이 멈추는 경우 방지
   if (meta && settings && mastery && cardCount > 0 && !needsContentBump) return
@@ -99,7 +99,7 @@ export async function ensureSeeded(): Promise<void> {
 
 /** 샘플 콘텐츠·설정만 복원하고 학습 기록은 비움 */
 export async function restoreSampleData(): Promise<void> {
-  const today = toDateKey()
+  const today = todayKey()
   await db.transaction(
     'rw',
     [

@@ -10,6 +10,8 @@ import { ProgressPage } from './pages/ProgressPage'
 import { MockExamPage } from './pages/MockExamPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { TimelinePage } from './pages/TimelinePage'
+import { SetupPage } from './pages/SetupPage'
+import { DiagnosticPage } from './pages/DiagnosticPage'
 
 function Bootstrap({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
@@ -59,6 +61,8 @@ export default function App() {
           <Bootstrap>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/setup" element={<SetupPage />} />
+              <Route path="/setup/diagnostic" element={<DiagnosticPage />} />
               <Route path="/study" element={<StudySessionPage />} />
               <Route path="/cards" element={<CardsPage />} />
               <Route path="/timeline" element={<TimelinePage />} />
