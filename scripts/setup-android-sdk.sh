@@ -20,11 +20,21 @@ if [[ ! -x "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" ]]; then
 fi
 
 export PATH="$SDK_ROOT/cmdline-tools/latest/bin:$SDK_ROOT/platform-tools:$PATH"
-yes | sdkmanager --sdk_root="$SDK_ROOT" --licenses >/dev/null
+
+mkdir -p "$SDK_ROOT/licenses"
+printf '\n24333f8a63b6825ea9c5514f83c2829b004d1dc\n' > "$SDK_ROOT/licenses/android-sdk-license"
+printf '\n84831b9409646161da1e653ef071701f\n' > "$SDK_ROOT/licenses/android-sdk-preview-license"
+set +o pipefail
+yes | sdkmanager --sdk_root="$SDK_ROOT" --licenses >/tmp/android-sdk-licenses.log || true
+set -o pipefail
+
 sdkmanager --sdk_root="$SDK_ROOT" \
   "platform-tools" \
   "platforms;android-36" \
   "build-tools;36.0.0"
 
-printf 'sdk.dir=%s\n' "$SDK_ROOT" > "$(dirname "$0")/../android/local.properties"
+ANDROID_DIR="$(cd "$(dirname "$0")/.." && pwd)/android"
+if [[ -d "$ANDROID_DIR" ]]; then
+  printf 'sdk.dir=%s\n' "$SDK_ROOT" > "$ANDROID_DIR/local.properties"
+fi
 echo "ANDROID_SDK_ROOT=$SDK_ROOT"
