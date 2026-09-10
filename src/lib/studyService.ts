@@ -446,12 +446,12 @@ export async function finishSession(session: ActiveSession): Promise<void> {
 
   const day: StudyDayRecord = {
     date: today,
-    completed: true,
+    completed: Boolean(existingDay?.completed || session.entryMode !== 'review'),
     cardsReviewed: (existingDay?.cardsReviewed ?? 0) + cardsReviewedCount,
     conceptDone: Boolean(existingDay?.conceptDone || session.conceptDone),
     questionsAnswered: (existingDay?.questionsAnswered ?? 0) + session.answered.length,
     correctCount: (existingDay?.correctCount ?? 0) + session.answered.filter((a) => a.correct).length,
-    lessonId: existingDay?.lessonId ?? session.lessonId,
+    lessonId: existingDay?.lessonId ?? (session.entryMode === 'review' ? undefined : session.lessonId),
     minutesSpent: (existingDay?.minutesSpent ?? 0) + minutesSpent,
     minutesMeasured: Boolean(existingDay?.minutesMeasured || minutesMeasured),
     finishedSessionIds: [...(existingDay?.finishedSessionIds ?? []), session.id],

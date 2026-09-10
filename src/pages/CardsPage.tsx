@@ -4,6 +4,7 @@ import { Button, Dialog, EmptyState, InlineStatus, PageHeader } from '../compone
 import { db } from '../db/database'
 import { addDays, isDue, toDateKey } from '../lib/dates'
 import { addCardFromContent, buildTodayPlan, startOrResumeSession } from '../lib/studyService'
+import { pickDueCardsForToday } from '../lib/studyPlan'
 import { createWrongCardFromQuestion, updateCardContent } from '../lib/wrongCard'
 import {
   ALL_ERAS,
@@ -161,7 +162,14 @@ export function CardsPage() {
   }
 
   const ongoing = activeSession?.date === today && activeSession.step !== 'result' ? activeSession : null
-  const sessionCards = ongoing ? ongoing.cardIds.slice(ongoing.cardIndex).flatMap(id => { const c = cards.find(item => item.id === id); return c ? [c] : [] }) : plan?.dueCards ?? []
+  const sessionCards = ongoing
+    ? ongoing.cardIds.slice(ongoing.cardIndex).flatMap(id => {
+        const card = cards.find(item => item.id === id)
+        return card ? [card] : []
+      })
+    : plan
+      ? pickDueCardsForToday(dueCards, plan.lesson.era, plan.quantity.dailyCardCap)
+      : []
   const selectedCount = ongoing ? Math.max(0, ongoing.cardIds.length - ongoing.cardIndex) : sessionCards.length
   const bundleEras = ALL_ERAS.filter(id => sessionCards.some(c => c.era === id))
 

@@ -277,7 +277,11 @@ export function MockExamPage() {
       return
     }
     setUnansweredOpen(false)
-    await saverRef.current?.flush()
+    try {
+      await saverRef.current?.flush()
+    } catch {
+      return
+    }
     const outcome = await submitLockRef.current.run(async () => {
       const payload = snapshotForAutoSubmit({
         id,
@@ -348,7 +352,11 @@ export function MockExamPage() {
 
   async function closeRunning() {
     persistProgress()
-    await saverRef.current?.flush()
+    try {
+      await saverRef.current?.flush()
+    } catch {
+      return
+    }
     itemStartedAtRef.current = null
     setView('prep')
     await refreshPrep()

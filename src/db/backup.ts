@@ -1,6 +1,7 @@
 import type { ExportPayload } from '../types'
 import { db } from './database'
 import { validateExportPayload } from '../lib/backupValidate'
+import { lessonCompletionsFromStudyDays } from '../lib/lessonProgress'
 import type { BackupRestoreResult } from '../types/contracts'
 
 const TABLES = [
@@ -82,6 +83,8 @@ export async function restoreBackup(raw: unknown): Promise<BackupRestoreResult> 
     return { ok: false, code: 'import-invalid', message: checked.message }
   }
   const payload = checked.payload
+  const lessonCompletions =
+    payload.lessonCompletions ?? lessonCompletionsFromStudyDays(payload.studyDays)
 
   await db.transaction('rw', TABLES.map((name) => db.table(name)), async () => {
     await Promise.all([
@@ -104,8 +107,8 @@ export async function restoreBackup(raw: unknown): Promise<BackupRestoreResult> 
     if (payload.mockResults.length) await db.mockResults.bulkPut(payload.mockResults)
     if (payload.activeSession) await db.activeSession.put(payload.activeSession)
     if (payload.activeMock) await db.activeMock.put(payload.activeMock)
-    if (payload.lessonCompletions?.length) {
-      await db.lessonCompletions.bulkPut(payload.lessonCompletions)
+    if (lessonCompletions.length) {
+      await db.lessonCompletions.bulkPut(lessonCompletions)
     }
     await db.meta.put(payload.meta)
   })

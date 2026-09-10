@@ -66,4 +66,39 @@ describe('backup validation', () => {
     })
     expect(result.ok).toBe(false)
   })
+
+  it('rejects malformed nested records and active progress', () => {
+    expect(
+      validateExportPayload({
+        ...validPayload(),
+        attempts: [{ id: 'attempt-without-required-fields' }],
+      }).ok,
+    ).toBe(false)
+
+    expect(
+      validateExportPayload({
+        ...validPayload(),
+        activeSession: {
+          id: 'broken-session',
+          date: '2026-09-01',
+          step: 'cards',
+          lessonId: 'lesson-01',
+        },
+      }).ok,
+    ).toBe(false)
+
+    expect(
+      validateExportPayload({
+        ...validPayload(),
+        version: 2,
+        lessonCompletions: [
+          {
+            lessonId: 'lesson-01',
+            firstCompletedAt: '2026-09-01',
+            lastCompletedAt: '2026-09-01',
+          },
+        ],
+      }).ok,
+    ).toBe(false)
+  })
 })
