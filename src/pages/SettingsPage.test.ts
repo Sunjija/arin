@@ -6,12 +6,15 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { SettingsPage } from './SettingsPage'
+import { AccountProvider } from '../account/AccountProvider'
+import { resetAccountSyncDb } from '../account/outbox'
 import { db } from '../db/database'
 import { resetAppDb, seedCore } from '../test/idb'
 
 afterEach(async () => {
   cleanup()
   await resetAppDb()
+  await resetAccountSyncDb()
 })
 
 describe('SettingsPage save validation', () => {
@@ -19,7 +22,7 @@ describe('SettingsPage save validation', () => {
     await resetAppDb()
     await seedCore({ dailyQuestionCount: 15 })
     const user = userEvent.setup()
-    render(createElement(SettingsPage))
+    render(createElement(AccountProvider, null, createElement(SettingsPage)))
     const input = await screen.findByLabelText('하루 문제 수')
     await user.clear(input)
     await user.type(input, '0')
@@ -33,7 +36,7 @@ describe('SettingsPage save validation', () => {
     await resetAppDb()
     await seedCore({ dailyQuestionCount: 15 })
     const user = userEvent.setup()
-    render(createElement(SettingsPage))
+    render(createElement(AccountProvider, null, createElement(SettingsPage)))
     const input = await screen.findByLabelText('하루 문제 수')
     await user.clear(input)
     await user.type(input, '5')

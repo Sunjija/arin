@@ -18,6 +18,7 @@ import {
   validateSettingsForm,
 } from '../components/dashboard/settingsValidation'
 import { MAX_DAILY_CARDS, MIN_DAILY_CARDS } from '../lib/studyLimits'
+import { AccountPanel } from '../account/AccountPanel'
 import { ALL_TYPES, TYPE_LABELS, type QuestionType, type UserSettings } from '../types'
 
 export function SettingsPage() {
@@ -151,6 +152,7 @@ export function SettingsPage() {
   return (
     <div className="max-w-[720px] space-y-5">
       <PageHeader title="설정" />
+      <AccountPanel />
 
       <section className="surface p-5">
         <h2 className="section-title">학습 목표/분량</h2>
@@ -263,8 +265,8 @@ export function SettingsPage() {
       <section className="surface p-5">
         <h2 className="section-title">기록 백업하기 / 기록 가져오기</h2>
         <p className="meta-text mt-2 leading-relaxed">
-          JSON 파일은 이 브라우저에 있는 학습 기록을 옮길 때 쓰는 보조 형식입니다. 가져오기에
-          실패하면 지금 화면에서 이유를 보여 드리고, 기존 기록은 그대로 둡니다.
+          JSON 파일은 이 브라우저에 있는 학습 기록을 옮길 때 쓰는 보조 형식입니다. 로그인 후 서버
+          동기화와는 별개이며, 가져오기에 실패하면 기존 기록은 그대로 둡니다.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button disabled={busy} onClick={() => void onExport()}>

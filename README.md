@@ -19,6 +19,21 @@ npm run dev
 - 개발 서버: [http://127.0.0.1:43127](http://127.0.0.1:43127)
 - 스크립트: `npm test` · `npm run typecheck` · `npm run lint` · `npm run build`
 
+기본 `npm run dev`는 **데모 모드**다. 학습 기록은 이 브라우저 IndexedDB에만 남고, 화면은 서버 저장 완료라고 말하지 않는다.
+
+계정·기기 간 동기화(로컬 SQLite, 외부 클라우드 계정 없음):
+
+```bash
+npm run dev:account
+```
+
+- 설정 화면에서 회원가입/로그인 (`a@arin.test` / `ArinTest123!`, `b@arin.test` / 같은 비밀번호 — 개발 시드)
+- 계약: [`docs/contracts/account-sync-v1.md`](docs/contracts/account-sync-v1.md)
+- 운영 메모: [`docs/ops/account-sync.md`](docs/ops/account-sync.md)
+- 환경변수 예시: [`.env.example`](.env.example)
+
+이 저장소 작업만으로 운영 배포나 유료 클라우드가 연결되지는 않는다.
+
 ## 화면
 
 | 경로 | 역할 |

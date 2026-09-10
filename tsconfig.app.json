@@ -23,5 +23,9 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "exclude": ["src/data/runInspection.ts", "src/data/inspectQuestions.test.ts"]
+  "exclude": [
+    "src/data/runInspection.ts",
+    "src/data/inspectQuestions.test.ts",
+    "src/account/accountSwitch.test.ts"
+  ]
 }
