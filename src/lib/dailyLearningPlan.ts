@@ -245,27 +245,36 @@ function buildFresh(input: DailyPlanInput): FrozenDailyPlan {
   const items: DailyPlanItem[] = []
   const usedConcepts = new Set<string>()
 
-  for (const card of takenCards) {
-    const conceptId = cardConceptId(card, input.topics, input.lessons)
+  const grouped = new Map<string, FlashcardRecord[]>()
+  for (const due of takenCards) {
+    const conceptId = cardConceptId(due, input.topics, input.lessons)
+    const list = grouped.get(conceptId) ?? []
+    list.push(due)
+    grouped.set(conceptId, list)
+  }
+  for (const [conceptId, group] of grouped) {
+    const representative = group[0]!
     const title = conceptTitle(conceptId, input.topics, input.lessons)
-    const lesson = input.lessons.find((item) => item.era === card.era)
+    const lesson = input.lessons.find((item) => item.era === representative.era)
     const questionIds = lesson
       ? practiceQuestionsForLesson(input.questions, lesson.id, input.questionClasses)
           .slice(0, 1)
           .map((q) => q.id)
       : []
+    const confused = group.some(
+      (due) => due.lastRating === 'hard' || due.lastRating === 'again' || due.lapses > 0,
+    )
     items.push({
-      id: `review:${card.id}`,
+      id: `review:${conceptId}`,
       kind: 'review-due',
       conceptId,
       conceptTitle: title,
       lessonId: lesson?.id,
-      cardIds: [card.id],
+      cardIds: group.map((due) => due.id),
       questionIds,
-      reason:
-        card.lastRating === 'hard' || card.lastRating === 'again' || card.lapses > 0
-          ? `지난번 헷갈렸던 ${title}을 먼저 복습해요.`
-          : `복습 시점이 된 ${title}을 확인해요.`,
+      reason: confused
+        ? `지난번 헷갈렸던 ${title}을 먼저 복습해요.`
+        : `복습 시점이 된 ${title}을 확인해요.`,
     })
     usedConcepts.add(conceptId)
   }

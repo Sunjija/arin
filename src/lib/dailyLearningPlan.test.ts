@@ -214,6 +214,17 @@ describe('reuseOrBuildDailyPlan', () => {
     expect(nextDay.createdAt).not.toBe(first.createdAt)
   })
 
+  it('같은 개념 카드는 한 항목으로 묶는다', () => {
+    const cards = [
+      card('c-a', '2026-09-10', { lastRating: 'hard' }),
+      card('c-b', '2026-09-10', { lastRating: 'hard' }),
+    ]
+    const plan = reuseOrBuildDailyPlan(input({ cards }))
+    const reviews = plan.items.filter((item) => item.kind === 'review-due')
+    expect(reviews).toHaveLength(1)
+    expect(reviews[0]?.cardIds).toEqual(['c-a', 'c-b'])
+  })
+
   it('충분한 학습 시간이 쌓이면 시간 추정을 보정한다', () => {
     const samples = [30, 32, 28, 31, 29]
     const plan = reuseOrBuildDailyPlan(input({ actualMinuteSamples: samples }))
