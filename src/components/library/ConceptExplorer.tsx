@@ -74,6 +74,17 @@ export function ConceptExplorer({
               <h3>기억할 핵심어</h3>
               <ul>{selected.keywords.map((word) => <li key={word}>{word}</li>)}</ul>
             </section>
+            {selected.id === 'lesson-01' ? (
+              <section className="concept-lesson-guide">
+                <h3>한 번에 잡는 흐름</h3>
+                <div className="concept-flow">
+                  <div><strong>신석기</strong><span>빗살무늬토기 · 농경 · 정착</span></div>
+                  <div><strong>청동기</strong><span>비파형동검 · 고인돌 · 군장 사회</span></div>
+                  <div><strong>고조선</strong><span>단군 전승 · 위만 집권 · 8조법</span></div>
+                </div>
+                <p className="meta-text">유물은 시대를, 제도는 사회 모습을 묻는 단서로 활용하세요.</p>
+              </section>
+            ) : null}
             <section>
               <h3>이렇게 구분하세요</h3>
               <ol className="concept-points">

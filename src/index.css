@@ -985,3 +985,9 @@ body:has(.review-page), body:has(.library-page), body:has(.progress-page) { back
   .concept-browser { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .concept-index { max-height: 240px; overflow-y: auto; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
 }
+
+.concept-lesson-guide { padding: 20px; background: #fff8f4; border-radius: 14px; }
+.concept-flow { display: grid; gap: 8px; margin-bottom: 12px; }
+.concept-flow div { display: flex; align-items: baseline; gap: 12px; padding: 10px 12px; background: white; border-radius: 8px; }
+.concept-flow strong { min-width: 64px; color: var(--accent); }
+.concept-flow span { line-height: 1.6; }
