@@ -1,0 +1,21 @@
+{
+  "productName": "arin",
+  "displayName": "arin",
+  "version": "0.1.0",
+  "versionCode": 1,
+  "urlScheme": "arin",
+  "note": "저장소에 운영 스토어 앱 식별자가 없다. development가 현재 설치 빌드 ID다. 운영 제출 전에 production.appId를 확정하고 이 파일만 바꾼다.",
+  "development": {
+    "appId": "app.arin.dev",
+    "androidApplicationId": "app.arin.dev",
+    "iosBundleId": "app.arin.dev",
+    "appName": "arin 개발"
+  },
+  "production": {
+    "appId": "app.arin",
+    "androidApplicationId": "app.arin",
+    "iosBundleId": "app.arin",
+    "appName": "arin",
+    "status": "placeholder-unregistered"
+  }
+}

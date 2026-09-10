@@ -12,6 +12,38 @@ dist
 dist-ssr
 *.local
 
+# Native signing secrets — never commit
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+keystore.properties
+android/key.properties
+google-services.json
+GoogleService-Info.plist
+.env.local
+.env.*.local
+
+# Capacitor / Android / iOS build output
+android/app/build
+android/build
+android/.gradle
+android/captures
+android/local.properties
+android/*.iml
+ios/App/Pods
+ios/App/build
+ios/DerivedData
+ios/App/App/public
+app/build
+dist
+dist-ssr
+android/app/src/main/assets/public
+
+artifacts/mobile/*.apk
+artifacts/mobile/*.aab
+artifacts/mobile/*.ipa
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

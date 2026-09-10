@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useFocusLayoutControl } from './layout/useFocusLayout'
 import { NAV_ITEMS } from './layout/navConfig'
+import { OfflineBanner } from './platform/OfflineBanner'
+import { RuntimeBanner } from './platform/RuntimeBanner'
 
 const ICONS: Record<string, ReactNode> = {
   오늘: (
@@ -42,6 +44,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className={`app-shell${focused ? ' is-focus' : ''}`}>
+      {focused ? null : <RuntimeBanner />}
+      <OfflineBanner />
       <header className="site-header">
         <Link to="/" className="brand" aria-label="arin 오늘 화면">
           <strong className="brand-name">arin</strong>

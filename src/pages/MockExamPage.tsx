@@ -35,6 +35,8 @@ import {
 import { createWrongCardFromQuestion } from '../lib/wrongCard'
 import { getScoreSummary, recordQuizAnswer, updateAttemptCause } from '../lib/studyService'
 import { Button, Dialog } from '../components/ui'
+import { useAppPause } from '../platform/useAppPause'
+import { useHardwareBack } from '../platform/useHardwareBack'
 import type { ActiveMock, MockExamResult, QuestionSnapshot, WrongCause } from '../types'
 import type { ScoreSummary } from '../types/contracts'
 
@@ -361,6 +363,15 @@ export function MockExamPage() {
     setView('prep')
     await refreshPrep()
   }
+
+  useAppPause(() => {
+    persistProgress()
+    void saverRef.current?.flush()
+  })
+  useHardwareBack(focused, () => {
+    void closeRunning()
+    return true
+  })
 
   async function handleCause(questionId: string, cause: WrongCause) {
     setCauses((current) => ({ ...current, [questionId]: cause }))

@@ -16,8 +16,10 @@ npm install
 npm run dev
 ```
 
-- 개발 서버: [http://127.0.0.1:43127](http://127.0.0.1:43127)
+- 개발 서버(데모 모드): [http://127.0.0.1:43127](http://127.0.0.1:43127)
+- 개발 서버에 붙는 모드: `npm run dev:live`
 - 스크립트: `npm test` · `npm run typecheck` · `npm run lint` · `npm run build`
+- 설치형 앱: [`docs/mobile/dev-preview.md`](docs/mobile/dev-preview.md) · 계약 [`docs/contracts/mobile-platform-v1.md`](docs/contracts/mobile-platform-v1.md)
 
 ## 화면
 
