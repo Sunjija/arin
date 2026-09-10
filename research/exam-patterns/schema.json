@@ -1,0 +1,40 @@
+{
+  "$comment": "Shared analysis contract for exam-pattern research. Compatible with artifacts/question-quality-benchmark-roadmap.md item fields.",
+  "item_required": [
+    "id",
+    "round",
+    "number",
+    "points",
+    "answer",
+    "primary_era",
+    "secondary_eras",
+    "topic",
+    "core_concepts",
+    "people",
+    "events",
+    "institutions",
+    "official_skill_type_estimate",
+    "internal_format_id",
+    "stimulus_types",
+    "visual_required",
+    "visual_required_reason",
+    "reasoning_steps",
+    "solution_sketch",
+    "distractor_strategy",
+    "confused_concepts",
+    "answer_target_exposed_in_stem",
+    "classification_basis",
+    "uncertainty",
+    "review"
+  ],
+  "review_levels": ["none", "auto", "ai_source_check", "human"],
+  "skill_types_official_names": [
+    "역사 지식의 이해",
+    "연대기의 파악",
+    "역사 상황 및 쟁점의 인식",
+    "역사 자료의 분석 및 해석",
+    "역사 탐구의 설계 및 수행",
+    "결론의 도출 및 평가"
+  ],
+  "note": "Per-item official_skill_type is not published by NIKH. Field is an internal estimate referencing official names."
+}

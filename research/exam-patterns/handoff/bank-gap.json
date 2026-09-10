@@ -1,0 +1,294 @@
+{
+  "generated_at": "2026-09-10T18:13:49+00:00",
+  "bank_size": 100,
+  "bank_with_passage": 44,
+  "bank_without_passage": 56,
+  "bank_eras": {
+    "prehistoric": 6,
+    "three-kingdoms": 8,
+    "north-south": 7,
+    "goryeo": 15,
+    "joseon-early": 6,
+    "joseon-late": 12,
+    "opening": 11,
+    "colonial": 14,
+    "modern": 14,
+    "culture": 7
+  },
+  "bank_points": {
+    "1": 22,
+    "2": 56,
+    "3": 22
+  },
+  "bank_formats": {
+    "source-underline": 6,
+    "source-what": 5,
+    "wrong-statement": 7,
+    "map-region": 4,
+    "chronology-labeled": 7,
+    "king-policy-match": 5,
+    "policy-content": 14,
+    "source-who": 11,
+    "chronology-events": 7,
+    "king-compare": 6,
+    "org-activity": 7,
+    "cause-effect": 10,
+    "heritage-period": 6,
+    "policy-name": 5
+  },
+  "official_classified_eras": {
+    "goryeo": 37,
+    "joseon-late": 23,
+    "joseon-early": 32,
+    "opening": 22,
+    "three-kingdoms": 62,
+    "prehistoric": 13,
+    "culture": 11,
+    "north-south": 8,
+    "modern": 20,
+    "colonial": 23
+  },
+  "missing_era_format_points_combos": [
+    {
+      "era": "three-kingdoms",
+      "format": "map-region",
+      "points": 3,
+      "official_n": 2
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "heritage-period",
+      "points": 2,
+      "official_n": 2
+    },
+    {
+      "era": "modern",
+      "format": "map-region",
+      "points": 2,
+      "official_n": 2
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "chronology-labeled",
+      "points": 2,
+      "official_n": 2
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "heritage-period",
+      "points": 3,
+      "official_n": 2
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "source-what",
+      "points": 1,
+      "official_n": 2
+    },
+    {
+      "era": "joseon-early",
+      "format": "policy-name",
+      "points": 2,
+      "official_n": 2
+    },
+    {
+      "era": "joseon-late",
+      "format": "source-what",
+      "points": 1,
+      "official_n": 2
+    },
+    {
+      "era": "colonial",
+      "format": "source-what",
+      "points": 2,
+      "official_n": 2
+    },
+    {
+      "era": "culture",
+      "format": "heritage-period",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "colonial",
+      "format": "map-region",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "source-underline",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "heritage-period",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "heritage-period",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "wrong-statement",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "culture",
+      "format": "wrong-statement",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "source-underline",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "cause-effect",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "culture",
+      "format": "map-region",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "joseon-early",
+      "format": "map-region",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "map-region",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "heritage-period",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "joseon-early",
+      "format": "org-activity",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "wrong-statement",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "joseon-early",
+      "format": "map-region",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "cause-effect",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "joseon-late",
+      "format": "heritage-period",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "prehistoric",
+      "format": "source-what",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "prehistoric",
+      "format": "king-compare",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "source-what",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "source-who",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "policy-content",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "three-kingdoms",
+      "format": "source-who",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "north-south",
+      "format": "heritage-period",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "source-who",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "chronology-events",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "source-what",
+      "points": 1,
+      "official_n": 1
+    },
+    {
+      "era": "goryeo",
+      "format": "chronology-labeled",
+      "points": 2,
+      "official_n": 1
+    },
+    {
+      "era": "joseon-early",
+      "format": "source-who",
+      "points": 3,
+      "official_n": 1
+    },
+    {
+      "era": "joseon-late",
+      "format": "king-policy-match",
+      "points": 2,
+      "official_n": 1
+    }
+  ],
+  "note": "문항 은행은 읽기 전용으로 집계했다. 문항 생성·조립 코드는 변경하지 않았다."
+}

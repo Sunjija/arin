@@ -1,0 +1,300 @@
+{
+  "schema": "arin.exam-patterns.blueprint.v1",
+  "label": "observed_official_advanced_distribution_candidate",
+  "not_official_blueprint": true,
+  "generated_at": "2026-09-10T18:13:49+00:00",
+  "data_version": "exam-patterns-2026-09-v1",
+  "evidence_rounds": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+  ],
+  "classification_evidence_rounds": [
+    79
+  ],
+  "confidence": "medium",
+  "evidence_note": "배점 10·30·10은 65~79회 정답표 15개에서 확인했다. 시대·평가 능력·자료 유형의 자동 추정은 텍스트 추출이 된 회차와 키워드 규칙에 의존한다. AI 원본 대조가 끝난 회차는 현재 제79회 50문항이다. 사람 검수는 0이다. 65~78회 전체를 확정 시대로 쓰지 말 것.",
+  "must": {
+    "item_count": 50,
+    "choices": 5,
+    "points_total": 100,
+    "points_quota": {
+      "1": 10,
+      "2": 30,
+      "3": 10
+    },
+    "basis": "공식 요강(50문항 5지 택1, 1~3점 차등, 100점)과 확보한 15개 심화 정답표에서 반복 관측된 10·30·10."
+  },
+  "strong": {
+    "era_allocation_50": {
+      "prehistoric": 2,
+      "three-kingdoms": 7,
+      "north-south": 2,
+      "goryeo": 6,
+      "joseon-early": 4,
+      "joseon-late": 6,
+      "opening": 5,
+      "colonial": 12,
+      "modern": 5,
+      "culture": 1
+    },
+    "era_shares_recent_confirmed": {
+      "prehistoric": 0.04,
+      "three-kingdoms": 0.14,
+      "north-south": 0.04,
+      "goryeo": 0.12,
+      "joseon-early": 0.08,
+      "joseon-late": 0.12,
+      "opening": 0.1,
+      "colonial": 0.24,
+      "modern": 0.1,
+      "culture": 0.02
+    },
+    "rounding": "largest_remainder_hamilton",
+    "tolerance_note": "허용 오차는 제품 선택이 아니라, 회차 완전체에서 관측된 편차를 별도 필드로 둔다.",
+    "basis": "ai_source_check 이상만. 키워드 자동 분류는 estimated_auto에 둔다."
+  },
+  "estimated_auto": {
+    "era_allocation_50": {
+      "prehistoric": 3,
+      "three-kingdoms": 10,
+      "north-south": 2,
+      "goryeo": 7,
+      "culture": 2,
+      "joseon-early": 6,
+      "opening": 4,
+      "joseon-late": 6,
+      "colonial": 7,
+      "modern": 3
+    },
+    "era_shares_recent_auto": {
+      "prehistoric": 0.05303030303030303,
+      "three-kingdoms": 0.19696969696969696,
+      "north-south": 0.03787878787878788,
+      "goryeo": 0.14393939393939395,
+      "culture": 0.03787878787878788,
+      "joseon-early": 0.12121212121212122,
+      "opening": 0.09090909090909091,
+      "joseon-late": 0.11363636363636363,
+      "colonial": 0.13636363636363635,
+      "modern": 0.06818181818181818
+    },
+    "skill_shares_recent_auto": {
+      "historical_knowledge": 0.14942528735632185,
+      "source_analysis": 0.5287356321839081,
+      "chronology": 0.19540229885057472,
+      "situation_issue": 0.10344827586206896,
+      "conclusion_evaluation": 0.022988505747126436
+    },
+    "note": "텍스트 추출+키워드 휴리스틱. 확정 통계가 아니다."
+  },
+  "flexible": {
+    "skill_allocation_50": {
+      "source_analysis": 35,
+      "conclusion_evaluation": 2,
+      "chronology": 7,
+      "situation_issue": 5,
+      "historical_knowledge": 1
+    },
+    "stimulus_share_recent": {
+      "photo": 0.33884297520661155,
+      "instructional_text": 0.23140495867768596,
+      "text_source": 0.3305785123966942,
+      "map": 0.06611570247933884,
+      "timeline": 0.04132231404958678,
+      "dialogue": 0.2644628099173554,
+      "composite": 0.04132231404958678,
+      "table": 0.03305785123966942
+    },
+    "stimulus_is_multi": true
+  },
+  "conflicts": [
+    "시대·평가능력·자료유형 목표를 동시에 정수로 맞추면 해가 없을 수 있다. 그 경우 must(배점·문항수)를 우선하고 strong(시대)을 다음으로 두며 flexible은 완화한다.",
+    "주변 분포를 각각 맞춰도 실제 회차의 문항 배열(앞쪽 전근대, 뒤쪽 근현대 등)이 재현된다고 가정하지 않는다."
+  ],
+  "per_round_points": [
+    {
+      "round": 65,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 66,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 67,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 68,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 69,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 70,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 71,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 72,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 73,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 74,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 75,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 76,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 77,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 78,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    },
+    {
+      "round": 79,
+      "extracted_items": 50,
+      "target_items": 50,
+      "missing": 0,
+      "points_1": 10,
+      "points_2": 30,
+      "points_3": 10,
+      "points_sum": 100,
+      "complete": true
+    }
+  ],
+  "weight_formula": {
+    "recent_count": 5,
+    "recent_weight": 2.0,
+    "older_weight": 1.0,
+    "rationale": "다가올 시험에 가까운 최근 5회(현재 기준 75~79회)를 2배로 두어 최신 구성에 민감하게 하되, 한 회의 특수 문항이 목표를 과도하게 흔들지 않도록 이전 10회는 1로 둔다. 균등 가중 결과도 항상 함께 제공한다. 가중치를 바꾸면 시대·유형 목표 정수가 달라질 수 있으므로 변경 시 차이표를 남겨야 한다."
+  }
+}

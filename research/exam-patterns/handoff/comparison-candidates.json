@@ -1,0 +1,276 @@
+{
+  "items": [
+    {
+      "bank_id": "q-57",
+      "bank_era": "colonial",
+      "bank_format": "org-activity",
+      "bank_points": 2,
+      "candidates": [
+        {
+          "official_id": "adv-79-38",
+          "round": 79,
+          "number": 38,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "colonial",
+          "official_format": "org-activity",
+          "official_points": 2,
+          "official_skill_estimate": "source_analysis"
+        },
+        {
+          "official_id": "adv-79-39",
+          "round": 79,
+          "number": 39,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "colonial",
+          "official_format": "org-activity",
+          "official_points": 2,
+          "official_skill_estimate": "source_analysis"
+        },
+        {
+          "official_id": "adv-79-42",
+          "round": 79,
+          "number": 42,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "colonial",
+          "official_format": "org-activity",
+          "official_points": 2,
+          "official_skill_estimate": "source_analysis"
+        },
+        {
+          "official_id": "adv-79-44",
+          "round": 79,
+          "number": 44,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "colonial",
+          "official_format": "org-activity",
+          "official_points": 2,
+          "official_skill_estimate": "source_analysis"
+        },
+        {
+          "official_id": "adv-79-35",
+          "round": 79,
+          "number": 35,
+          "score": 6,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식"
+          ],
+          "official_era": "colonial",
+          "official_format": "org-activity",
+          "official_points": 1,
+          "official_skill_estimate": "source_analysis"
+        }
+      ],
+      "forced": false,
+      "note": null
+    },
+    {
+      "bank_id": "q-99",
+      "bank_era": "colonial",
+      "bank_format": "king-compare",
+      "bank_points": 2,
+      "candidates": [],
+      "forced": false,
+      "note": "적합한 공식 기출 비교 후보를 억지로 연결하지 않음."
+    },
+    {
+      "bank_id": "q-27",
+      "bank_era": "colonial",
+      "bank_format": "cause-effect",
+      "bank_points": 2,
+      "candidates": [
+        {
+          "official_id": "adv-79-40",
+          "round": 79,
+          "number": 40,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "colonial",
+          "official_format": "cause-effect",
+          "official_points": 2,
+          "official_skill_estimate": "chronology"
+        }
+      ],
+      "forced": false,
+      "note": null
+    },
+    {
+      "bank_id": "q-55",
+      "bank_era": "colonial",
+      "bank_format": "chronology-events",
+      "bank_points": 3,
+      "candidates": [],
+      "forced": false,
+      "note": "적합한 공식 기출 비교 후보를 억지로 연결하지 않음."
+    },
+    {
+      "bank_id": "q-86",
+      "bank_era": "opening",
+      "bank_format": "chronology-labeled",
+      "bank_points": 3,
+      "candidates": [
+        {
+          "official_id": "adv-79-31",
+          "round": 79,
+          "number": 31,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "opening",
+          "official_format": "chronology-labeled",
+          "official_points": 3,
+          "official_skill_estimate": "chronology"
+        }
+      ],
+      "forced": false,
+      "note": null
+    },
+    {
+      "bank_id": "q-70",
+      "bank_era": "culture",
+      "bank_format": "heritage-period",
+      "bank_points": 1,
+      "candidates": [
+        {
+          "official_id": "adv-71-33",
+          "round": 71,
+          "number": 33,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "culture",
+          "official_format": "heritage-period",
+          "official_points": 1,
+          "official_skill_estimate": "historical_knowledge"
+        },
+        {
+          "official_id": "adv-70-22",
+          "round": 70,
+          "number": 22,
+          "score": 6,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식"
+          ],
+          "official_era": "culture",
+          "official_format": "heritage-period",
+          "official_points": 3,
+          "official_skill_estimate": "historical_knowledge"
+        }
+      ],
+      "forced": false,
+      "note": null
+    },
+    {
+      "bank_id": "q-01",
+      "bank_era": "prehistoric",
+      "bank_format": "source-underline",
+      "bank_points": 1,
+      "candidates": [],
+      "forced": false,
+      "note": "적합한 공식 기출 비교 후보를 억지로 연결하지 않음."
+    },
+    {
+      "bank_id": "q-52",
+      "bank_era": "goryeo",
+      "bank_format": "policy-name",
+      "bank_points": 2,
+      "candidates": [],
+      "forced": false,
+      "note": "적합한 공식 기출 비교 후보를 억지로 연결하지 않음."
+    },
+    {
+      "bank_id": "q-24",
+      "bank_era": "opening",
+      "bank_format": "source-what",
+      "bank_points": 2,
+      "candidates": [
+        {
+          "official_id": "adv-79-29",
+          "round": 79,
+          "number": 29,
+          "score": 8,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식",
+            "같은 배점"
+          ],
+          "official_era": "opening",
+          "official_format": "source-what",
+          "official_points": 2,
+          "official_skill_estimate": "source_analysis"
+        },
+        {
+          "official_id": "adv-79-28",
+          "round": 79,
+          "number": 28,
+          "score": 6,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식"
+          ],
+          "official_era": "opening",
+          "official_format": "source-what",
+          "official_points": 1,
+          "official_skill_estimate": "source_analysis"
+        }
+      ],
+      "forced": false,
+      "note": null
+    },
+    {
+      "bank_id": "q-96",
+      "bank_era": "colonial",
+      "bank_format": "source-who",
+      "bank_points": 2,
+      "candidates": [
+        {
+          "official_id": "adv-79-41",
+          "round": 79,
+          "number": 41,
+          "score": 6,
+          "reasons": [
+            "같은 시대",
+            "같은 내부 형식"
+          ],
+          "official_era": "colonial",
+          "official_format": "source-who",
+          "official_points": 1,
+          "official_skill_estimate": "source_analysis"
+        }
+      ],
+      "forced": false,
+      "note": null
+    }
+  ]
+}

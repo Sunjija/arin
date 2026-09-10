@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Official exam papers, page renders, OCR, and HTTP cache.
+# Analysis metadata in research/exam-patterns remains versioned.
+var/exam-patterns/
+research/exam-patterns/.local/
+scripts/exam-patterns/.local/
+__pycache__/
+*.pyc
