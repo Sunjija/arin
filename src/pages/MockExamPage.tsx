@@ -21,9 +21,16 @@ import {
 import {
   FULL_QUESTION_COUNT,
   SAMPLE_QUESTION_COUNT,
-  buildMockSnapshots,
   questionFromSnapshot,
 } from '../lib/examScoring'
+import {
+  assembleMockExam,
+  describeMockPool,
+  inventoryShortages,
+  mixSummaryCopy,
+  transitionNotice,
+} from '../lib/examMix'
+import { computeTargetMix } from '../data/officialExamAnalysis'
 import {
   FULL_DURATION_MS,
   SAMPLE_DURATION_MS,
@@ -82,11 +89,15 @@ export function MockExamPage() {
   const focused = view === 'running' || view === 'confirm'
   useFocusLayout(focused)
 
-  const uniqueQuestionCount = useMemo(
-    () => new Set(questions.map((item) => item.id)).size,
-    [],
-  )
-  const poolBlocked = uniqueQuestionCount < FULL_QUESTION_COUNT
+  const poolInfo = useMemo(() => describeMockPool(questions, selectedMode), [selectedMode])
+  const mix = useMemo(() => computeTargetMix(), [])
+  const inventoryGaps = useMemo(() => {
+    const count = selectedMode === 'full' ? FULL_QUESTION_COUNT : SAMPLE_QUESTION_COUNT
+    return inventoryShortages(poolInfo.pool, count, mix)
+  }, [poolInfo, selectedMode, mix])
+  const poolBlocked = poolInfo.pool.length < FULL_QUESTION_COUNT
+  const transitionMessage = selectedMode === 'full' ? transitionNotice(poolInfo) : null
+  const mixCopy = mixSummaryCopy(mix)
 
   const remaining = deadlineAt ? Math.max(0, Date.parse(deadlineAt) - nowMs) : 0
 
@@ -209,15 +220,15 @@ export function MockExamPage() {
     setNotice(null)
     try {
       const count = selectedMode === 'full' ? FULL_QUESTION_COUNT : SAMPLE_QUESTION_COUNT
-      const nextSnapshots = buildMockSnapshots(questions, count)
-      if (selectedMode === 'full' && !canStartFull(nextSnapshots).ok) {
+      const assembly = assembleMockExam(questions, count, selectedMode)
+      if (selectedMode === 'full' && !canStartFull(assembly.snapshots).ok) {
         setNotice('고유 문항이 50개보다 적어 실전 연습을 시작할 수 없습니다. 10문항 연습을 이용해 주세요.')
         setSelectedMode('sample')
         return
       }
       const started = await startMock({
         mode: selectedMode,
-        snapshots: nextSnapshots,
+        snapshots: assembly.snapshots,
         durationMs: selectedMode === 'full' ? FULL_DURATION_MS : SAMPLE_DURATION_MS,
         replaceExisting,
       })
@@ -277,7 +288,11 @@ export function MockExamPage() {
       return
     }
     setUnansweredOpen(false)
-    await saverRef.current?.flush()
+    try {
+      await saverRef.current?.flush()
+    } catch {
+      return
+    }
     const outcome = await submitLockRef.current.run(async () => {
       const payload = snapshotForAutoSubmit({
         id,
@@ -348,7 +363,11 @@ export function MockExamPage() {
 
   async function closeRunning() {
     persistProgress()
-    await saverRef.current?.flush()
+    try {
+      await saverRef.current?.flush()
+    } catch {
+      return
+    }
     itemStartedAtRef.current = null
     setView('prep')
     await refreshPrep()
@@ -472,6 +491,10 @@ export function MockExamPage() {
         notice={notice}
         busy={busy}
         poolBlocked={poolBlocked}
+        poolInfo={poolInfo}
+        mixCopy={mixCopy}
+        shortages={selectedMode === 'full' ? inventoryGaps : []}
+        transitionMessage={transitionMessage}
       />
       <Dialog open={replaceOpen} title="진행 중인 시험" onClose={() => setReplaceOpen(false)}>
         <p>{activeMock ? existingProgressCopy(activeMock) : '진행 중인 시험을 덮어쓸까요?'}</p>

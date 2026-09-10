@@ -1,6 +1,7 @@
 import { Button, EmptyState, InlineStatus, PageHeader } from '../ui'
 import type { ActiveMock } from '../../types'
 import type { ScoreSummary } from '../../types/contracts'
+import type { MixShortage, MockPoolDescription } from '../../lib/examMix'
 import {
   FULL_LABEL,
   SAMPLE_LABEL,
@@ -20,6 +21,10 @@ export function MockPrepScreen({
   notice,
   busy,
   poolBlocked,
+  poolInfo,
+  mixCopy,
+  shortages,
+  transitionMessage,
 }: {
   selectedMode: 'sample' | 'full'
   onSelectMode: (mode: 'sample' | 'full') => void
@@ -30,6 +35,10 @@ export function MockPrepScreen({
   notice: string | null
   busy: boolean
   poolBlocked: boolean
+  poolInfo?: MockPoolDescription
+  mixCopy?: string
+  shortages?: MixShortage[]
+  transitionMessage?: string | null
 }) {
   const recent = summary ? recentMocksForDisplay(summary) : []
   const average = summary ? fullMockAverageFromSummary(summary) : null
@@ -79,7 +88,21 @@ export function MockPrepScreen({
             <p className="metric-value">{selectedMode === 'sample' ? 16 : 80}분</p>
           </div>
         </div>
-        <p className="meta-text mt-3">배점은 문항마다 1·2·3점입니다. 비율은 로컬 출제 규칙입니다.</p>
+        <p className="meta-text mt-3">{mixCopy ?? '배점은 문항마다 1·2·3점입니다. 비율은 로컬 출제 규칙입니다.'}</p>
+        {selectedMode === 'full' && transitionMessage ? (
+          <InlineStatus tone="neutral">{transitionMessage}</InlineStatus>
+        ) : null}
+        {selectedMode === 'full' && shortages && shortages.length > 0 ? (
+          <InlineStatus tone="neutral">
+            재고 부족: {shortages.map((item) => `${item.dimension} ${item.have}/${item.needed}`).join(' · ')}
+          </InlineStatus>
+        ) : null}
+        {poolInfo && selectedMode === 'full' ? (
+          <p className="meta-text">
+            승인 {poolInfo.approvedCount}문항 · 실전 후보 {poolInfo.mockCount}문항
+            {poolInfo.policy === 'approved-only' ? ' · 승인 문항만 사용' : null}
+          </p>
+        ) : null}
         {poolBlocked && selectedMode === 'full' ? (
           <InlineStatus tone="error">
             고유 문항이 50개보다 적어 실전 연습을 시작할 수 없습니다. 10문항 연습을 이용해 주세요.

@@ -1,4 +1,5 @@
 import { Button, ChoiceOption, EmptyState, InlineStatus, PageHeader } from '../ui'
+import { StimulusBlock } from '../question/StimulusBlock'
 import type { MockExamResult, QuestionSnapshot, WrongCause } from '../../types'
 import type { ScoreSummary } from '../../types/contracts'
 import {
@@ -66,7 +67,9 @@ export function MockResultScreen({
               <p className="meta-text">
                 {index + 1}번 · 배점 {review.difficulty}점 · {review.correct ? '정답' : review.selectedIndex == null ? '미응답' : '오답'}
               </p>
-              {review.passage ? <blockquote className="passage-text">{review.passage}</blockquote> : null}
+              {review.passage || review.stimulus ? (
+                <StimulusBlock stimulus={review.stimulus} passage={review.passage} />
+              ) : null}
               <h3 className="font-semibold">{review.stem}</h3>
               <div className="space-y-2">
                 {review.choices.map((choice, choiceIndex) => {

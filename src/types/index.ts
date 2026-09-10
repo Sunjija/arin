@@ -26,6 +26,104 @@ export type QuestionType =
  */
 export type Difficulty = 1 | 2 | 3
 
+/** 개념 확인용 연습과 실전 모의고사를 구분한다. */
+export type QuestionPurpose = 'practice' | 'mock'
+
+/** 초안 / 검수 중 / 승인 / 사용 중단 */
+export type QuestionReviewStatus = 'draft' | 'in-review' | 'approved' | 'retired'
+
+export type ReviewAgentKind = 'none' | 'ai' | 'human'
+
+export type ChoiceOrderMode = 'free' | 'keep'
+
+export type RightsStatus = 'unverified' | 'reconstructed-study' | 'cleared' | 'restricted'
+
+export type SimilarityAuditStatus = 'not-run' | 'estimate' | 'human-reviewed'
+
+export type TagConfidence = 'unset' | 'estimate' | 'authored' | 'reviewed'
+
+export type StimulusKind =
+  | 'none'
+  | 'text'
+  | 'document'
+  | 'newspaper'
+  | 'dialogue'
+  | 'timeline'
+  | 'table'
+  | 'catalog'
+  | 'diagram'
+  | 'map'
+  | 'quote'
+
+/** 국사편찬위원회가 안내하는 심화 평가 유형 6종 */
+export type OfficialSkillType =
+  | 'knowledge'
+  | 'chronology'
+  | 'situation'
+  | 'inquiry'
+  | 'source-analysis'
+  | 'evaluation'
+
+export const OFFICIAL_SKILL_LABELS: Record<OfficialSkillType, string> = {
+  knowledge: '역사 지식의 이해',
+  chronology: '연대기의 파악',
+  situation: '역사 상황 및 쟁점의 인식',
+  inquiry: '역사 탐구의 설계 및 수행',
+  'source-analysis': '역사 자료의 분석 및 해석',
+  evaluation: '결론의 도출 및 평가',
+}
+
+export interface StimulusSpec {
+  kind: Exclude<StimulusKind, 'none'>
+  /** 실제 사료 인용과 학습용 재구성을 구분한다. */
+  authenticity: 'reconstructed' | 'quoted' | 'original-visual'
+  title?: string
+  caption?: string
+  altText?: string
+  body?: string
+  rows?: Array<{ label: string; value: string }>
+  columns?: string[]
+  table?: string[][]
+  events?: Array<{ marker?: string; year?: string; text: string }>
+  dialogue?: Array<{ speaker: string; line: string }>
+  diagramText?: string
+}
+
+export interface FactSource {
+  title: string
+  url?: string
+  accessedAt?: string
+  note?: string
+}
+
+export interface SimilarityAudit {
+  status: SimilarityAuditStatus
+  corpusVersion?: string
+  maxScore?: number
+  reviewed: boolean
+}
+
+export interface QuestionProvenance {
+  origin: 'original'
+  blueprintVersion: string
+  factSources: FactSource[]
+  productionMethod: 'original-authored' | 'ai-draft-human-pending'
+  authorId: string
+  reviewAgent: ReviewAgentKind
+  reviewerId?: string
+  reviewedAt?: string | null
+  rightsStatus: RightsStatus
+  mediaRightsNote?: string
+  similarityAudit: SimilarityAudit
+}
+
+/** 실제 풀이 통계. 집필 배점과 섞지 않는다. */
+export interface QuestionStats {
+  attemptCount: number | null
+  correctRate: number | null
+  discrimination: number | null
+}
+
 export type WrongCause =
   | 'first-time'
   | 'confused-person'
@@ -49,7 +147,7 @@ export interface Question {
   explanation: string
   era: EraId
   tags: QuestionType[]
-  /** 공식 심화 배점(1·2·3)에 맞춘 난이도 */
+  /** 집필자가 부여한 1·2·3점. 정답률·변별도와 별개다. */
   difficulty: Difficulty
   source: string
   sourceUrl: string
@@ -58,6 +156,20 @@ export interface Question {
   lessonId?: string
   /** examFormats.ts의 ExamFormatId (선택; 없으면 휴리스틱 추정) */
   formatId?: string
+  purpose?: QuestionPurpose[]
+  reviewStatus?: QuestionReviewStatus
+  contentVersion?: number
+  officialSkillType?: OfficialSkillType
+  officialSkillConfidence?: TagConfidence
+  reasoningSteps?: 1 | 2 | 3
+  stimulusType?: StimulusKind
+  stimulusTypeConfidence?: TagConfidence
+  stimulus?: StimulusSpec
+  visualRequired?: boolean
+  distractorStrategy?: string
+  choiceOrder?: ChoiceOrderMode
+  provenance?: QuestionProvenance
+  stats?: QuestionStats
 }
 
 export interface Lesson {
@@ -254,6 +366,11 @@ export interface QuestionSnapshot {
   tags: QuestionType[]
   difficulty: Difficulty
   lessonId?: string
+  contentVersion?: number
+  formatId?: string
+  choiceOrder?: ChoiceOrderMode
+  stimulusType?: StimulusKind
+  stimulus?: StimulusSpec
 }
 
 export type MockSessionStatus = 'in-progress' | 'submitted'

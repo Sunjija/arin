@@ -1,4 +1,5 @@
 import { Button, ChoiceOption } from '../ui'
+import { StimulusBlock } from '../question/StimulusBlock'
 import type { QuestionSnapshot } from '../../types'
 import { formatRemaining, unansweredNumbers } from './mockExamLogic'
 
@@ -125,11 +126,7 @@ export function MockRunScreen({
       ) : snapshot ? (
         <section className="surface space-y-3 p-5">
           <p className="meta-text">배점 {snapshot.difficulty}점</p>
-          {snapshot.passage ? (
-            <blockquote className="passage-text rounded-xl bg-[var(--accent-soft)] p-3">
-              {snapshot.passage}
-            </blockquote>
-          ) : null}
+          <StimulusBlock stimulus={snapshot.stimulus} passage={snapshot.passage} />
           <h1 className="text-lg font-semibold">{snapshot.stem}</h1>
           <div className="space-y-2">
             {snapshot.choices.map((choice, choiceIndex) => (

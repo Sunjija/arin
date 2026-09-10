@@ -159,6 +159,16 @@ describe('examScoring', () => {
     expect(snapshot.choices).not.toEqual(['갑', '을', '병', '정', '무'])
   })
 
+  it('keeps chronology choice order when choiceOrder is keep', () => {
+    const live = q('seq', 3)
+    live.choiceOrder = 'keep'
+    live.choices = ['가→나→다', '나→가→다', '다→나→가', '가→다→나', '다→가→나']
+    live.answerIndex = 2
+    const snapshot = freezeQuestionSnapshot(live, seededRandom(21))
+    expect(snapshot.choices).toEqual(live.choices)
+    expect(snapshot.answerIndex).toBe(2)
+  })
+
   it('builds unique full snapshots without padding', () => {
     const pool = Array.from({ length: 60 }, (_, i) =>
       q(`q${i}`, ((i % 3) + 1) as 1 | 2 | 3, ALL_ERAS[i % ALL_ERAS.length]!),

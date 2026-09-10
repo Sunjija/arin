@@ -1,4 +1,11 @@
 import type { Question } from '../types'
+import { overlayBatch1Questions } from './batch1Questions'
+import {
+  questionsForMock,
+  questionsForStudy,
+  stabilizeAuthoredChoices,
+  withBankDefaults,
+} from './questionBank'
 
 const META = {
   source: '자체 제작 학습문항',
@@ -9,9 +16,9 @@ const META = {
 
 /**
  * 자체 제작 학습문항 (공식 기출 문장·이미지 미사용).
- * formatId는 examFormats.ts 기준. 전근대사≈60% / 근현대≈40% 목표.
+ * formatId는 examFormats.ts 기준. 전근대사≈60% / 근현대≈40%는 분석 완료 전 임시 목표.
  */
-const authoredQuestions: Question[] = [
+const legacyAuthoredQuestions: Question[] = [
   // ─── 선사·고조선 ───
   {
     id: 'q-01',
@@ -2033,22 +2040,11 @@ const authoredQuestions: Question[] = [
 
 ]
 
-/**
- * 저작 단계의 정답 위치 편향이 풀이 단서가 되지 않도록 문항 ID 순서대로
- * 정답을 1~5번에 균등 배치한다. 선지 내용과 정답 자체는 바꾸지 않는다.
- */
-function balanceAnswerPosition(question: Question, targetIndex: number): Question {
-  if (question.answerIndex === targetIndex) return question
-  const answer = question.choices[question.answerIndex]
-  if (answer == null) return question
-  const choices = question.choices.filter((_, index) => index !== question.answerIndex)
-  choices.splice(targetIndex, 0, answer)
-  return { ...question, choices, answerIndex: targetIndex }
-}
+export const questions: Question[] = overlayBatch1Questions(legacyAuthoredQuestions)
+  .map(withBankDefaults)
+  .map(stabilizeAuthoredChoices)
 
-export const questions: Question[] = authoredQuestions.map((question, index) =>
-  balanceAnswerPosition(question, index % 5),
-)
+export { questionsForMock, questionsForStudy }
 
 export function difficultyDistribution(list: Question[] = questions) {
   const counts = { 1: 0, 2: 0, 3: 0 }

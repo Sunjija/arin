@@ -13,6 +13,11 @@ export function snapshotFromQuestion(question: Question): QuestionSnapshot {
     tags: [...question.tags],
     difficulty: question.difficulty,
     lessonId: question.lessonId,
+    contentVersion: question.contentVersion,
+    formatId: question.formatId,
+    choiceOrder: question.choiceOrder,
+    stimulusType: question.stimulusType,
+    stimulus: question.stimulus ? JSON.parse(JSON.stringify(question.stimulus)) : undefined,
   }
 }
 

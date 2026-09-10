@@ -138,7 +138,6 @@ export async function ensureSeeded(): Promise<void> {
           return current ? mergeSeedCard(current, seeded) : seeded
         })
         await db.cards.bulkPut(refreshed)
-        await db.activeSession.clear()
       }
       if (!meta) {
         await db.meta.put({

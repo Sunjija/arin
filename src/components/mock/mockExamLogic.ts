@@ -138,6 +138,7 @@ export function reviewFromSnapshot(
   selectedIndex: number | null
   correct: boolean
   difficulty: QuestionSnapshot['difficulty']
+  stimulus: QuestionSnapshot['stimulus']
 } {
   return {
     questionId: snapshot.questionId,
@@ -149,6 +150,7 @@ export function reviewFromSnapshot(
     selectedIndex,
     correct: selectedIndex != null && selectedIndex === snapshot.answerIndex,
     difficulty: snapshot.difficulty,
+    stimulus: snapshot.stimulus,
   }
 }
 
@@ -231,6 +233,7 @@ export function createProgressSaver(
   let pending: ProgressDraft | null = null
   let retries = 0
   let lastError: string | null = null
+  let failed: ProgressDraft | null = null
   let chain: Promise<void> = Promise.resolve()
 
   function setRevision(next: number) {
@@ -239,6 +242,7 @@ export function createProgressSaver(
 
   function enqueue(draft: ProgressDraft) {
     pending = draft
+    failed = null
     retries = 0
     chain = chain.then(
       () => run(),
@@ -272,6 +276,8 @@ export function createProgressSaver(
             if (retries <= maxRetries) {
               pending = pending ?? draft
               await delay(retryDelayMs * retries)
+            } else {
+              failed = pending ?? draft
             }
           }
         } catch (error) {
@@ -280,6 +286,8 @@ export function createProgressSaver(
           if (retries <= maxRetries) {
             pending = pending ?? draft
             await delay(retryDelayMs * retries)
+          } else {
+            failed = pending ?? draft
           }
         }
       }
@@ -291,6 +299,7 @@ export function createProgressSaver(
   async function flush(): Promise<void> {
     await chain
     if (pending) await enqueue(pending)
+    if (failed) throw new Error(lastError ?? 'save-failed')
   }
 
   return {

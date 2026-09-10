@@ -66,4 +66,80 @@ describe('backup validation', () => {
     })
     expect(result.ok).toBe(false)
   })
+
+  it('rejects malformed nested records and active progress', () => {
+    expect(
+      validateExportPayload({
+        ...validPayload(),
+        attempts: [{ id: 'attempt-without-required-fields' }],
+      }).ok,
+    ).toBe(false)
+
+    expect(
+      validateExportPayload({
+        ...validPayload(),
+        activeSession: {
+          id: 'broken-session',
+          date: '2026-09-01',
+          step: 'cards',
+          lessonId: 'lesson-01',
+        },
+      }).ok,
+    ).toBe(false)
+
+    expect(
+      validateExportPayload({
+        ...validPayload(),
+        version: 2,
+        lessonCompletions: [
+          {
+            lessonId: 'lesson-01',
+            firstCompletedAt: '2026-09-01',
+            lastCompletedAt: '2026-09-01',
+          },
+        ],
+      }).ok,
+    ).toBe(false)
+  })
+
+  it('accepts frozen mock snapshots that include stimulus and content version', () => {
+    const result = validateExportPayload({
+      ...validPayload(),
+      version: 2,
+      activeMock: {
+        id: 'mock-1',
+        revision: 1,
+        mode: 'sample',
+        status: 'in-progress',
+        questionSnapshots: [
+          {
+            questionId: 'q-57',
+            stem: '다음 자료의 단체에 대한 설명으로 옳은 것은?',
+            passage: '상하이에서 김구가 소수의 결사를 조직하였다.',
+            choices: ['가', '나', '다', '라', '마'],
+            answerIndex: 0,
+            explanation: '한인애국단',
+            era: 'colonial',
+            tags: ['independence-org'],
+            difficulty: 2,
+            contentVersion: 2,
+            choiceOrder: 'free',
+            stimulusType: 'document',
+            stimulus: {
+              kind: 'document',
+              authenticity: 'reconstructed',
+              body: '상하이에서 김구가 소수의 결사를 조직하였다.',
+            },
+          },
+        ],
+        answers: [0],
+        itemElapsedMs: [1200],
+        currentIndex: 0,
+        startedAt: '2026-09-10T00:00:00.000Z',
+        deadlineAt: '2026-09-10T00:16:00.000Z',
+        updatedAt: '2026-09-10T00:01:00.000Z',
+      },
+    })
+    expect(result.ok).toBe(true)
+  })
 })

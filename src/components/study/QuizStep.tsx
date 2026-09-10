@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button, ChoiceOption, InlineStatus } from '../ui'
+import { StimulusBlock } from '../question/StimulusBlock'
 import { getQuestionById } from '../../data/questions'
 import { finishSession, recordQuizAnswer, updateAttemptCause } from '../../lib/studyService'
 import { createWrongCardFromQuestion, snapshotFromQuestion } from '../../lib/wrongCard'
@@ -208,11 +209,7 @@ export function QuizStep({
           {ERA_LABELS[question.era]} · 배점 {question.difficulty}점
         </p>
       ) : null}
-      {question.passage ? (
-        <blockquote className="passage-text rounded-xl bg-[var(--accent-soft)]/50 p-4 whitespace-pre-line">
-          {question.passage}
-        </blockquote>
-      ) : null}
+      <StimulusBlock stimulus={question.stimulus} passage={question.passage} />
       <h1 className="text-lg font-semibold leading-relaxed">{question.stem}</h1>
 
       <div className="space-y-2" role="group" aria-label="선택지">

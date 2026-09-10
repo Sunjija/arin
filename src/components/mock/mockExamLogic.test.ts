@@ -278,4 +278,29 @@ describe('save retry', () => {
     expect(saver.getRevision()).toBe(4)
     expect(saver.getError()).toBeNull()
   })
+
+  it('makes flush fail after retries are exhausted and allows a later retry', async () => {
+    const save = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockResolvedValue({ ok: true as const, mock: activeMock({ revision: 4 }) })
+    const saver = createProgressSaver(save, { retryDelayMs: 0, maxRetries: 1 })
+    const draft = {
+      id: 'mock-1',
+      answers: [1, null, null],
+      currentIndex: 0,
+      itemElapsedMs: [null, null, null],
+    }
+
+    await saver.enqueue(draft)
+    await expect(saver.flush()).rejects.toThrow('offline')
+    expect(saver.getError()).toContain('offline')
+
+    await saver.enqueue(draft)
+    await expect(saver.flush()).resolves.toBeUndefined()
+    expect(save).toHaveBeenCalledTimes(3)
+    expect(saver.getRevision()).toBe(4)
+    expect(saver.getError()).toBeNull()
+  })
 })

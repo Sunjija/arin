@@ -115,6 +115,131 @@ select {
   line-height: 1.7;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stimulus-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-elevated);
+  padding: 14px;
+}
+
+.stimulus-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+
+.stimulus-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+}
+
+.stimulus-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.stimulus-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stimulus-table {
+  width: 100%;
+  min-width: 280px;
+  border-collapse: collapse;
+  font-size: var(--text-passage);
+}
+
+.stimulus-table th,
+.stimulus-table td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.stimulus-table th {
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.stimulus-catalog {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.stimulus-catalog-row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 8px;
+}
+
+.stimulus-catalog-row dt {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.stimulus-catalog-row dd {
+  margin: 0;
+}
+
+.stimulus-timeline,
+.stimulus-dialogue {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.stimulus-timeline li,
+.stimulus-dialogue li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.stimulus-marker,
+.stimulus-speaker {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stimulus-diagram {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: var(--text-passage);
+  line-height: 1.6;
+}
+
+.stimulus-newspaper {
+  border-left: 3px solid var(--line-strong);
+  padding-left: 12px;
+}
+
 .choice-text {
   font-size: var(--text-choice);
   line-height: 1.6;

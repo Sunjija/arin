@@ -2,7 +2,13 @@ import 'fake-indexeddb/auto'
 import { afterEach, describe, expect, it } from 'vitest'
 import { lessons } from '../data/lessons'
 import { addDays } from './dates'
-import { buildTodayPlan, getProgressSnapshot } from './studyService'
+import {
+  buildTodayPlan,
+  finishSession,
+  getProgressSnapshot,
+  startOrResumeSession,
+} from './studyService'
+import { CONTENT_VERSION, ensureSeeded, seedCards } from '../db/seed'
 import { db } from '../db/database'
 import { practiceAttempt, resetAppDb, seedCore } from '../test/idb'
 import type { ActiveSession } from '../types'
@@ -73,5 +79,65 @@ describe('today plan lessons and estimated scores', () => {
     expect(home.estimatedScore).toBe(progress.estimated)
     expect(home.scoreSummary).toEqual(progress.scoreSummary)
     expect(home.scoreSummary.practiceAccuracy).toBe(50)
+  })
+
+  it('does not mark the daily lesson complete after a review-only card session', async () => {
+    await resetAppDb()
+    await seedCore()
+    await db.cards.bulkPut(seedCards('2026-01-05'))
+
+    const review = await startOrResumeSession({ today: '2026-01-05', entryMode: 'review' })
+    expect(review.cardIds.length).toBeGreaterThan(0)
+    await finishSession({
+      ...review,
+      step: 'result',
+      cardIndex: review.cardIds.length,
+    })
+
+    const day = await db.studyDays.get('2026-01-05')
+    expect(day).toMatchObject({
+      completed: false,
+      cardsReviewed: review.cardIds.length,
+      conceptDone: false,
+      questionsAnswered: 0,
+    })
+    expect(day?.lessonId).toBeUndefined()
+    expect(await db.lessonCompletions.count()).toBe(0)
+  })
+
+  it('starts review even when every due card belongs to another era', async () => {
+    await resetAppDb()
+    await seedCore({ startDate: '2026-01-05' })
+    const plan = await buildTodayPlan('2026-01-05')
+    const foreign = seedCards('2026-01-05').find((card) => card.era !== plan.lesson.era)
+    expect(foreign).toBeDefined()
+    await db.cards.put({ ...foreign!, nextReviewAt: '2026-01-05' })
+
+    const review = await startOrResumeSession({ today: '2026-01-05', entryMode: 'review' })
+    expect(review.cardIds).toContain(foreign!.id)
+    expect(review.step).toBe('cards')
+  })
+
+  it('preserves the active session and memo during a content version bump', async () => {
+    await resetAppDb()
+    await seedCore()
+    await db.cards.bulkPut(seedCards('2026-01-05'))
+    const session = await startOrResumeSession('2026-01-05')
+    await db.activeSession.put({
+      ...session,
+      step: 'concept',
+      conceptMemo: '광종의 노비안검법을 다시 보기',
+    })
+    const meta = await db.meta.get('meta')
+    await db.meta.put({ ...meta!, contentVersion: CONTENT_VERSION - 1 })
+
+    await ensureSeeded()
+
+    expect(await db.activeSession.get(session.id)).toMatchObject({
+      id: session.id,
+      step: 'concept',
+      conceptMemo: '광종의 노비안검법을 다시 보기',
+    })
+    expect((await db.meta.get('meta'))?.contentVersion).toBe(CONTENT_VERSION)
   })
 })

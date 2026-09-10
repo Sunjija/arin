@@ -1,5 +1,5 @@
 import { lessons } from '../data/lessons'
-import { questions } from '../data/questions'
+import { questions, questionsForStudy } from '../data/questions'
 import { cardFingerprint } from './cardFingerprint'
 import { addDays, daysBetween, isDue, planWeekNumber, toDateKey } from './dates'
 import { observedWeakAreas, updateMasteryScore } from './mastery'
@@ -214,6 +214,7 @@ export async function startOrResumeSession(
   const plan = await buildTodayPlan(today)
   const settings = await getSettings()
   const mastery = await getMastery()
+  const dailyCardCount = normalizeDailyCardCount(settings.dailyCardCount)
   const wrong = await db.wrongAnswers.orderBy('createdAt').reverse().limit(40).toArray()
   const recentWrongIds = wrong.map((w) => w.questionId)
 
@@ -221,7 +222,7 @@ export async function startOrResumeSession(
     entryMode === 'review'
       ? []
       : selectDailyQuestions({
-          questions,
+          questions: questionsForStudy(questions),
           masteryEras: mastery.eras,
           masteryTypes: mastery.types,
           recentWrongIds,
@@ -232,12 +233,21 @@ export async function startOrResumeSession(
           boostTypes: settings.focusTypes,
         })
 
+  const dueForSession =
+    entryMode === 'review'
+      ? pickDueCardsForToday(
+          (await db.cards.toArray()).filter((card) => isDue(card.nextReviewAt, today)),
+          plan.lesson.era,
+          dailyCardCount,
+        )
+      : plan.dueCards
+
   const session: ActiveSession = {
     id: `session-${today}-${Date.now()}`,
     date: today,
-    step: plan.dueCards.length > 0 ? 'cards' : entryMode === 'review' ? 'result' : 'concept',
+    step: dueForSession.length > 0 ? 'cards' : entryMode === 'review' ? 'result' : 'concept',
     lessonId: plan.lesson.id,
-    cardIds: plan.dueCards.map((c) => c.id),
+    cardIds: dueForSession.map((c) => c.id),
     cardIndex: 0,
     conceptDone: false,
     conceptMemo: '',
@@ -422,12 +432,12 @@ export async function finishSession(session: ActiveSession): Promise<void> {
 
   const day: StudyDayRecord = {
     date: today,
-    completed: true,
+    completed: Boolean(existingDay?.completed || session.entryMode !== 'review'),
     cardsReviewed: (existingDay?.cardsReviewed ?? 0) + cardsReviewedCount,
     conceptDone: Boolean(existingDay?.conceptDone || session.conceptDone),
     questionsAnswered: (existingDay?.questionsAnswered ?? 0) + session.answered.length,
     correctCount: (existingDay?.correctCount ?? 0) + session.answered.filter((a) => a.correct).length,
-    lessonId: existingDay?.lessonId ?? session.lessonId,
+    lessonId: existingDay?.lessonId ?? (session.entryMode === 'review' ? undefined : session.lessonId),
     minutesSpent: (existingDay?.minutesSpent ?? 0) + minutesSpent,
     minutesMeasured: Boolean(existingDay?.minutesMeasured || minutesMeasured),
     finishedSessionIds: [...(existingDay?.finishedSessionIds ?? []), session.id],

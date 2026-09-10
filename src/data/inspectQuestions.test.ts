@@ -16,7 +16,8 @@ describe('question inspection agent', () => {
     const report = inspectQuestionBank()
     expect(report.total).toBeGreaterThanOrEqual(100)
     expect(report.findings.filter((finding) => finding.severity === 'error')).toEqual([])
-    expect(report.answerPositionCounts).toEqual([20, 20, 20, 20, 20])
+    expect(report.findings.some((finding) => finding.code === 'CYCLIC_ANSWER_INDEX')).toBe(false)
+    expect(report.answerPositionCounts.reduce((sum, count) => sum + count, 0)).toBe(report.total)
 
     mkdirSync('artifacts', { recursive: true })
     const text = formatReportText(report)

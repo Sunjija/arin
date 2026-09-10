@@ -58,4 +58,16 @@ describe('pickDueCardsForToday', () => {
     )
     expect(picked.map((card) => card.id)).toEqual(['c-pre-a', 'c-pre-b'])
   })
+
+  it('still selects due cards when none belong to today lesson era', () => {
+    const picked = pickDueCardsForToday(
+      [
+        { id: 'c-goryeo', era: 'goryeo', nextReviewAt: '2026-09-07' },
+        { id: 'c-joseon', era: 'joseon-early', nextReviewAt: '2026-09-08' },
+      ],
+      'prehistoric',
+      10,
+    )
+    expect(picked.map((card) => card.id)).toEqual(['c-goryeo', 'c-joseon'])
+  })
 })

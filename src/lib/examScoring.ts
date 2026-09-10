@@ -135,7 +135,7 @@ export function freezeQuestionSnapshot(
   random: RandomFn = Math.random,
 ): QuestionSnapshot {
   const order = question.choices.map((_, index) => index)
-  const shuffled = shuffle(order, random)
+  const shuffled = question.choiceOrder === 'keep' ? order : shuffle(order, random)
   const choices = shuffled.map((index) => question.choices[index]!)
   const answerIndex = shuffled.indexOf(question.answerIndex)
   return {
@@ -149,7 +149,16 @@ export function freezeQuestionSnapshot(
     tags: [...question.tags],
     difficulty: question.difficulty,
     lessonId: question.lessonId,
+    contentVersion: question.contentVersion,
+    formatId: question.formatId,
+    choiceOrder: question.choiceOrder,
+    stimulusType: question.stimulusType,
+    stimulus: question.stimulus ? stimulusClone(question.stimulus) : undefined,
   }
+}
+
+function stimulusClone<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
 }
 
 export function buildMockSnapshots(
@@ -174,6 +183,11 @@ export function questionFromSnapshot(snapshot: QuestionSnapshot): Question {
     tags: [...snapshot.tags],
     difficulty: snapshot.difficulty,
     lessonId: snapshot.lessonId,
+    formatId: snapshot.formatId,
+    contentVersion: snapshot.contentVersion,
+    choiceOrder: snapshot.choiceOrder,
+    stimulusType: snapshot.stimulusType,
+    stimulus: snapshot.stimulus ? stimulusClone(snapshot.stimulus) : undefined,
     source: '',
     sourceUrl: '',
     license: '',
