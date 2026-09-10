@@ -991,3 +991,6 @@ body:has(.review-page), body:has(.library-page), body:has(.progress-page) { back
 .concept-flow div { display: flex; align-items: baseline; gap: 12px; padding: 10px 12px; background: white; border-radius: 8px; }
 .concept-flow strong { min-width: 64px; color: var(--accent); }
 .concept-flow span { line-height: 1.6; }
+
+.lesson-practice button[aria-pressed="true"] { border-color: var(--accent); background: #fff0eb; font-weight: 700; }
+.lesson-practice .field-control { white-space: normal; height: auto; min-height: 48px; overflow-wrap: anywhere; }
