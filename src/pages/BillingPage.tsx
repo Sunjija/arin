@@ -130,6 +130,12 @@ export function BillingPage() {
         </p>
       </section>
 
+      {status ? (
+        <div data-testid="billing-status">
+          <InlineStatus tone={status.tone}>{status.text}</InlineStatus>
+        </div>
+      ) : null}
+
       <section className="surface p-5" data-testid="billing-account">
         <h2 className="section-title">현재 계정과 구매 귀속</h2>
         <p className="meta-text mt-2 leading-relaxed">
@@ -418,12 +424,6 @@ export function BillingPage() {
         만 14세 이상 대상이어도 결제 사용자를 성인으로 보지 않습니다. 미성년자 계약은 법정대리인 동의가
         없으면 취소할 수 있다는 고지가 필요하며, 문구는 법무 검토 전입니다.
       </p>
-
-      {status ? (
-        <div data-testid="billing-status">
-          <InlineStatus tone={status.tone}>{status.text}</InlineStatus>
-        </div>
-      ) : null}
 
       <p>
         <Link to="/settings" className="btn btn-text">
