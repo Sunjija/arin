@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Account API local data
+server/data/*.sqlite
+server/data/*.sqlite-*
+server/data/dev-mailbox.json
+server/data/backups/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
