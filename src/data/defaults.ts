@@ -11,6 +11,12 @@ export function defaultSettings(): UserSettings {
     focusTypes: ['chronology', 'king-figure'],
     startDate: toDateKey(),
     planWeeks: 8,
+    goalGrade: 1,
+    examDate: null,
+    experienceLevel: 'first-time',
+    onboardingCompleted: false,
+    diagnosticCompletedAt: null,
+    diagnosticSkipped: false,
   }
 }
 

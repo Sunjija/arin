@@ -1,3 +1,12 @@
+import type {
+  AttemptOutcomeKind,
+  AttemptQuestionSnapshot,
+  ExperienceLevel,
+  FrozenDailyPlan,
+  GoalGrade,
+  SessionStudyMode,
+} from './dailyLearning'
+
 /** 한국사 시대 구분 */
 export type EraId =
   | 'prehistoric'
@@ -89,6 +98,14 @@ export interface UserSettings {
   focusTypes: QuestionType[]
   startDate: string
   planWeeks: number
+  /** 심화 1급(80) / 2급(70). 자기평가가 아님. */
+  goalGrade?: GoalGrade
+  /** YYYY-MM-DD. null이면 응시일 미정 */
+  examDate?: string | null
+  experienceLevel?: ExperienceLevel
+  onboardingCompleted?: boolean
+  diagnosticCompletedAt?: string | null
+  diagnosticSkipped?: boolean
 }
 
 export interface MasteryScores {
@@ -132,7 +149,12 @@ export interface AttemptRecord {
   era: EraId
   tags: QuestionType[]
   createdAt: string
-  source: 'practice' | 'mock'
+  source: 'practice' | 'mock' | 'diagnostic'
+  outcomeKind?: AttemptOutcomeKind
+  confidence?: 'sure' | 'unsure'
+  sawExplanation?: boolean
+  conceptIds?: string[]
+  questionSnapshot?: AttemptQuestionSnapshot
 }
 
 export interface StudyDayRecord {
@@ -144,6 +166,10 @@ export interface StudyDayRecord {
   correctCount: number
   lessonId?: string
   minutesSpent: number
+  plan?: FrozenDailyPlan
+  shortReviewCompleted?: boolean
+  completedSessionId?: string
+  shortReviewSessionId?: string
 }
 
 export interface MockExamResult {
@@ -182,6 +208,9 @@ export interface ActiveSession {
   answered: SessionAnswer[]
   startedAt: string
   updatedAt: string
+  mode?: SessionStudyMode
+  planDate?: string
+  saveError?: string | null
 }
 
 export type QuizPhase =
@@ -200,6 +229,9 @@ export interface SessionAnswer {
   responseMs: number
   eraGuess?: EraId
   clueMemo?: string
+  confidence?: 'sure' | 'unsure'
+  sawExplanation?: boolean
+  outcomeKind?: AttemptOutcomeKind
 }
 
 export interface AppMeta {
@@ -283,3 +315,8 @@ export const ALL_TYPES: QuestionType[] = [
   'independence-org',
   'political-system',
 ]
+
+export const GOAL_GRADE_LABELS: Record<GoalGrade, string> = {
+  1: '1급 (80점 이상)',
+  2: '2급 (70점 이상)',
+}

@@ -26,16 +26,19 @@ export function ProgressPage() {
         <p className="mt-2 leading-relaxed text-[var(--ink-muted)]">{data.advice}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl bg-[var(--accent-soft)]/60 p-4">
-            <p className="text-sm text-[var(--ink-muted)]">예상 시험 점수</p>
+            <p className="text-sm text-[var(--ink-muted)]">기록 기반 점수 (추정)</p>
             <p className="text-2xl font-semibold">
               {data.estimated}점
               {data.scoreIsEstimate ? <span className="ml-2 text-sm font-normal">(연습 기반 추정)</span> : null}
             </p>
           </div>
           <div className="rounded-xl bg-white/50 p-4">
-            <p className="text-sm text-[var(--ink-muted)]">85점 이상 연속</p>
+            <p className="text-sm text-[var(--ink-muted)]">목표 점수 연속 달성</p>
             <p className="text-2xl font-semibold">
-              {data.streak85}회{data.stable ? ' · 1급 안정권' : ''}
+              {data.streak85}회
+            </p>
+            <p className="mt-1 text-xs text-[var(--ink-muted)]">
+              적격 모의고사 기준입니다. 짧은 퀴즈만으로 실전 준비를 단정하지 않습니다.
             </p>
           </div>
         </div>

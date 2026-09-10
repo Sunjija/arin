@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { SessionProgress } from '../components/SessionProgress'
 import { lessons } from '../data/lessons'
 import { getQuestionById } from '../data/questions'
@@ -17,11 +17,17 @@ import {
 import { MAX_DAILY_CARDS } from '../lib/studyLimits'
 import { db } from '../db/database'
 import type { ActiveSession, CardRating, FlashcardRecord } from '../types'
+import { markStudySessionSaveError } from '../lib/dailyLearningService'
+import type { SessionStudyMode } from '../types/dailyLearning'
 
 export function StudySessionPage() {
+  const [searchParams] = useSearchParams()
+  const mode: SessionStudyMode =
+    searchParams.get('mode') === 'short-review' ? 'short-review' : 'full'
   const [session, setSession] = useState<ActiveSession | null>(null)
   const [cards, setCards] = useState<FlashcardRecord[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [allCards, setAllCards] = useState<FlashcardRecord[]>([])
   const questionStartedAt = useRef(0)
 
@@ -37,7 +43,7 @@ export function StudySessionPage() {
 
   useEffect(() => {
     let alive = true
-    startOrResumeSession()
+    startOrResumeSession(undefined, mode)
       .then(async (s) => {
         if (!alive) return
         setSession(s)
@@ -49,7 +55,7 @@ export function StudySessionPage() {
     return () => {
       alive = false
     }
-  }, [refreshCards])
+  }, [refreshCards, mode])
 
   const lesson = useMemo(
     () => lessons.find((l) => l.id === session?.lessonId) ?? lessons[0],
@@ -58,7 +64,19 @@ export function StudySessionPage() {
 
   const update = async (next: ActiveSession) => {
     setSession(next)
-    await saveSession(next)
+    try {
+      await saveSession(next)
+      setSaveError(null)
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : '저장에 실패했습니다. 답안은 화면에 남아 있습니다.'
+      setSaveError(message)
+      setSession(await markStudySessionSaveError(next, message))
+    }
+  }
+
+  const retrySave = async () => {
+    if (!session) return
+    await update(session)
   }
 
   if (error) {
@@ -79,7 +97,23 @@ export function StudySessionPage() {
   return (
     <div>
       <section className="surface mb-5 p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm text-[var(--ink-muted)]">
+            {session.mode === 'short-review' ? '짧은 복습' : '오늘 학습'}
+          </p>
+          <Link to="/" className="btn btn-ghost">
+            중간 종료 · 나중에 이어 하기
+          </Link>
+        </div>
         <SessionProgress current={session.step} />
+        {saveError ? (
+          <div className="mt-3 rounded-xl border border-[var(--wrong)] p-3" role="alert">
+            <p>{saveError}</p>
+            <button type="button" className="btn btn-secondary mt-2" onClick={() => void retrySave()}>
+              저장 다시 시도
+            </button>
+          </div>
+        ) : null}
       </section>
       {session.step === 'cards' && (
         <CardsStep
@@ -100,14 +134,23 @@ export function StudySessionPage() {
             }
             const nextIndex = session.cardIndex + 1
             if (nextIndex >= nextIds.length) {
-              await update({ ...session, cardIds: nextIds, step: 'concept', cardIndex: nextIndex })
+              const nextStep = session.mode === 'short-review' ? 'quiz' : 'concept'
+              await update({
+                ...session,
+                cardIds: nextIds,
+                step: nextStep,
+                cardIndex: nextIndex,
+                quizPhase: 'choices',
+                revealedChoices: true,
+              })
             } else {
               await update({ ...session, cardIds: nextIds, cardIndex: nextIndex })
               await refreshCards(nextIds)
             }
           }}
           onSkipToConcept={async () => {
-            await update({ ...session, step: 'concept' })
+            const nextStep = session.mode === 'short-review' ? 'quiz' : 'concept'
+            await update({ ...session, step: nextStep })
           }}
         />
       )}
@@ -441,27 +484,8 @@ function QuizStep({
             onClick={async () => {
               if (session.selectedIndex == null) return
               const correct = session.selectedIndex === question.answerIndex
-              const responseMs = getElapsedMs()
               if (correct) {
-                await recordQuizAnswer({
-                  question,
-                  selectedIndex: session.selectedIndex,
-                  correct: true,
-                  responseMs,
-                  source: 'practice',
-                })
-                const answered = [
-                  ...session.answered,
-                  {
-                    questionId: question.id,
-                    correct: true,
-                    selectedIndex: session.selectedIndex,
-                    responseMs,
-                    eraGuess: session.eraGuess,
-                    clueMemo: session.clueMemo,
-                  },
-                ]
-                await onChange({ ...session, answered, quizPhase: 'feedback' })
+                await onChange({ ...session, quizPhase: 'feedback' })
               } else {
                 await onChange({ ...session, quizPhase: 'cause' })
               }
@@ -513,51 +537,130 @@ function QuizStep({
       )}
 
       {phase === 'feedback' && (
-        <div className="space-y-3">
-          <p
-            className={`font-semibold ${session.answered.at(-1)?.correct ? 'text-[var(--correct)]' : 'text-[var(--wrong)]'}`}
-          >
-            {session.answered.at(-1)?.correct ? '정답입니다' : '오답입니다'}
-            <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">
-              (정답: {question.answerIndex + 1}번)
-            </span>
-          </p>
-          <p className="leading-relaxed">{question.explanation}</p>
-          {!session.answered.at(-1)?.correct && (
-            <button
-              type="button"
-              className="btn btn-secondary w-full"
-              onClick={async () => {
-                const { created } = await addCardFromContent({
-                  front: question.stem,
-                  back: `${question.choices[question.answerIndex]} — ${question.explanation}`,
-                  kind: 'concept',
-                  era: question.era,
-                  tags: question.tags,
-                  fromWrongAnswer: true,
+        <CorrectOrWrongFeedback
+          session={session}
+          question={question}
+          message={message}
+          onMessage={setMessage}
+          onCommit={async (confidence) => {
+            if (session.selectedIndex == null) return
+            const already = session.answered.some((item) => item.questionId === question.id)
+            let answered = session.answered
+            if (!already) {
+              const correct = session.selectedIndex === question.answerIndex
+              const responseMs = getElapsedMs()
+              if (correct) {
+                await recordQuizAnswer({
+                  question,
+                  selectedIndex: session.selectedIndex,
+                  correct: true,
+                  responseMs,
+                  source: 'practice',
+                  confidence,
                 })
-                setMessage(created ? '암기카드에 추가했습니다.' : '같은 카드가 이미 있어 추가하지 않았습니다.')
-              }}
-            >
-              카드로 추가
-            </button>
-          )}
-          {message ? <p className="text-sm text-[var(--accent)]">{message}</p> : null}
-          <button type="button" className="btn btn-primary w-full" onClick={() => void goNext()}>
-            {session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'}
-          </button>
-        </div>
+                answered = [
+                  ...session.answered,
+                  {
+                    questionId: question.id,
+                    correct: true,
+                    selectedIndex: session.selectedIndex,
+                    responseMs,
+                    confidence,
+                    eraGuess: session.eraGuess,
+                    clueMemo: session.clueMemo,
+                  },
+                ]
+              }
+            }
+            await goNext(answered)
+          }}
+        />
       )}
+    </div>
+  )
+}
+
+function CorrectOrWrongFeedback({
+  session,
+  question,
+  message,
+  onMessage,
+  onCommit,
+}: {
+  session: ActiveSession
+  question: NonNullable<ReturnType<typeof getQuestionById>>
+  message: string | null
+  onMessage: (value: string | null) => void
+  onCommit: (confidence: 'sure' | 'unsure') => Promise<void>
+}) {
+  const last = session.answered.at(-1)
+  const correct =
+    last?.questionId === question.id
+      ? Boolean(last.correct)
+      : session.selectedIndex === question.answerIndex
+  const lastButton = session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'
+
+  return (
+    <div className="space-y-3">
+      <p className={`font-semibold ${correct ? 'text-[var(--correct)]' : 'text-[var(--wrong)]'}`}>
+        {correct ? '정답입니다' : '오답입니다'}
+        <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">
+          (정답: {question.answerIndex + 1}번)
+        </span>
+      </p>
+      <p className="leading-relaxed">{question.explanation}</p>
+      {!correct ? (
+        <button
+          type="button"
+          className="btn btn-secondary w-full"
+          onClick={async () => {
+            const { created } = await addCardFromContent({
+              front: question.stem,
+              back: `${question.choices[question.answerIndex]} — ${question.explanation}`,
+              kind: 'concept',
+              era: question.era,
+              tags: question.tags,
+              fromWrongAnswer: true,
+            })
+            onMessage(created ? '암기카드에 추가했습니다.' : '같은 카드가 이미 있어 추가하지 않았습니다.')
+          }}
+        >
+          카드로 추가
+        </button>
+      ) : (
+        <p className="text-sm text-[var(--ink-muted)]">
+          같은 문항을 다시 맞혀도 실전 숙달로 표시하지 않습니다. 확신이 없었으면 아래에 남길 수 있습니다.
+        </p>
+      )}
+      {message ? <p className="text-sm text-[var(--accent)]">{message}</p> : null}
+      <button type="button" className="btn btn-primary w-full" onClick={() => void onCommit('sure')}>
+        {lastButton}
+      </button>
+      {correct && last?.questionId !== question.id ? (
+        <button type="button" className="btn btn-ghost w-full" onClick={() => void onCommit('unsure')}>
+          확신 없이 맞힘 · {lastButton}
+        </button>
+      ) : null}
     </div>
   )
 }
 
 function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTitle: string }) {
   const stats = sessionAnswerStats(session.answered)
+  const shortReview = session.mode === 'short-review'
   return (
     <div className="surface space-y-4 p-5">
-      <h1 className="font-display text-2xl">오늘 학습 결과</h1>
+      <h1 className="font-display text-2xl">{shortReview ? '짧은 복습 결과' : '오늘 학습 결과'}</h1>
       <p className="text-sm text-[var(--ink-muted)]">{lessonTitle}</p>
+      {shortReview ? (
+        <p className="rounded-xl bg-[var(--accent-soft)] p-3 text-sm">
+          짧은 복습을 마쳤습니다. 오늘의 전체 학습은 아직 완료가 아닙니다.
+        </p>
+      ) : (
+        <p className="text-sm text-[var(--ink-muted)]">
+          학습 완료는 오늘 계획의 기록입니다. 기억 상태와 실전 적용은 따로 남습니다.
+        </p>
+      )}
       <div className="grid grid-cols-2 gap-3">
         <div className="metric-card">
           <p className="metric-label">복습 카드</p>
@@ -575,9 +678,15 @@ function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTi
         <Link to="/" className="btn btn-primary">
           홈으로
         </Link>
-        <Link to="/cards" className="btn btn-secondary">
-          오답·카드 보기
-        </Link>
+        {!shortReview ? (
+          <Link to="/cards" className="btn btn-secondary">
+            오답·카드 보기
+          </Link>
+        ) : (
+          <Link to="/study" className="btn btn-secondary">
+            이어서 오늘 학습
+          </Link>
+        )}
       </div>
     </div>
   )
