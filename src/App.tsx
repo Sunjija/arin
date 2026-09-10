@@ -11,6 +11,7 @@ import { ProgressPage } from './pages/ProgressPage'
 import { MockExamPage } from './pages/MockExamPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { LibraryPage } from './pages/LibraryPage'
+import { BillingPage } from './pages/BillingPage'
 
 function Bootstrap({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
@@ -69,6 +70,7 @@ export default function App() {
                 <Route path="/progress" element={<ProgressPage />} />
                 <Route path="/mock" element={<MockExamPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/billing" element={<BillingPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Bootstrap>

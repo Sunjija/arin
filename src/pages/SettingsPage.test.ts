@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import 'fake-indexeddb/auto'
 import { createElement } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -14,12 +15,16 @@ afterEach(async () => {
   await resetAppDb()
 })
 
+function renderSettings() {
+  return render(createElement(MemoryRouter, null, createElement(SettingsPage)))
+}
+
 describe('SettingsPage save validation', () => {
   it('rejects 0 daily questions and does not write the invalid value', async () => {
     await resetAppDb()
     await seedCore({ dailyQuestionCount: 15 })
     const user = userEvent.setup()
-    render(createElement(SettingsPage))
+    renderSettings()
     const input = await screen.findByLabelText('하루 문제 수')
     await user.clear(input)
     await user.type(input, '0')
@@ -33,7 +38,7 @@ describe('SettingsPage save validation', () => {
     await resetAppDb()
     await seedCore({ dailyQuestionCount: 15 })
     const user = userEvent.setup()
-    render(createElement(SettingsPage))
+    renderSettings()
     const input = await screen.findByLabelText('하루 문제 수')
     await user.clear(input)
     await user.type(input, '5')
