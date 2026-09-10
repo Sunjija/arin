@@ -7,6 +7,8 @@ import { ConceptStep } from '../components/study/ConceptStep'
 import { QuizStep } from '../components/study/QuizStep'
 import { ResultStep } from '../components/study/ResultStep'
 import { Button, InlineStatus } from '../components/ui'
+import { useAppPause } from '../platform/useAppPause'
+import { useHardwareBack } from '../platform/useHardwareBack'
 import { lessons } from '../data/lessons'
 import { finishSession, rateCard, saveSession, startOrResumeSession } from '../lib/studyService'
 import { MAX_DAILY_CARDS } from '../lib/studyLimits'
@@ -78,6 +80,14 @@ export function StudySessionPage() {
       setClosing(false)
     }
   }
+
+  useAppPause(() => {
+    if (session) void saveSession(session)
+  })
+  useHardwareBack(focused, () => {
+    void closeToHome()
+    return true
+  })
 
   const afterCards = async (next: ActiveSession) => {
     if (next.entryMode === 'review') {

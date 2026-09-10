@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { useCallback, useEffect, useId, useRef, type ReactNode } from 'react'
+import { useHardwareBack } from '../../platform/useHardwareBack'
 
 export function Dialog({
   open,
@@ -14,6 +15,11 @@ export function Dialog({
   const titleId = useId()
   const panelRef = useRef<HTMLDivElement>(null)
   const lastFocus = useRef<HTMLElement | null>(null)
+  const closeOnBack = useCallback(() => {
+    onClose()
+    return true
+  }, [onClose])
+  useHardwareBack(open, closeOnBack)
 
   useEffect(() => {
     if (!open) return

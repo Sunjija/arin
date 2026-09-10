@@ -24,7 +24,7 @@
 | 개발 앱 식별자 | `app.arin.dev` (운영 스토어 ID는 저장소에 없음. 플레이스홀더 `app.arin`) |
 | 커스텀 URL 스킴 | `arin` |
 
-식별자 단일 출처: [`mobile/identity.json`](../../mobile/identity.json). `capacitor.config.ts`와 네이티브 프로젝트는 이 값을 따른다.
+식별자 단일 출처: [`mobile/identity.json`](../../mobile/identity.json). `capacitor.config.json`의 `appId`/`appName`은 이 파일의 development 값과 같아야 한다.
 
 ---
 
@@ -230,7 +230,7 @@ Play Billing Library / StoreKit 2 의존성을 모바일 브랜치에 미리 넣
 | 파일 | 역할 | 변경 담당 |
 |---|---|---|
 | `mobile/identity.json` | 앱 ID·표시 이름·스킴 단일 출처 | 모바일 |
-| `capacitor.config.ts` | webDir, 플러그인, System Bars, Keyboard, Splash | 모바일 |
+| `capacitor.config.json` | webDir, 플러그인, System Bars, Keyboard, Splash | 모바일 |
 | `android/**` | 개발용 Android 프로젝트. 권한·딥링크 intent-filter | 모바일. 결제 권한은 결제 |
 | `ios/**` | Xcode 프로젝트 스캐폴드. 서명·팀 ID는 미완 | 모바일 스캐폴드 / 서명는 로컬 macOS |
 | `.env.example` | `VITE_RUNTIME_MODE`, `VITE_API_BASE_URL`, `VITE_DEV_SERVER_URL` | 모바일. 비밀키 금지 |
@@ -253,7 +253,7 @@ Vite는 빌드 시 `import.meta.env.VITE_*`만 웹 번들에 넣는다. 네이�
 |---|---|---|---|
 | `VITE_RUNTIME_MODE` | `demo` (기본) | `demo` | `live` |
 | `VITE_API_BASE_URL` | 비움 = 로컬 전용 | 비움 | B 서버가 생기면 설정 |
-| `CAPACITOR_LIVE_RELOAD_URL` | 없음 | 없음 | Vite `http://<LAN>:43127` → `server.url` |
+| `CAPACITOR` live reload | 없음 | 없음 | `npx cap run android --live-reload --port 43127` |
 
 `demo`는 서버 없이 UI·IndexedDB만 쓴다. 배너에 **데모 · 서버 없음**을 표시한다.  
 `live`는 개발 서버(현재는 Vite, 이후 API)에 붙는다. 배너에 **개발 서버**를 표시한다.
