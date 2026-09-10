@@ -1,4 +1,5 @@
 import { useEffect, useId, useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import { db } from '../db/database'
 import { downloadJson, exportAllData, restoreBackup } from '../db/backup'
 import { clearAllLearningData } from '../db/seed'
@@ -258,6 +259,16 @@ export function SettingsPage() {
             <InlineStatus tone={goalStatus.tone}>{goalStatus.text}</InlineStatus>
           </div>
         ) : null}
+      </section>
+
+      <section className="surface p-5">
+        <h2 className="section-title">이용권</h2>
+        <p className="meta-text mt-2 leading-relaxed">
+          학습·실전 이용권 흐름은 개발 중입니다. 지금은 테스트 결제만 있으며 실제 판매가 아닙니다.
+        </p>
+        <Link to="/billing" className="btn btn-secondary mt-4 inline-flex">
+          이용권 관리
+        </Link>
       </section>
 
       <section className="surface p-5">
