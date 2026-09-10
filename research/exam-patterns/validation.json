@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-09-10T18:13:49+00:00",
+  "ok": true,
+  "error_count": 0,
+  "warning_count": 8,
+  "issues": [
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    },
+    {
+      "code": "cover_level_unconfirmed",
+      "severity": "warning",
+      "detail": "표지에서 심화/기본을 읽지 못함"
+    }
+  ]
+}

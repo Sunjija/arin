@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-09-10T18:13:49+00:00",
+  "data_version": "exam-patterns-2026-09-v1",
+  "target_rounds": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+  ],
+  "target_items": 750,
+  "acquired_rounds": 15,
+  "extracted_items": 750,
+  "auto_classified_items": 551,
+  "ai_source_checked_items": 50,
+  "human_reviewed_items": 0,
+  "classified_rounds": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+  ],
+  "ai_checked_rounds": [
+    79
+  ],
+  "do_not_treat_placeholder_rows_as_complete": true,
+  "validation_ok": true,
+  "input_fingerprint": "56feb719010502d3dcc0a56209e97e81ed404ee2b8c59e6db8a7d38227f38fc6"
+}

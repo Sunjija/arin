@@ -1,0 +1,1465 @@
+{
+  "schema": "arin.exam-patterns.manifest.v1",
+  "analysis_version": "exam-patterns-2026-09-v1",
+  "generated_at": "2026-09-10T17:32:55+00:00",
+  "baseline_rounds": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+  ],
+  "later_rounds": {
+    "checked_at": "2026-09-10T17:32:51+00:00",
+    "baseline_range": "65-79",
+    "later_than_79": [],
+    "scheduled_not_yet_published": [
+      {
+        "round": 80,
+        "from_schedule_page": true,
+        "status": "scheduled_or_upcoming",
+        "evidence": "공식 시험 일정 페이지에 제80회가 기재됨. 문제지 공개 여부는 자료실과 별도."
+      },
+      {
+        "round": 81,
+        "from_schedule_page": true,
+        "status": "scheduled_or_upcoming",
+        "evidence": "공식 시험 일정 페이지에 제81회가 기재됨."
+      }
+    ],
+    "sources": [
+      "https://www.historyexam.go.kr/pageLink.do?link=examSchedule",
+      "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+    ],
+    "notes": [
+      "2026-09-10 점검 기준 자료실 최신 심화 공개분은 제79회이다."
+    ]
+  },
+  "duplicate_file_sha256": {},
+  "origin_priority": "국사편찬위원회 한국사능력검정시험 공식 사이트",
+  "rounds": [
+    {
+      "round": 79,
+      "exam_level": "advanced",
+      "exam_date": "2026-08-09",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030131",
+      "source_post_title": "제79회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030131",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202608090227540820",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202608090227540820",
+        "declared_filename": "79í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:27:53+00:00",
+        "bytes": 17306859,
+        "sha256": "fa82e6c8977670c1b55778b061e33ee367c55cd3f8707806f63d70d8353453d7",
+        "local_path": "/workspace/var/exam-patterns/downloads/79-question_paper-B_202608090227540820.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202608090111475331",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202608090111475331",
+        "declared_filename": "79í íêµ­ì¬_ëµì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:27:56+00:00",
+        "bytes": 70345,
+        "sha256": "ea380c4a1f4f24ebd4c95ad171aa7ace3fc0654284fbe2d7be4d5b1f675ec393",
+        "local_path": "/workspace/var/exam-patterns/downloads/79-answer_key-B_202608090111475331.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:27:58+00:00",
+        "html_sha256": "bdde9403079ae25fd4c75f23f1d207f6e48c6a3932a3ceee6c33d906e78b1b3f",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 79,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 79,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030148",
+        "notice_title": "제79회 한국사능력검정시험 문항이의 심사결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 78,
+      "exam_level": "advanced",
+      "exam_date": "2026-05-23",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030119",
+      "source_post_title": "제78회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030119",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202605230140467170",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202605230140467170",
+        "declared_filename": "78í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:28:18+00:00",
+        "bytes": 18420102,
+        "sha256": "7d96d41c1686c5b3ea3c533d76fbb23235c44d8e55f53e81a320e31cf914fba0",
+        "local_path": "/workspace/var/exam-patterns/downloads/78-question_paper-B_202605230140467170.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202605230140467941",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202605230140467941",
+        "declared_filename": "78í íêµ­ì¬_ëµì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:28:22+00:00",
+        "bytes": 70087,
+        "sha256": "a8e8513c5d73ae81594460354a7b8a83ddaec9894001ff66cecae40f4d280638",
+        "local_path": "/workspace/var/exam-patterns/downloads/78-answer_key-B_202605230140467941.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:28:24+00:00",
+        "html_sha256": "7c27d3013e4e8ba9e7ef3aaccf05cb6cb166398f5d0cd83f126fa415c08bee1f",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 78,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 78,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030125",
+        "notice_title": "제78회 한국사능력검정시험 문항이의 심사결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 77,
+      "exam_level": "advanced",
+      "exam_date": "2026-02-07",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030110",
+      "source_post_title": "제77회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030110",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202602071228075140",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202602071228075140",
+        "declared_filename": "77í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:28:44+00:00",
+        "bytes": 17662983,
+        "sha256": "c3ff51d9273f7812a2b84d7fac4e8e1cb9aa642e80a4f53ebfc2a8afc5503e88",
+        "local_path": "/workspace/var/exam-patterns/downloads/77-question_paper-B_202602071228075140.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202602071050519721",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202602071050519721",
+        "declared_filename": "77í íêµ­ì¬_ëµì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:28:46+00:00",
+        "bytes": 31802,
+        "sha256": "71b9b6ef633f0e70b6a9b3c4565ec2f02a1ba2ef5f805f34d77d41427913b304",
+        "local_path": "/workspace/var/exam-patterns/downloads/77-answer_key-B_202602071050519721.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:28:48+00:00",
+        "html_sha256": "f88caed633300d7c2ef46675a654d6d7b1a1bf47cb4fec8fd9ae9c47e5e34593",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 77,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": "pdftotext",
+          "ocr_ok": null
+        },
+        "answer_key": {
+          "round": 77,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": []
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": false,
+        "notice_url": null,
+        "notice_title": null,
+        "corrected": null,
+        "note": "공지사항 제목 검색(이의)에서 해당 회차 심사결과 게시물을 찾지 못함. 정정 없음을 단정하지 않음."
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 76,
+      "exam_level": "advanced",
+      "exam_date": "2025-10-18",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030098",
+      "source_post_title": "제76회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030098",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202510180138534030",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202510180138534030",
+        "declared_filename": "76í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:29:07+00:00",
+        "bytes": 19906868,
+        "sha256": "b25c8617eb817711a54e69c09040298bf1b102f59fe29aebaad3558981e834f3",
+        "local_path": "/workspace/var/exam-patterns/downloads/76-question_paper-B_202510180138534030.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202510180138535251",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202510180138535251",
+        "declared_filename": "76í íêµ­ì¬_ëµì§(ì¬í)).pdf",
+        "downloaded_at": "2026-09-10T17:29:10+00:00",
+        "bytes": 34825,
+        "sha256": "9da8824061aa649e0c1246edc70bf86cb29273cbe24eabf11b636123d3c9e98b",
+        "local_path": "/workspace/var/exam-patterns/downloads/76-answer_key-B_202510180138535251.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:29:12+00:00",
+        "html_sha256": "74cb64096d44bbfc4038eb2ab3889f39a51022bce184ac7dc885163342827d3d",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 76,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": true,
+          "source": "pdftotext",
+          "ocr_ok": null
+        },
+        "answer_key": {
+          "round": 76,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": []
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030104",
+        "notice_title": "제76회 한국사능력검정시험 문항이의 심사결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 75,
+      "exam_level": "advanced",
+      "exam_date": "2025-08-09",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030080",
+      "source_post_title": "제75회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030080",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202508091211578890",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202508091211578890",
+        "declared_filename": "ì 75í ì¬í ë¬¸ì ì§.pdf",
+        "downloaded_at": "2026-09-10T17:29:33+00:00",
+        "bytes": 25105226,
+        "sha256": "2af5466f3be54d75eb65098f042f5f9c56de01fd213a71dfbe460ea222cc137e",
+        "local_path": "/workspace/var/exam-patterns/downloads/75-question_paper-B_202508091211578890.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202508091211596241",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202508091211596241",
+        "declared_filename": "ì 75í ì¬í ì ëµí.pdf",
+        "downloaded_at": "2026-09-10T17:29:35+00:00",
+        "bytes": 26860,
+        "sha256": "9ecff7c82b2f0343d3e6fd9dec389431411257e00fd8a53b11d519cb58c5dad1",
+        "local_path": "/workspace/var/exam-patterns/downloads/75-answer_key-B_202508091211596241.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:29:37+00:00",
+        "html_sha256": "e3cf48d7a47bff25c2851d839782bd32bcdbc28d23cb9663b472226eea9c2d20",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 75,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": true,
+          "source": "pdftotext",
+          "ocr_ok": null
+        },
+        "answer_key": {
+          "round": 75,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": []
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030088",
+        "notice_title": "제75회 한국사능력검정시험 문항이의 심사 결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 74,
+      "exam_level": "advanced",
+      "exam_date": "2025-05-24",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030069",
+      "source_post_title": "제74회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030069",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202505241213575190",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202505241213575190",
+        "declared_filename": "74í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:29:56+00:00",
+        "bytes": 10271310,
+        "sha256": "7d7322d680119d7b7b89c7465edc1dd8d0f06e8180594aff69b7d34502a44c79",
+        "local_path": "/workspace/var/exam-patterns/downloads/74-question_paper-B_202505241213575190.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202505241213576251",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202505241213576251",
+        "declared_filename": "74í ì¬í ì ëµí.pdf",
+        "downloaded_at": "2026-09-10T17:29:59+00:00",
+        "bytes": 26798,
+        "sha256": "db21586adfbe6df757b51a87eb0824cb414379cbe8f984c8fe1709e5b3643b46",
+        "local_path": "/workspace/var/exam-patterns/downloads/74-answer_key-B_202505241213576251.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:30:01+00:00",
+        "html_sha256": "e3375317e1bbcf391b2459d9936ccde74362af014ba8f359700fb24bde3a419d",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 74,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 74,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030074",
+        "notice_title": "제74회 한국사능력검정시험 문항이의 심사결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 73,
+      "exam_level": "advanced",
+      "exam_date": "2025-02-16",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030052",
+      "source_post_title": "제73회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030052",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202502161203255660",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202502161203255660",
+        "declared_filename": "73í ì¬í ë¬¸ì ì§.pdf",
+        "downloaded_at": "2026-09-10T17:30:20+00:00",
+        "bytes": 11181005,
+        "sha256": "d6ad706f1bd7ce3a0b18d7b7cdda9439d10b7b712121428b21af2c31268c4836",
+        "local_path": "/workspace/var/exam-patterns/downloads/73-question_paper-B_202502161203255660.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202502161203256681",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202502161203256681",
+        "declared_filename": "73í ì¬í ì ëµí.pdf",
+        "downloaded_at": "2026-09-10T17:30:22+00:00",
+        "bytes": 28265,
+        "sha256": "0dfeee4af303493e95a3a30c7f7cd890377f067789bdb7c00a9cc90af15c6347",
+        "local_path": "/workspace/var/exam-patterns/downloads/73-answer_key-B_202502161203256681.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:30:24+00:00",
+        "html_sha256": "0b146ff05c75c454454ddc8692c287b94e24035835dcc13adaf2dca2e2616f9b",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 73,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 73,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030062",
+        "notice_title": "제73회 한국사능력검정시험 문항이의 심사 결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 72,
+      "exam_level": "advanced",
+      "exam_date": "2024-10-20",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030043",
+      "source_post_title": "제72회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030043",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202410201053136300",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202410201053136300",
+        "declared_filename": "ì 72í ì¬í ë¬¸ì ì§.pdf",
+        "downloaded_at": "2026-09-10T17:30:46+00:00",
+        "bytes": 31386554,
+        "sha256": "87307e726a2605000a087b3c97ec2bae8e4c079ca2a2ef2b567cc9a4a415b9b5",
+        "local_path": "/workspace/var/exam-patterns/downloads/72-question_paper-B_202410201053136300.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202410201053138631",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202410201053138631",
+        "declared_filename": "ì 72í ì¬í ì ëµí.pdf",
+        "downloaded_at": "2026-09-10T17:30:49+00:00",
+        "bytes": 35910,
+        "sha256": "9f71656a1dfa110393e5097d3712c708e498470b3355ce680543ea959a59bfc7",
+        "local_path": "/workspace/var/exam-patterns/downloads/72-answer_key-B_202410201053138631.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:30:51+00:00",
+        "html_sha256": "d74f33ca2f374fff3a709001345b6a482dca8e4403f2dd434b4959f7721fe882",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 72,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": true,
+          "source": "pdftotext",
+          "ocr_ok": null
+        },
+        "answer_key": {
+          "round": 72,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": []
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030045",
+        "notice_title": "제72회 한국사능력검정시험 문항이의 심사 결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 71,
+      "exam_level": "advanced",
+      "exam_date": "2024-08-10",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030032",
+      "source_post_title": "제71회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030032",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202408101138402030",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202408101138402030",
+        "declared_filename": "71í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:31:12+00:00",
+        "bytes": 20813899,
+        "sha256": "4faa9016aa092da3684782b3c46f7ba04165c954649334ad5ba9956f4399c4a6",
+        "local_path": "/workspace/var/exam-patterns/downloads/71-question_paper-B_202408101138402030.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202408101138403551",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202408101138403551",
+        "declared_filename": "ì 71í ì¬í ì ëµí.pdf",
+        "downloaded_at": "2026-09-10T17:31:14+00:00",
+        "bytes": 36183,
+        "sha256": "d412bab448e17d15d0cfd71d6c98a524c109157362b854316d55b280ee6a2a4e",
+        "local_path": "/workspace/var/exam-patterns/downloads/71-answer_key-B_202408101138403551.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:31:16+00:00",
+        "html_sha256": "c884d3f9c60f370a69c538dcfc3c70a69a6ca91905082ef0fa71f5723caa0a0b",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 71,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": true,
+          "source": "pdftotext",
+          "ocr_ok": null
+        },
+        "answer_key": {
+          "round": 71,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": []
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030041",
+        "notice_title": "제71회 한국사능력검정시험 문항이의 심사 결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 70,
+      "exam_level": "advanced",
+      "exam_date": "2024-05-25",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000030012",
+      "source_post_title": "제70회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000030012",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202405251204104430",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202405251204104430",
+        "declared_filename": "70í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:31:33+00:00",
+        "bytes": 6299435,
+        "sha256": "4e9195f278bfdb5223cef43d60ff3bb1d55f09e4db0af803476392b08acc978c",
+        "local_path": "/workspace/var/exam-patterns/downloads/70-question_paper-B_202405251204104430.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202405251205112771",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202405251205112771",
+        "declared_filename": "70í íêµ­ì¬_ì ëµì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:31:36+00:00",
+        "bytes": 36557,
+        "sha256": "06b1ae9f5e8a33b8b9cd5c3f5d3c4d0acd6049e31a4a4b45a38658c574a252c1",
+        "local_path": "/workspace/var/exam-patterns/downloads/70-answer_key-B_202405251205112771.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:31:38+00:00",
+        "html_sha256": "eee89c70450639e0c2e88f24d540c383f18e2e4eb31394d55ced9a372596bc73",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 70,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": true,
+          "source": "pdftotext",
+          "ocr_ok": null
+        },
+        "answer_key": {
+          "round": 70,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": []
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030020",
+        "notice_title": "제70회 한국사능력검정시험 문항이의 심사 결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 69,
+      "exam_level": "advanced",
+      "exam_date": "2024-02-17",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000029997",
+      "source_post_title": "제69회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000029997",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202402171202232240",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202402171202232240",
+        "declared_filename": "69í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:31:58+00:00",
+        "bytes": 19151217,
+        "sha256": "9656cfbd40c3ed2b9f13ebb96e9a347bad87db8511dfe8954857baf7ccc91a26",
+        "local_path": "/workspace/var/exam-patterns/downloads/69-question_paper-B_202402171202232240.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202402171202233941",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202402171202233941",
+        "declared_filename": "69í íêµ­ì¬_ì ëµí(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:32:01+00:00",
+        "bytes": 35681,
+        "sha256": "8596e629436c89d05719cb063470cdef4217df5954e39c7f141311542d5f6183",
+        "local_path": "/workspace/var/exam-patterns/downloads/69-answer_key-B_202402171202233941.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:32:03+00:00",
+        "html_sha256": "53e14c7a3f727e464eda2b72912add57bf8dbdc90df9308f4059cc304e61422f",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 69,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 69,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000030009",
+        "notice_title": "제69회 한국사능력검정시험 문항이의 심사 결과",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 68,
+      "exam_level": "advanced",
+      "exam_date": "2023-12-02",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000029984",
+      "source_post_title": "제68회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000029984",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202312021231272410",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202312021231272410",
+        "declared_filename": "68í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:32:24+00:00",
+        "bytes": 21269874,
+        "sha256": "a407b26f559eeeed787b1e2d2e99f96532c9e7673372efd82aa0bd8362864fa9",
+        "local_path": "/workspace/var/exam-patterns/downloads/68-question_paper-B_202312021231272410.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202312021231274741",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202312021231274741",
+        "declared_filename": "68í íêµ­ì¬_ì ëµí(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:32:26+00:00",
+        "bytes": 29461,
+        "sha256": "37f0db72ac12ecf607fb8e954a08f9283b5dcb41ce5631edbebe996f02d07d75",
+        "local_path": "/workspace/var/exam-patterns/downloads/68-answer_key-B_202312021231274741.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:32:28+00:00",
+        "html_sha256": "36cf1abe40b5733a065fe14995c07c32a45a1d11ec1e02c741774596ba25aa9f",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 68,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 68,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000029991",
+        "notice_title": "제68회 한국사능력검정시험 문항이의 심사 결과 발표",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 67,
+      "exam_level": "advanced",
+      "exam_date": "2023-10-21",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000029978",
+      "source_post_title": "제67회 한국사능력검정시험 심화 시험지와 정답표",
+      "source_post_id": "1000029978",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202310211223458130",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202310211223458130",
+        "declared_filename": "67í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:32:47+00:00",
+        "bytes": 10680516,
+        "sha256": "0b07c5ac8a53be69eb839afd48ac044170a3b77a037f4ba48bdb629f02df3e9e",
+        "local_path": "/workspace/var/exam-patterns/downloads/67-question_paper-B_202310211223458130.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202310211223459441",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202310211223459441",
+        "declared_filename": "67í íêµ­ì¬_ì ëµí(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:32:49+00:00",
+        "bytes": 29996,
+        "sha256": "f2dd107d03de8915f61a0d3dc75873661fb36e01fa77dedd1b87b81efe02d6b8",
+        "local_path": "/workspace/var/exam-patterns/downloads/67-answer_key-B_202310211223459441.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:32:51+00:00",
+        "html_sha256": "e19456a5c1c580396be3ca06f6f784c1274b2980ef041b74717c2363334df583",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 67,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 67,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": false,
+        "notice_url": null,
+        "notice_title": null,
+        "corrected": null,
+        "note": "공지사항 제목 검색(이의)에서 해당 회차 심사결과 게시물을 찾지 못함. 정정 없음을 단정하지 않음."
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 66,
+      "exam_level": "advanced",
+      "exam_date": "2023-08-13",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000029966",
+      "source_post_title": "제66회 한국사능력검정시험 심화 문제지와 정답표",
+      "source_post_id": "1000029966",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202308131157406580",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202308131157406580",
+        "declared_filename": "66í íêµ­ì¬_ë¬¸ì ì§(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:23:54+00:00",
+        "bytes": 16234486,
+        "sha256": "d00670a2b083d47b66d6e5ff1ad32c1765f493bd9d98230065c2edaefcaa8d18",
+        "local_path": "/workspace/var/exam-patterns/downloads/66-question_paper-B_202308131157406580.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202308131157407821",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202308131157407821",
+        "declared_filename": "66í íêµ­ì¬_ì ëµí(ì¬í).pdf",
+        "downloaded_at": "2026-09-10T17:23:57+00:00",
+        "bytes": 36029,
+        "sha256": "591619732675e6f2655bbea597e42e08280c500a74265b98acacaa882da5a839",
+        "local_path": "/workspace/var/exam-patterns/downloads/66-answer_key-B_202308131157407821.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:23:59+00:00",
+        "html_sha256": "e28493a16da1384232777069718c63f12930d04d807f37a8334a32648f8ad579",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": null,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 66,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000029972",
+        "notice_title": "제66회 한국사능력검정시험 문항이의 심사 결과 발표",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    },
+    {
+      "round": 65,
+      "exam_level": "advanced",
+      "exam_date": "2023-06-17",
+      "exam_date_basis": "dataroom_post_date_usually_exam_day",
+      "source_post_url": "https://www.historyexam.go.kr/pst/view.do?bbs=dat&pst_sno=1000029957",
+      "source_post_title": "제65회 한국사능력검정시험 심화 문제지 및 정답표",
+      "source_post_id": "1000029957",
+      "paper": {
+        "kind": "question_paper",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202306170100293950",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202306170100293950",
+        "declared_filename": "ì 65í íêµ­ì¬ë¥ë ¥ê²ì ìí ì¬í ë¬¸ì ì§.pdf",
+        "downloaded_at": "2026-09-10T17:23:30+00:00",
+        "bytes": 10498027,
+        "sha256": "a50a6611da47601837319ba912a756586a2568634e925f4807fd7f46d6e14753",
+        "local_path": "/workspace/var/exam-patterns/downloads/65-question_paper-B_202306170100293950.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "answer_key": {
+        "kind": "answer_key",
+        "source_post_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202306170100295101",
+        "file_url": "https://www.historyexam.go.kr/atchFile/FileDown.do?atch_file_id=B_202306170100295101",
+        "declared_filename": "ì 65í íêµ­ì¬ë¥ë ¥ê²ì ìí ì¬í ì ëµí.pdf",
+        "downloaded_at": "2026-09-10T17:23:32+00:00",
+        "bytes": 31299,
+        "sha256": "12d805fdc905a3777e12ba5559bec57bcaf2731ec6ac9b4d754df6e86d9629ce",
+        "local_path": "/workspace/var/exam-patterns/downloads/65-answer_key-B_202306170100295101.pdf",
+        "git_excluded": true,
+        "app_bundle_excluded": true,
+        "redistributable": false,
+        "error": null
+      },
+      "web_answers": {
+        "source_url": "https://www.historyexam.go.kr/answer/list.do",
+        "fetched_at": "2026-09-10T17:23:34+00:00",
+        "html_sha256": "f3f2cbce46a028e5616475c53b245b651ba65aff3e8b7b96af2da65a5b8d0fb6",
+        "item_count": 50,
+        "points_sum": 100
+      },
+      "cover": {
+        "paper": {
+          "round": 65,
+          "level": null,
+          "has_advanced_mark": false,
+          "has_basic_mark": false,
+          "source": "page1_ocr",
+          "ocr_ok": true
+        },
+        "answer_key": {
+          "round": 65,
+          "level": "advanced",
+          "has_advanced_mark": true,
+          "has_basic_mark": false,
+          "source": null,
+          "ocr_ok": null
+        },
+        "verified": true,
+        "mismatch": false,
+        "notes": [
+          "문제지 표지 OCR에서 심화 표기를 읽지 못함. 정답표 표지·게시물 제목과 교차 확인."
+        ]
+      },
+      "statuses": {
+        "listed": true,
+        "paper_downloaded": true,
+        "key_downloaded": true,
+        "web_answers": true,
+        "cover_verified": true,
+        "extracted": true,
+        "classified": false,
+        "reviewed": false
+      },
+      "errors": [],
+      "missing": [],
+      "answer_correction": {
+        "notice_found": true,
+        "notice_url": "https://www.historyexam.go.kr/pst/view.do?bbs=noti&pst_sno=1000029959",
+        "notice_title": "제65회 한국사능력검정시험 문항이의신청 심사결과 발표",
+        "corrected": false,
+        "note": "한국사능력검정시험 상단메뉴 바로가기 본문 내용 바로가기 하단 주소 바로가기 로그인 회원가입 사이트맵 검색 입력창 시험 안내 시험 소개 응시 안내 응시 규정 시험장 현황 원서 접수 원서 접수 신청 원서 접수 확인 수험표 출력 문제 관리 시험 자료실 문항 이의 신청 정답 보기 알림마당 공지사항 자주하는 질문 각종 서식 나의 시험 정보 나의 접수 정보 나의 응시 결과 발급 내역 조회 회원 정보 수정 개명신청 및 내역 알림마당 공지사"
+      },
+      "terms": {
+        "publicly_listed_for_download": true,
+        "app_redistribution_allowed": null,
+        "app_redistribution_note": "확인하지 않음. 공개 다운로드와 앱 재배포는 별개이다.",
+        "photo_copyright_note": "자료실 안내: 문항에 사용된 사진 등의 저작권은 원저작자에게 있다.",
+        "evidence_urls": [
+          "https://www.historyexam.go.kr/pst/list.do?bbs=dat"
+        ]
+      }
+    }
+  ]
+}
