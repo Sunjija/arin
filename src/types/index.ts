@@ -119,6 +119,8 @@ export interface UserSettings {
   dailyQuestionCount: number
   dailyCardCount: number
   dailyNewConceptCount?: number
+  paceMode?: 'auto' | 'manual'
+  conceptTargetDate?: string | null
   dailyMinutes: number
   focusTypes: QuestionType[]
   startDate: string
@@ -141,6 +143,8 @@ export type LearningGoal = Required<
     | 'dailyQuestionCount'
     | 'dailyCardCount'
     | 'dailyNewConceptCount'
+    | 'paceMode'
+    | 'conceptTargetDate'
     | 'startDate'
     | 'planWeeks'
     | 'examRound'
@@ -190,7 +194,29 @@ export interface ReviewPlanItem {
   wrongCause?: WrongCause
 }
 
+export interface ConceptSchedule {
+  courseVersion: string
+  totalConcepts: number
+  completedConcepts: number
+  remainingConcepts: number
+  readyRemainingConcepts: number
+  unavailableConcepts: number
+  targetDate: string
+  studyDaysLeft: number
+  recommendedPerDay: number | null
+  selectedPerDay: number
+  availableTodayIds: string[]
+  nextConceptId: string | null
+  blockedConceptId: string | null
+  isStudyDay: boolean
+  readyContentFinishDate: string | null
+  allContentReadyFinishDate: string | null
+  warnings: string[]
+}
+
+
 export interface FrozenStudyPlan {
+  conceptSchedule?: ConceptSchedule
   policyVersion: string
   date: string
   createdAt: string
@@ -337,6 +363,10 @@ export interface ActiveSession {
   reviewQuestionIds?: string[]
   /** Frozen when the session starts; absent on legacy sessions. */
   questionSnapshots?: QuestionSnapshot[]
+  /** Present on concept-scoped sessions; absent means legacy whole-lesson mode. */
+  conceptIds?: string[]
+  confirmedConceptIds?: string[]
+  guideSnapshots?: LessonGuide[]
 }
 
 export type QuizPhase =

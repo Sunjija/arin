@@ -9,7 +9,8 @@
 3. `docs/parallel-redesign/contracts.md`: 학습 정책과 공통 데이터 설계 게이트
 4. `docs/parallel-redesign/ownership.md`: 소유 경로와 제출 규칙
 5. `docs/parallel-redesign/e-foundation-api.md`: 현재 API·이전 규칙·아직 동결하지 않은 범위
-6. 배정받은 `docs/parallel-redesign/briefs/` 지시문
+6. `docs/cursor-tasks/README.md`: 실제 배정·인수 상태 (권장 역할표와 구분)
+7. 배정받은 `docs/parallel-redesign/briefs/` 지시문
 콘텐츠 작업은 `agents/question-inspector.md`도 읽는다. `docs/archive/`와 `artifacts/`의 과거 리뷰는 현행 명령이 아니다.
 
 ## 제품 원칙

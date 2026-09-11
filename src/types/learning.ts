@@ -33,6 +33,9 @@ export interface SaveGoalInput {
   dailyQuestionCount?: number
   dailyCardCount?: number
   dailyNewConceptCount?: number
+  paceMode?: 'auto' | 'manual'
+  conceptTargetDate?: string | null
+  focusTypes?: import('./index').QuestionType[]
   startDate?: string
   planWeeks?: number
   onboardingCompleted?: boolean

@@ -17,6 +17,8 @@ export function scoreFromGrade(grade: GoalGrade, current?: number): number {
 export function toLearningGoal(settings: UserSettings): LearningGoal {
   const normalized = normalizeSettings(settings)
   return {
+    paceMode: normalized.paceMode ?? 'auto',
+    conceptTargetDate: normalized.conceptTargetDate ?? null,
     goalScore: normalized.goalScore,
     goalGrade: normalized.goalGrade ?? gradeFromScore(normalized.goalScore),
     dailyQuestionCount: normalized.dailyQuestionCount,
@@ -41,6 +43,8 @@ export function normalizeSettings(settings: UserSettings | null | undefined): Us
   const undecided = base.examDateUndecided ?? examDate == null
   return {
     ...base,
+    paceMode: base.paceMode ?? 'auto',
+    conceptTargetDate: base.conceptTargetDate ?? null,
     startDate: base.startDate || toDateKey(),
     goalGrade: base.goalGrade ?? gradeFromScore(base.goalScore),
     examRound: base.examRound ?? null,

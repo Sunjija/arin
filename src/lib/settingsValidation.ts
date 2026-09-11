@@ -12,6 +12,9 @@ export function validateGoalInput(input: SaveGoalInput): string | null {
   for (const [value, min, max, label] of ranges) {
     if (value != null && (!Number.isInteger(value) || value < min || value > max)) return `${label}는 ${min}에서 ${max} 사이의 정수로 입력하세요.`
   }
+  if (input.conceptTargetDate != null && !isDateKey(input.conceptTargetDate)) return '실제로 존재하는 개념 목표일을 입력하세요.'
+  if (input.paceMode !== undefined && !['auto', 'manual'].includes(input.paceMode)) return '학습 분량 방식이 올바르지 않습니다.'
+  if (input.focusTypes !== undefined && (!Array.isArray(input.focusTypes) || input.focusTypes.some(type => !ALL_TYPES.includes(type)))) return '집중 유형이 올바르지 않습니다.'
   if (input.examDate != null && !isDateKey(input.examDate)) return '실제로 존재하는 시험 날짜를 입력하세요.'
   if (input.startDate !== undefined && !isDateKey(input.startDate)) return '학습 시작일이 올바르지 않습니다.'
   if (input.goalGrade !== undefined && ![1, 2, 3].includes(input.goalGrade)) return '목표 급수가 올바르지 않습니다.'
@@ -122,6 +125,8 @@ export function parseUserSettings(
   if (goalError) return { ok: false, message: goalError }
 
   const settings: UserSettings = {
+    paceMode: raw.paceMode === 'manual' ? 'manual' : 'auto',
+    conceptTargetDate: typeof raw.conceptTargetDate === 'string' ? raw.conceptTargetDate : null,
     goalScore: raw.goalScore as number,
     dailyQuestionCount: raw.dailyQuestionCount as number,
     dailyCardCount: raw.dailyCardCount as number,

@@ -1,4 +1,5 @@
 import { lessons } from '../data/lessons'
+import { COURSE_CONCEPT_IDS } from '../data/courseOrder'
 import { questions } from '../data/questions'
 import { cardFingerprint } from './cardFingerprint'
 import { addDays, daysBetween, planWeekNumber, toDateKey } from './dates'
@@ -111,6 +112,12 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     db.attempts.toArray(),
   ])
   const frozen = await computeStudyPlan(today)
+  if (frozen.conceptSchedule) {
+    const rows = await db.conceptProgress.toArray()
+    const completed = rows.filter(row => row.learnState === 'completed' && COURSE_CONCEPT_IDS.includes(row.conceptId)).length
+    const remaining = frozen.conceptSchedule.totalConcepts - completed
+    frozen.conceptSchedule = { ...frozen.conceptSchedule, completedConcepts: completed, remainingConcepts: remaining, readyRemainingConcepts: Math.max(0, remaining - frozen.conceptSchedule.unavailableConcepts) }
+  }
   const lesson = lessons.find((item) => item.id === frozen.currentLessonId) ?? lessons[0]!
   const dueCards = (await db.cards.bulkGet(frozen.reviewCardIds)).filter(
     (card): card is FlashcardRecord => Boolean(card),
@@ -143,7 +150,7 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     mockResultsNewestFirst: mocks,
   })
   const questionCount = frozen.newQuestionCount + frozen.reviewQuestionCount
-  const completionRate = studyDay
+  const completionRate = studyDay?.completed ? 100 : studyDay
     ? Math.round(
         ((studyDay.conceptDone ? 1 : 0) +
           Math.min(1, studyDay.cardsReviewed / Math.max(1, frozen.reviewCardCount || 1)) +

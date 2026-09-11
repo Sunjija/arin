@@ -33,8 +33,9 @@ export function todayQuantityLine(input: {
   reviewCardCount: number
   questionCount: number
   estimatedMinutes: number
+  newConceptCount?: number
 }): string {
-  return `개념 1단원 · 문제 ${input.questionCount}개 · 복습 카드 ${input.reviewCardCount}장`
+  return `${input.newConceptCount == null ? '개념 1단원' : `개념 ${input.newConceptCount}개`} · 문제 ${input.questionCount}개 · 복습 카드 ${input.reviewCardCount}장`
 }
 
 export function homeRecordHint(plan: Pick<TodayPlan, 'scoreSummary'>): string | null {
@@ -73,6 +74,7 @@ export function buildHomeViewModel(
       reviewCardCount: plan.reviewCardCount,
       questionCount: plan.questionCount,
       estimatedMinutes: plan.estimatedMinutes,
+      newConceptCount: plan.frozenPlan?.conceptSchedule ? plan.frozenPlan.newConceptCount : undefined,
     }),
     guidance: plan.quantity.guidance,
     primaryCta: homePrimaryCta(plan, hasActiveSession),
@@ -84,6 +86,7 @@ export function buildHomeViewModel(
 export function homePrimaryCta(plan: TodayPlan, hasActiveSession: boolean): HomeCta {
   if (hasActiveSession) return { label: '이어서 학습', to: '/study' }
   if (plan.completion.todayDone) return { label: '추가 복습', to: '/cards' }
+  if (plan.frozenPlan?.newConceptCount === 0) return { label: plan.reviewHasEvidence ? '배운 내용 복습' : '자료실 살펴보기', to: plan.reviewHasEvidence ? '/cards' : '/library?tab=concepts' }
   return { label: '오늘 학습 시작', to: '/study' }
 }
 

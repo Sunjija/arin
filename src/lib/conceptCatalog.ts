@@ -3,7 +3,7 @@ import { lessons } from '../data/lessons'
 import { guideForLesson } from '../data/lessonGuides'
 import type { Concept, Lesson, Question } from '../types'
 
-export const CONCEPT_CONTENT_VERSION = 1
+export const CONCEPT_CONTENT_VERSION = 3
 
 export function catalogConcepts(
   topics: TopicEntry[] = TOPIC_CATALOG,
@@ -25,7 +25,7 @@ export function catalogConcepts(
       summary: guideForLesson(topic.lessonId ?? '')?.sections.find((section) => section.conceptId === topic.id)?.paragraphs.join('\n') ?? '',
       keywords: topic.keywords,
       source: guideForLesson(topic.lessonId ?? '')?.sections.find((section) => section.conceptId === topic.id)?.sourceUrl ?? '',
-      contentVersion: CONCEPT_CONTENT_VERSION,
+      contentVersion: guideForLesson(topic.lessonId ?? '')?.contentVersion ?? CONCEPT_CONTENT_VERSION,
     }
   })
 }

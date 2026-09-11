@@ -37,7 +37,7 @@ describe('P0 independent acceptance review', () => {
   })
   it('rolls back completion if lesson persistence fails', async () => {
     await seedCore()
-    const session = await startLesson({ today: '2026-01-05' })
+    const session = await startLesson({ today: '2026-01-05', lessonId: 'lesson-01' })
     vi.spyOn(db.lessonCompletions, 'put').mockRejectedValueOnce(new Error('storage failure'))
     await expect(completeSession({ ...session, conceptDone: true, answered: session.questionIds.map(questionId => ({ questionId, selectedIndex: 0, correct: true, responseMs: null, attemptId: `test-${questionId}` })) })).rejects.toThrow()
     expect((await db.studyDays.get(session.date))?.finishedSessionIds ?? []).not.toContain(session.id)

@@ -4,11 +4,11 @@ import type { LessonGuide } from '../types'
 export const lessonGuides: LessonGuide[] = [
   {
     lessonId: 'lesson-01',
-    contentVersion: 2,
+    contentVersion: 3,
     reviewStatus: 'source-checked',
     checkedAt: '2026-09-11',
     introduction:
-      '생활 도구와 생산 방식이 어떻게 달라졌는지 먼저 이해하고, 그 변화 속에서 고조선의 성립과 사회 모습을 연결해 봅니다. 아래 설명은 우리역사넷(국사편찬위원회) 교과서 자료를 대조한 학습용 정리이며, 전문가 시험 승인 상태는 아닙니다.',
+      '생활 도구와 생산 방식이 어떻게 달라졌는지 먼저 이해하고, 그 변화 속에서 고조선의 성립과 사회 모습을 연결해 봅니다.',
     sections: [
       {
         conceptId: 't-pre-01',
@@ -29,10 +29,11 @@ export const lessonGuides: LessonGuide[] = [
           '많은 노동이 필요한 고인돌은 지배층의 존재를 읽는 단서입니다. 민무늬 토기를 신석기의 빗살무늬토기와 비교해 두세요. 「청동기가 나왔다」는 것만으로 모든 생활 도구가 청동으로 바뀌었다고 읽지 마세요.',
         ],
         recallPrompt: '고인돌이 지배층의 존재를 보여 주는 이유와 청동기 시대에도 쓰인 생활 도구를 설명해 보세요.',
-        expectedElements: ['큰 무덤을 만드는 노동력을 동원할 수 있는 지배층', '돌·나무 도구도 계속 사용', '민무늬 토기·비파형 동검'],
+        expectedElements: ['큰 무덤을 만드는 노동력을 동원할 수 있는 지배층', '돌·나무 도구도 계속 사용'],
         sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0030',
         additionalSourceUrls: [
           'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0010',
+          'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020',
         ],
       },
       {

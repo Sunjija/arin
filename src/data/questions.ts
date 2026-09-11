@@ -2064,7 +2064,7 @@ const authoredQuestions: Question[] = [
     id: 'q-101',
     stem: '다음 출토 목록에서 읽을 수 있는 철기의 용도로 가장 적절한 것은?',
     passage:
-      '유적 출토 목록(요약)\n· 철제 괭이, 철제 낫\n· 철제 칼, 철제 화살촉\n· 철제 끌, 철제 자귀\n같은 층위에서 돌·나무 공구도 함께 확인되었다.',
+      '학습용 가상 출토 목록\n· 철제 괭이, 철제 낫\n· 철제 칼, 철제 화살촉\n· 철제 끌, 철제 자귀\n돌·나무 공구도 함께 출토된 상황을 가정하였다.',
     choices: [
       '농기구·무기·공구로 활용되었다.',
       '모든 생활 도구를 철기로만 교체하였다.',
@@ -2083,7 +2083,7 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-07'],
     familyId: 'pre-iron-use',
-    contentVersion: 1,
+    contentVersion: 2,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0020_0010',
   },
   {
@@ -2100,16 +2100,16 @@ const authoredQuestions: Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      '정답은 「(나) → (다) → (가)」입니다. (나) 빗살무늬토기·움집은 신석기, (다) 고인돌·비파형 동검은 청동기, (가) 위만의 집권은 고조선 후기이므로 신석기 → 청동기 → 고조선 순입니다. 「(가) → (나) → (다)」와 「(가)가 앞에 오는 배열」은 위만을 선사 유물보다 앞에 둔 오류입니다. 「(다) → (나) → (가)」는 청동기를 신석기보다 앞에 둔 오류입니다. 「(나) → (가) → (다)」는 위만 집권을 청동기 표지보다 앞에 둔 오류입니다.',
+      '정답은 「(나) → (다) → (가)」입니다. (나) 빗살무늬토기·움집은 신석기, (다) 고인돌·비파형 동검은 청동기, (가) 위만의 집권은 고조선 후기이므로 신석기 생활 모습 → 청동기 문화의 발달 → 위만 집권 순입니다. 고조선 자체의 성립을 청동기 시대 이후로 미루어 이해하지 않도록 주의하세요. 「(가) → (나) → (다)」는 위만 집권을 신석기 생활 모습보다 앞에 둔 오류입니다. 「(다) → (가) → (나)」는 신석기 생활 모습을 청동기 문화와 위만 집권보다 뒤에 둔 오류입니다. 「(다) → (나) → (가)」는 청동기를 신석기보다 앞에 둔 오류입니다. 「(나) → (가) → (다)」는 위만 집권을 청동기 표지보다 앞에 둔 오류입니다.',
     era: 'prehistoric',
     tags: ['chronology', 'source'],
     difficulty: 2,
     lessonId: 'lesson-01',
     formatId: 'chronology-labeled',
     ...META,
-    conceptIds: ['t-pre-08'],
+    conceptIds: ['t-pre-01', 't-pre-02', 't-pre-04', 't-pre-08'],
     familyId: 'pre-era-sequence',
-    contentVersion: 1,
+    contentVersion: 2,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010',
   },
 

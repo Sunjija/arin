@@ -36,6 +36,23 @@ function validSnapshot(value: unknown): boolean {
     (value.contentVersion === undefined || (Number.isInteger(value.contentVersion) && Number(value.contentVersion) > 0))
 }
 
+function validGuide(value: unknown): value is import('../types').LessonGuide {
+  if (!isRecord(value) || !isId(value.lessonId) || !Number.isInteger(value.contentVersion) || Number(value.contentVersion) < 1 || !['draft', 'source-checked', 'approved'].includes(String(value.reviewStatus)) || !isDateKey(value.checkedAt) || typeof value.introduction !== 'string' || !Array.isArray(value.sections) || value.sections.length === 0) return false
+  return value.sections.every(section => isRecord(section) && isId(section.conceptId) && isId(section.title) && idList(section.paragraphs) && section.paragraphs.length > 0 && isId(section.recallPrompt) && idList(section.expectedElements) && section.expectedElements.length > 0 && typeof section.sourceUrl === 'string' && /^https?:\/\//.test(section.sourceUrl) && (section.additionalSourceUrls === undefined || idList(section.additionalSourceUrls)))
+}
+
+function validConceptSchedule(value: unknown): boolean {
+  if (!isRecord(value) || !isId(value.courseVersion) || !isDateKey(value.targetDate) || typeof value.isStudyDay !== 'boolean' || !idList(value.availableTodayIds) || !idList(value.warnings)) return false
+  for (const key of ['totalConcepts', 'completedConcepts', 'remainingConcepts', 'readyRemainingConcepts', 'unavailableConcepts', 'studyDaysLeft', 'selectedPerDay']) {
+    if (!Number.isInteger(value[key]) || Number(value[key]) < 0) return false
+  }
+  if (Number(value.selectedPerDay) < 1 || Number(value.selectedPerDay) > 20) return false
+  if (value.recommendedPerDay !== null && (!Number.isInteger(value.recommendedPerDay) || Number(value.recommendedPerDay) < 0)) return false
+  for (const key of ['nextConceptId', 'blockedConceptId']) if (value[key] !== null && !isId(value[key])) return false
+  for (const key of ['readyContentFinishDate', 'allContentReadyFinishDate']) if (value[key] !== null && !isDateKey(value[key])) return false
+  return Number(value.completedConcepts) + Number(value.remainingConcepts) === value.totalConcepts && Number(value.readyRemainingConcepts) + Number(value.unavailableConcepts) === value.remainingConcepts
+}
+
 export function parseMasteryScores(
   raw: unknown,
 ): { ok: true; value: MasteryScores } | { ok: false; message: string } {
@@ -129,6 +146,14 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
       if (session[key] !== undefined && !idList(session[key])) return { ok: false, message: '학습 문항 범위가 손상되었습니다.' }
     }
   }
+  if (isRecord(raw.activeSession)) {
+    const session = raw.activeSession
+    if (session.conceptIds !== undefined || session.guideSnapshots !== undefined || session.confirmedConceptIds !== undefined) {
+      if (!idList(session.conceptIds) || new Set(session.conceptIds).size !== session.conceptIds.length || !idList(session.confirmedConceptIds) || !session.confirmedConceptIds.every(id => (session.conceptIds as string[]).includes(id)) || !Array.isArray(session.guideSnapshots) || !session.guideSnapshots.every(validGuide)) return { ok: false, message: '진행 중인 개념 원본이 손상되었습니다.' }
+      const snapshotIds = session.guideSnapshots.flatMap(guide => guide.sections.map(section => section.conceptId))
+      if (snapshotIds.length !== session.conceptIds.length || new Set(snapshotIds).size !== snapshotIds.length || !snapshotIds.every(id => (session.conceptIds as string[]).includes(id))) return { ok: false, message: '개념 범위와 원본이 일치하지 않습니다.' }
+    }
+  }
   for (const day of raw.studyDays as unknown[]) {
     if (!isRecord(day) || !isDateKey(day.date)) return { ok: false, message: '학습 날짜가 손상되었습니다.' }
     if (day.plan === undefined) continue
@@ -137,6 +162,7 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
     for (const key of ['currentConceptIds', 'newQuestionIds', 'reviewQuestionIds', 'reviewCardIds', 'reasons', 'warnings']) {
       if (!idList(plan[key])) return { ok: false, message: '저장된 학습 계획 목록이 손상되었습니다.' }
     }
+    if (plan.conceptSchedule !== undefined && !validConceptSchedule(plan.conceptSchedule)) return { ok: false, message: '개념 분량 계획이 손상되었습니다.' }
     for (const key of ['newConceptCount', 'newQuestionCount', 'reviewQuestionCount', 'reviewCardCount', 'remainingNewLessons', 'missedStudyDays']) {
       if (!Number.isInteger(plan[key]) || Number(plan[key]) < 0) return { ok: false, message: '저장된 학습 계획 분량이 손상되었습니다.' }
     }

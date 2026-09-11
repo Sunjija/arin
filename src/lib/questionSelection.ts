@@ -19,6 +19,8 @@ export interface SelectionContext {
   boostTypes?: QuestionType[]
   boostMultiplier?: number
   excludeIds?: string[]
+  newQuestionIdsAllowed?: string[]
+  reviewQuestionIdsAllowed?: string[]
 }
 
 export interface SplitSelection {
@@ -49,6 +51,7 @@ export function selectStudyQuestions(ctx: SelectionContext): SplitSelection {
 
   const newPool = ctx.questions.filter((question) => {
     if (exclude.has(question.id)) return false
+    if (ctx.newQuestionIdsAllowed) return ctx.newQuestionIdsAllowed.includes(question.id)
     if (ctx.todayLessonId) return question.lessonId === ctx.todayLessonId
     if (ctx.todayLessonEra) return question.era === ctx.todayLessonEra
     return true
@@ -56,6 +59,7 @@ export function selectStudyQuestions(ctx: SelectionContext): SplitSelection {
 
   const reviewPool = ctx.questions.filter((question) => {
     if (exclude.has(question.id)) return false
+    if (ctx.reviewQuestionIdsAllowed) return ctx.reviewQuestionIdsAllowed.includes(question.id)
     if (question.lessonId) return learnedLessons.has(question.lessonId)
     return learnedEras.has(question.era)
   })

@@ -51,7 +51,7 @@ describe('learning foundation', () => {
     expect(session.newQuestionIds?.every((id) => questions.find((item) => item.id === id)?.lessonId === 'lesson-01')).toBe(true)
   })
 
-  it('reviews completed eras while new questions stay in the current lesson', async () => {
+  it('retains legacy review evidence without inventing concept completions', async () => {
     await seedCore()
     await db.lessonCompletions.put({
       lessonId: 'lesson-01',
@@ -74,11 +74,12 @@ describe('learning foundation', () => {
         })),
     )
     const plan = await computeStudyPlan('2026-01-06')
-    expect(plan.currentLessonId).toBe('lesson-02')
+    expect(plan.currentLessonId).toBe('lesson-01')
+    expect(plan.conceptSchedule?.completedConcepts).toBe(0)
     expect(plan.reviewCardIds.length).toBeGreaterThan(0)
     const reviewCards = await db.cards.bulkGet(plan.reviewCardIds)
     expect(reviewCards.every((card) => card?.era === 'prehistoric')).toBe(true)
-    expect(plan.newQuestionIds.every((id) => questions.find((item) => item.id === id)?.lessonId === 'lesson-02')).toBe(true)
+    expect(plan.newQuestionIds.every((id) => questions.find((item) => item.id === id)?.lessonId === 'lesson-01')).toBe(true)
   })
 
   it('stores library answers in the same attempt log without completing a concept from a view', async () => {
@@ -113,10 +114,10 @@ describe('learning foundation', () => {
 
   it('completes a lesson only after the concept and its confirmation questions', async () => {
     await seedCore({ startDate: '2026-01-05' })
-    const session = await startLesson({ today: '2026-01-05' })
+    const session = await startLesson({ today: '2026-01-05', lessonId: 'lesson-01' })
     await completeSession({ ...session, conceptDone: false, entryMode: 'daily' })
     expect(await db.lessonCompletions.get('lesson-01')).toBeUndefined()
-    const again = await startLesson({ today: '2026-01-06' })
+    const again = await startLesson({ today: '2026-01-06', lessonId: 'lesson-01' })
     await completeSession({ ...again, conceptDone: true, entryMode: 'daily', answered: again.questionIds.map(questionId => ({ questionId, selectedIndex: 0, correct: false, responseMs: null, attemptId: `test-${questionId}` })) })
     expect((await db.lessonCompletions.get('lesson-01'))?.lessonId).toBe('lesson-01')
   })
@@ -150,7 +151,7 @@ describe('learning foundation', () => {
 })
 
 describe('today plan through the frozen API', () => {
-  it('stays on lesson-01 until it is completed', async () => {
+  it('keeps unconfirmed concepts after absence or a legacy chapter completion', async () => {
     await seedCore({ startDate: '2026-01-05', planWeeks: 8 })
     const seen = new Set<string>()
     for (let day = 0; day < 10; day += 1) {
@@ -166,7 +167,8 @@ describe('today plan through the frozen API', () => {
     })
     await db.studyDays.clear()
     const next = await buildTodayPlan('2026-01-15')
-    expect(next.lesson.id).toBe('lesson-02')
+    expect(next.lesson.id).toBe('lesson-01')
+    expect(next.frozenPlan?.currentConceptIds[0]).toBe('t-pre-01')
   })
 
   it('resumes an in-progress session without rewriting its list', async () => {

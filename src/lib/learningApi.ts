@@ -1,4 +1,6 @@
 import { lessons } from '../data/lessons'
+import { guideForLesson } from '../data/lessonGuides'
+import { buildConceptSchedule } from './conceptSchedule'
 import { questions } from '../data/questions'
 import { CARD_LESSON_SCOPE } from '../data/cardLessonScope'
 import { db } from '../db/database'
@@ -24,9 +26,7 @@ import {
   classifyExamDate,
   countMissedStudyDays,
   normalizeStudyWeekdays,
-  projectConceptFinishDate,
   remainingLessons,
-  remainingVolumeWarning,
   reviewPeriodStart,
 } from './goalSchedule'
 import { LEARNING_POLICY } from './learningPolicy'
@@ -42,6 +42,7 @@ import type {
   FlashcardRecord,
   FrozenStudyPlan,
   LearningGoal,
+  LessonGuide,
   LearningSource,
   LessonCompletion,
   Question,
@@ -189,7 +190,7 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
       const newQuestionIds = active.newQuestionIds ?? active.questionIds
       const reviewQuestionIds = active.reviewQuestionIds ?? []
       return { ...originalPlan, date: today, currentLessonId: active.lessonId,
-        currentConceptIds: lessonConceptIds(active.lessonId), newQuestionIds, reviewQuestionIds,
+        currentConceptIds: active.conceptIds ?? lessonConceptIds(active.lessonId), newConceptCount: active.conceptIds?.length ?? originalPlan.newConceptCount, newQuestionIds, reviewQuestionIds,
         reviewCardIds: active.cardIds, newQuestionCount: newQuestionIds.length,
         reviewQuestionCount: reviewQuestionIds.length, reviewCardCount: active.cardIds.length, sameDayResume,
         reasons: [...originalPlan.reasons, `${active.date}에 시작한 학습을 이어갑니다.`],
@@ -203,7 +204,6 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
   const { completions, storedProgress, attempts } = await loadProgressRows()
   const goal = toLearningGoal(settings)
   const resumeLessonId = active?.step !== 'result' ? active?.lessonId : undefined
-  const lesson = selectNextLesson(lessons, completions, resumeLessonId)
   const progress = hydrateConceptProgress({
     stored: storedProgress,
     completions,
@@ -213,13 +213,17 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
   const learnedEras = [...learnedErasFromCompletions(completions)]
   const remaining = remainingLessons(lessons, completions)
   const examDateMode = classifyExamDate(goal.examDate, goal.examDateUndecided, today)
-  const finishDate = projectConceptFinishDate({
-    today,
-    remainingLessonCount: remaining.length,
-    // The current reader completes one lesson per session, not N catalog topics.
-    dailyNewLessons: 1,
-    studyWeekdays: goal.studyWeekdays,
-  })
+  const concepts = catalogConcepts()
+  const conceptSchedule = buildConceptSchedule({ today, goal, concepts, progress })
+  const currentConceptIds = conceptSchedule.availableTodayIds
+  const firstConcept = concepts.find(concept => concept.id === (currentConceptIds[0] ?? conceptSchedule.nextConceptId))
+  const lesson = lessons.find(item => item.id === firstConcept?.lessonId) ?? selectNextLesson(lessons, completions, resumeLessonId)
+  const completedConceptIds = new Set(progress.filter(row => row.learnState === 'completed').map(row => row.conceptId))
+  const seenQuestionIds = new Set(attempts.map(attempt => attempt.questionId))
+  const learnedQuestion = (question: Question) => seenQuestionIds.has(question.id) ||
+    (question.conceptIds?.length ? question.conceptIds.every(id => completedConceptIds.has(id)) : Boolean(question.lessonId && learnedLessons.includes(question.lessonId)))
+  const reviewQuestionIdsAllowed = questions.filter(learnedQuestion).map(question => question.id)
+  const finishDate = conceptSchedule.allContentReadyFinishDate
   const reviewStart = reviewPeriodStart(goal.examDate)
   const missedStudyDays = countMissedStudyDays({
     today,
@@ -227,15 +231,7 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
     lastStudyDate: meta?.lastStudyDate ?? null,
     studyWeekdays: goal.studyWeekdays,
   })
-  const volumeWarning = remainingVolumeWarning({
-    remainingLessonCount: remaining.length,
-    conceptFinishDate: finishDate,
-    examDate: goal.examDate,
-    reviewPeriodStart: reviewStart,
-    examDateMode,
-  })
-
-  const dueAll = cards.filter((card) => isDue(card.nextReviewAt, today) && isLearnedCard(card, learnedLessons))
+  const dueAll = cards.filter((card) => isDue(card.nextReviewAt, today) && isLearnedCard(card, learnedLessons, completedConceptIds, seenQuestionIds))
   const quantity = planDailyQuantity({
     dailyMinutes: settings.dailyMinutes,
     dailyQuestionCap: settings.dailyQuestionCount,
@@ -251,20 +247,12 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
   const dueReviewQuestionIds = dueCards
     .map((card) => card.sourceQuestionId)
     .filter((id): id is string => Boolean(id))
-  const recentWrongIds = wrongAnswers
-    .filter((row) => {
-      const question = questions.find((item) => item.id === row.questionId)
-      if (!question) return false
-      if (question.lessonId) return learnedLessons.includes(question.lessonId)
-      return learnedEras.includes(question.era)
-    })
-    .map((row) => row.questionId)
-
-  const currentLessonQuestions = questions.filter((question) => question.lessonId === lesson.id)
-  const reviewBudget = learnedLessons.length > 0 ? Math.max(1, Math.floor(quantity.selectedQuestionCount * 0.3)) : 0
-  const newCount = remaining.length === 0 ? 0 : Math.min(quantity.selectedQuestionCount - reviewBudget, currentLessonQuestions.length)
-  const reviewCount =
-    learnedLessons.length === 0 ? 0 : Math.max(0, quantity.selectedQuestionCount - newCount)
+  const recentWrongIds = wrongAnswers.filter(row => reviewQuestionIdsAllowed.includes(row.questionId)).map(row => row.questionId)
+  const understood = new Set([...completedConceptIds, ...currentConceptIds])
+  const newQuestionIdsAllowed = questions.filter(question => question.conceptIds?.some(id => currentConceptIds.includes(id)) && question.conceptIds.every(id => understood.has(id))).map(question => question.id)
+  const reviewBudget = reviewQuestionIdsAllowed.length ? Math.max(1, Math.floor(quantity.selectedQuestionCount * 0.3)) : 0
+  const newCount = Math.min(quantity.selectedQuestionCount - reviewBudget, newQuestionIdsAllowed.length)
+  const reviewCount = Math.max(0, quantity.selectedQuestionCount - newCount)
   const masteryRow = await db.mastery.get('mastery')
   const initialMastery = createInitialMastery()
   const selected = selectStudyQuestions({
@@ -281,14 +269,13 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
     newCount,
     reviewCount,
     boostTypes: settings.focusTypes,
+    newQuestionIdsAllowed,
+    reviewQuestionIdsAllowed,
   })
 
-  const currentConceptIds = lessonConceptIds(lesson.id)
   const reasons = [
-    `새 학습: ${lesson.title} 개념 ${currentConceptIds.length}개, 확인 문제 ${selected.newQuestions.length}개`,
-    learnedLessons.length === 0
-      ? '아직 완료한 단원이 없어 자동 복습에 미학습 카드를 넣지 않습니다.'
-      : `누적 복습: 완료한 단원 ${learnedLessons.length}개 범위에서 카드 ${dueCards.length}장, 문항 ${selected.reviewQuestions.length}개`,
+    currentConceptIds.length ? `오늘 새 개념 ${currentConceptIds.length}개 · 확인 문제 ${selected.newQuestions.length}개` : '오늘 새 개념이 없습니다. 학습 요일과 콘텐츠 준비 상태를 확인해 주세요.',
+    `이미 학습한 범위와 풀어 본 문항에서 복습 카드 ${dueCards.length}장, 문항 ${selected.reviewQuestions.length}개를 골랐습니다.`,
   ]
   if (missedStudyDays > 0) {
     reasons.push(`결석 ${missedStudyDays}일 — 미완료 개념을 건너뛰지 않고 이어서 학습합니다.`)
@@ -303,12 +290,13 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
     newQuestionIds: selected.newQuestions.map((question) => question.id),
     reviewQuestionIds: selected.reviewQuestions.map((question) => question.id),
     reviewCardIds: dueCards.map((card) => card.id),
-    newConceptCount: remaining.length === 0 ? 0 : currentConceptIds.length,
+    newConceptCount: currentConceptIds.length,
+    conceptSchedule,
     newQuestionCount: selected.newQuestions.length,
     reviewQuestionCount: selected.reviewQuestions.length,
     reviewCardCount: dueCards.length,
     reasons,
-    warnings: [...(volumeWarning ? [volumeWarning] : []), ...(currentConceptIds.length ? [] : ['이 단원의 상세 개념 설명은 준비 중입니다. 기존 요약·문제 연습을 제공합니다.'])],
+    warnings: conceptSchedule.warnings,
     conceptFinishDate: finishDate,
     examDate: goal.examDate,
     examDateMode,
@@ -319,6 +307,10 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
   }
 
   if (active && active.step !== 'result') {
+    plan.currentLessonId = active.lessonId
+    plan.currentConceptIds = active.conceptIds ?? lessonConceptIds(active.lessonId)
+    plan.newConceptCount = plan.currentConceptIds.length
+    plan.conceptSchedule = undefined
     plan.newQuestionIds = active.newQuestionIds ?? active.questionIds
     plan.reviewQuestionIds = active.reviewQuestionIds ?? []
     plan.reviewCardIds = active.cardIds
@@ -335,7 +327,10 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
   return plan
 }
 
-function isLearnedCard(card: FlashcardRecord, learnedLessonIds: string[]): boolean {
+function isLearnedCard(card: FlashcardRecord, learnedLessonIds: string[], completedConceptIds = new Set<string>(), seenQuestionIds = new Set<string>()): boolean {
+  const sourceQuestion = questions.find(question => question.id === card.sourceQuestionId)
+  if (sourceQuestion && (seenQuestionIds.has(sourceQuestion.id) || sourceQuestion.conceptIds?.length && sourceQuestion.conceptIds.every(id => completedConceptIds.has(id)))) return true
+
   const scope = card.sourceQuestionId
     ? [questions.find((question) => question.id === card.sourceQuestionId)?.lessonId].filter((id): id is string => Boolean(id))
     : (!card.userEdited && !card.fromWrongAnswer ? CARD_LESSON_SCOPE[card.id] : undefined)
@@ -403,12 +398,26 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
     return existing
   }
 
+  if (entryMode === 'daily' && input.lessonId === undefined && existing?.date === today && existing.step === 'result' && (await db.studyDays.get(today))?.completed) return existing
+
   const plan = await computeStudyPlan(today)
   const lessonId = input.lessonId ?? plan.currentLessonId
   if (!lessons.some((lesson) => lesson.id === lessonId)) throw new DataError('not-found', '학습 단원을 찾을 수 없습니다.')
   const { completions, storedProgress, attempts } = await loadProgressRows()
   const progress = hydrateConceptProgress({ stored: storedProgress, completions, attempts })
-  const conceptIds = lessonConceptIds(lessonId)
+  const scoped = entryMode === 'daily' && input.lessonId === undefined
+  const conceptIds = entryMode === 'review' ? [] : scoped ? plan.currentConceptIds : lessonConceptIds(lessonId)
+  if (scoped && !conceptIds.length) throw new DataError('validation-failed', plan.conceptSchedule?.isStudyDay === false ? '오늘은 새 개념을 학습하는 날이 아닙니다. 설정에서 학습 요일을 조정하거나 자료실을 이용해 주세요.' : '다음 개념의 상세 설명을 준비 중입니다. 자료실에서 이미 배운 내용을 복습해 주세요.')
+  const guideSnapshots: LessonGuide[] = []
+  for (const id of conceptIds) {
+    const concept = catalogConcepts().find(item => item.id === id)
+    const guide = guideForLesson(concept?.lessonId ?? '')
+    const section = guide?.sections.find(item => item.conceptId === id)
+    if (!guide || !section) continue
+    const group = guideSnapshots.find(item => item.lessonId === guide.lessonId)
+    if (group) group.sections.push(structuredClone(section))
+    else guideSnapshots.push(structuredClone({ ...guide, introduction: '오늘 배울 개념의 연결을 살펴보세요.', sections: [section] }))
+  }
   const nextProgress = markConceptsLearning(ensureProgressRows(progress, conceptIds), conceptIds, today)
   if (nextProgress.length) await db.conceptProgress.bulkPut(nextProgress.filter((row) => conceptIds.includes(row.conceptId)))
 
@@ -416,7 +425,7 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
   const newQuestionIds = lessonId === plan.currentLessonId ? plan.newQuestionIds : questions.filter((question) => question.lessonId === lessonId).slice(0, (await getSettings()).dailyQuestionCount).map((question) => question.id)
   const reviewQuestionIds = plan.reviewQuestionIds.filter((id) => !newQuestionIds.includes(id))
   const questionIds = entryMode === 'review' ? plan.reviewQuestionIds : [...newQuestionIds, ...reviewQuestionIds]
-  const currentCompleted = completions.some((row) => row.lessonId === lessonId)
+  const currentCompleted = !scoped && completions.some((row) => row.lessonId === lessonId)
   const step: ActiveSession['step'] =
     entryMode === 'review'
       ? cardIds.length > 0
@@ -448,6 +457,7 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
     entryMode,
     newQuestionIds,
     reviewQuestionIds,
+    ...(scoped ? { conceptIds, confirmedConceptIds: [], guideSnapshots } : {}),
     questionSnapshots: questionIds.map((id) => questions.find((question) => question.id === id)).filter((question): question is Question => Boolean(question)).map(snapshotFromQuestion),
   }
   await db.activeSession.clear()
@@ -601,7 +611,9 @@ async function completeSessionTransaction(session: ActiveSession): Promise<Compl
   const minutesSpent = 0
   const cardsReviewedCount = Math.min(session.cardIndex, session.cardIds.length)
   const newQuestionIds = session.newQuestionIds ?? session.questionIds
-  const lessonComplete = session.entryMode !== 'review' && session.conceptDone && newQuestionIds.length > 0 && newQuestionIds.every(id => session.answered.some(answer => answer.questionId === id))
+  const scoped = session.conceptIds !== undefined
+  const confirmed = scoped && session.conceptIds!.length > 0 && session.conceptIds!.every(id => session.confirmedConceptIds?.includes(id))
+  const lessonComplete = session.entryMode !== 'review' && session.conceptDone && (scoped ? confirmed : newQuestionIds.length > 0) && newQuestionIds.every(id => session.answered.some(answer => answer.questionId === id))
   const day: StudyDayRecord = {
     date: today,
     completed: Boolean(existingDay?.completed || lessonComplete),
@@ -618,13 +630,20 @@ async function completeSessionTransaction(session: ActiveSession): Promise<Compl
   await db.studyDays.put(day)
 
   if (lessonComplete) {
-    const current = await db.lessonCompletions.get(session.lessonId)
-    await db.lessonCompletions.put(upsertLessonCompletion(current, session.lessonId, today))
-    const conceptIds = lessonConceptIds(session.lessonId)
+    const conceptIds = session.conceptIds ?? lessonConceptIds(session.lessonId)
     const stored = await db.conceptProgress.bulkGet(conceptIds)
     const existingRows = stored.filter((row): row is ConceptProgressRecord => Boolean(row))
     const completed = markConceptsCompleted(ensureProgressRows(existingRows, conceptIds), conceptIds, today)
     await db.conceptProgress.bulkPut(completed.filter((row) => conceptIds.includes(row.conceptId)))
+    const affectedLessons = scoped ? [...new Set(catalogConcepts().filter(item => conceptIds.includes(item.id)).map(item => item.lessonId).filter((id): id is string => Boolean(id)))] : [session.lessonId]
+    for (const lessonId of affectedLessons) {
+      const taught = lessonConceptIds(lessonId)
+      const rows = await db.conceptProgress.bulkGet(taught)
+      if (!scoped || taught.length > 0 && rows.every(row => row?.learnState === 'completed')) {
+        const current = await db.lessonCompletions.get(lessonId)
+        await db.lessonCompletions.put(upsertLessonCompletion(current, lessonId, today))
+      }
+    }
   }
 
   const meta = await db.meta.get('meta')

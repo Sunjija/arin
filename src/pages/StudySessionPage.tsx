@@ -161,16 +161,21 @@ export function StudySessionPage() {
         <ConceptStep
           lesson={lesson}
           memo={session.conceptMemo}
+          guideSnapshots={session.guideSnapshots}
+          confirmedConceptIds={session.confirmedConceptIds}
+          questionCount={session.questionIds.length}
+          onConfirm={session.conceptIds ? async (id, checked) => persist({ ...session, confirmedConceptIds: checked ? [...new Set([...(session.confirmedConceptIds ?? []), id])] : session.confirmedConceptIds?.filter(item => item !== id) }) : undefined}
           onMemo={async (conceptMemo) => persist({ ...session, conceptMemo })}
-          onDone={() =>
-            persist({
-              ...session,
-              conceptDone: true,
-              step: 'quiz',
-              quizPhase: 'choices',
-              revealedChoices: true,
-            })
-          }
+          onDone={async () => {
+            const next = { ...session, conceptDone: true, quizPhase: 'choices' as const, revealedChoices: true }
+            if (next.questionIds.length) await persist({ ...next, step: 'quiz' })
+            else if (next.cardIds.length) await persist({ ...next, step: 'cards' })
+            else {
+              const done = { ...next, step: 'result' as const }
+              await finishSession(done)
+              setSession(done)
+            }
+          }}
         />
       )}
       {session.step === 'quiz' && <QuizStep session={session} onChange={persist} />}

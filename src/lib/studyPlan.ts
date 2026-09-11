@@ -56,7 +56,7 @@ export function planDailyQuantity(input: {
 }
 
 export function quantitySettingsCopy(): string {
-  return `하루 분량은 개념·문제·복습 개수로 정합니다. 카드 상한은 ${MIN_DAILY_CARDS}~${MAX_DAILY_CARDS}장입니다. 입력된 학습 시간은 참고용이며, 그 시간에 맞추려고 개념이나 문항 수를 줄이지 않습니다.`
+  return `하루 분량은 개념·문제·복습 개수로 정합니다. 카드 상한은 ${MIN_DAILY_CARDS}~${MAX_DAILY_CARDS}장입니다. 문제·카드 수는 상한이며, 배운 범위에 맞는 내용만 제공합니다.`
 }
 
 /**

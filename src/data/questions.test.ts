@@ -53,7 +53,8 @@ describe('question bank quality', () => {
     questions.forEach((question) => {
       counts[question.answerIndex] += 1
     })
-    expect(counts).toEqual([20, 20, 20, 20, 20])
+    expect(counts.reduce((sum, count) => sum + count, 0)).toBe(questions.length)
+    expect(Math.max(...counts) - Math.min(...counts)).toBeLessThanOrEqual(1)
   })
 
   it('connects every question to a lesson from the same era', () => {

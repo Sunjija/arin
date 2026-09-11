@@ -9,11 +9,11 @@ export function ResultStep({ session, lessonTitle }: { session: ActiveSession; l
   return (
     <div className="surface space-y-4 p-5">
       <h1 className="font-display text-2xl">{review ? '복습 결과' : '오늘 학습 결과'}</h1>
-      <p className="meta-text">{review ? '카드 복습만 진행했습니다.' : lessonTitle}</p>
+      <p className="meta-text">{review ? '배운 범위의 카드와 문제를 복습했습니다.' : session.conceptIds ? `오늘 개념 ${session.conceptIds.length}개 확인 · ${lessonTitle}` : lessonTitle}</p>
       <div className="grid grid-cols-2 gap-3">
         <div className="metric-card">
           <p className="metric-label">복습 카드</p>
-          <p className="metric-value">{session.cardIds.length}장</p>
+          <p className="metric-value">{Math.min(session.cardIndex, session.cardIds.length)}장</p>
         </div>
         {review ? (
           <div className="metric-card">
@@ -23,7 +23,7 @@ export function ResultStep({ session, lessonTitle }: { session: ActiveSession; l
         ) : (
           <div className="metric-card">
             <p className="metric-label">문제 정답률</p>
-            <p className="metric-value">{stats.accuracy}%</p>
+            <p className="metric-value">{stats.total ? `${stats.accuracy}%` : '기록 없음'}</p>
             <p className="mt-1 text-xs text-[var(--ink-muted)]">
               {stats.correct}/{stats.total}
             </p>

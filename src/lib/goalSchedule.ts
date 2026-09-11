@@ -34,11 +34,10 @@ export function countStudyDaysInclusive(start: string, end: string, weekdays: nu
   if (daysBetween(start, end) < 0) return 0
   const allowed = normalizeStudyWeekdays(weekdays)
   if (allowed.length === 0) return 0
-  let count = 0
-  let cursor = start
-  while (daysBetween(cursor, end) >= 0) {
-    if (allowed.includes(weekdayOf(cursor))) count += 1
-    cursor = addDays(cursor, 1)
+  const length = daysBetween(start, end) + 1
+  let count = Math.floor(length / 7) * allowed.length
+  for (let i = 0; i < length % 7; i += 1) {
+    if (allowed.includes(weekdayOf(addDays(start, i)))) count += 1
   }
   return count
 }

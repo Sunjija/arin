@@ -2,16 +2,16 @@
   "method": "literal-source-inventory-v1",
   "inputHashes": {
     "src/data/lessons.ts": "36c6247817ed88ad11a84b5ee3c25a72f01eb169a7eb2994c4cefae90ad3746c",
-    "src/data/questions.ts": "45357f8cbce79888427bf7cda8bfcbf6004bb4b8f1b2a2ccf4db5cdeaf4af5a7",
+    "src/data/questions.ts": "b4f879b452bce276737e5dc40a5419cb6994bcd6ef27a23a5a0bdaba5b2b79ed",
     "src/data/cards.ts": "734cf1df9cd8d9f9bdce7f0c6041255aefdc9ba3528fde30a481daa5a05f3cdb",
     "src/data/timeline.ts": "692792c6de4c37297cfa40621b90df6278ec5b23440b2d81fa4c873826efdc32",
     "src/data/topicCatalog.ts": "eedf578379555fc3362b37f3746fae59c4c7ac94be8ea026477c4224a5ba3bbe",
-    "src/data/lessonGuides.ts": "16355f9cc28d4b45b56f581e7e0254ba2a5645ae41c324574e6edc76d7d48a8b"
+    "src/data/lessonGuides.ts": "1abe9a9e7c7a2aa4025c5ed47e74ee468f6b6ef53c1148bfd14f9c7c84158bb2"
   },
   "caveat": "Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.",
   "counts": {
     "lessons": 18,
-    "questions": 100,
+    "questions": 102,
     "cards": 95,
     "timeline": 70,
     "concepts": 88,
@@ -20,9 +20,9 @@
   "summary": {
     "conceptsWithGuide": 7,
     "conceptsWithoutGuide": 81,
-    "questionsExplicitlyMapped": 6,
-    "questionsWithSourceUrl": 6,
-    "questionsWithPassage": 44,
+    "questionsExplicitlyMapped": 8,
+    "questionsWithSourceUrl": 8,
+    "questionsWithPassage": 46,
     "actualImageQuestions": 0,
     "calibratedQuestions": 0
   },
@@ -52,7 +52,9 @@
         "q-03",
         "q-51",
         "q-79",
-        "q-84"
+        "q-84",
+        "q-101",
+        "q-102"
       ]
     },
     {
@@ -478,12 +480,15 @@
       "recallPrompts": 1,
       "explicitQuestionIds": [
         "q-01",
-        "q-03"
+        "q-03",
+        "q-102"
       ],
       "candidateQuestionIds": [
         "q-01",
         "q-03",
-        "q-84"
+        "q-84",
+        "q-101",
+        "q-102"
       ],
       "candidateCardIds": [
         "c-14"
@@ -506,12 +511,15 @@
       "recallPrompts": 1,
       "explicitQuestionIds": [
         "q-03",
-        "q-84"
+        "q-84",
+        "q-102"
       ],
       "candidateQuestionIds": [
         "q-01",
         "q-03",
-        "q-84"
+        "q-84",
+        "q-101",
+        "q-102"
       ],
       "candidateCardIds": [
         "c-15",
@@ -531,12 +539,13 @@
       "lessonId": "lesson-01",
       "status": "source-checked-guide-expert-review-pending",
       "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0010",
-      "descriptionBlocks": 1,
+      "descriptionBlocks": 2,
       "recallPrompts": 1,
       "explicitQuestionIds": [
         "q-51"
       ],
       "candidateQuestionIds": [
+        "q-02",
         "q-51",
         "q-79"
       ],
@@ -557,17 +566,19 @@
       "lessonId": "lesson-01",
       "status": "source-checked-guide-expert-review-pending",
       "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020",
-      "descriptionBlocks": 1,
+      "descriptionBlocks": 2,
       "recallPrompts": 1,
       "explicitQuestionIds": [
         "q-02",
         "q-51",
-        "q-79"
+        "q-79",
+        "q-102"
       ],
       "candidateQuestionIds": [
         "q-02",
         "q-51",
-        "q-79"
+        "q-79",
+        "q-102"
       ],
       "candidateCardIds": [
         "c-16",
@@ -589,7 +600,7 @@
       "lessonId": "lesson-01",
       "status": "source-checked-guide-expert-review-pending",
       "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0030",
-      "descriptionBlocks": 1,
+      "descriptionBlocks": 2,
       "recallPrompts": 1,
       "explicitQuestionIds": [
         "q-02",
@@ -619,7 +630,9 @@
       "descriptionBlocks": 0,
       "recallPrompts": 0,
       "explicitQuestionIds": [],
-      "candidateQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-02"
+      ],
       "candidateCardIds": [
         "c-46"
       ],
@@ -640,10 +653,16 @@
       "lessonId": "lesson-01",
       "status": "source-checked-guide-expert-review-pending",
       "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0020_0010",
-      "descriptionBlocks": 1,
+      "descriptionBlocks": 2,
       "recallPrompts": 1,
-      "explicitQuestionIds": [],
-      "candidateQuestionIds": [],
+      "explicitQuestionIds": [
+        "q-101"
+      ],
+      "candidateQuestionIds": [
+        "q-01",
+        "q-02",
+        "q-101"
+      ],
       "candidateCardIds": [],
       "candidateTimelineIds": [],
       "requiredNext": [
@@ -659,16 +678,20 @@
       "lessonId": "lesson-01",
       "status": "source-checked-guide-expert-review-pending",
       "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020",
-      "descriptionBlocks": 1,
+      "descriptionBlocks": 2,
       "recallPrompts": 1,
-      "explicitQuestionIds": [],
+      "explicitQuestionIds": [
+        "q-102"
+      ],
       "candidateQuestionIds": [
         "q-01",
         "q-02",
         "q-03",
         "q-51",
         "q-79",
-        "q-84"
+        "q-84",
+        "q-101",
+        "q-102"
       ],
       "candidateCardIds": [
         "c-14",
@@ -3051,6 +3074,7 @@
       "candidateConceptIds": [
         "t-pre-01",
         "t-pre-02",
+        "t-pre-07",
         "t-pre-08"
       ],
       "familyId": "pre-neolithic-evidence",
@@ -3069,8 +3093,11 @@
         "t-pre-05"
       ],
       "candidateConceptIds": [
+        "t-pre-03",
         "t-pre-04",
         "t-pre-05",
+        "t-pre-06",
+        "t-pre-07",
         "t-pre-08"
       ],
       "familyId": "pre-gojoseon-state",
@@ -4653,6 +4680,49 @@
       "formatId": "policy-content",
       "actualStimulus": "none",
       "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-101",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-07"
+      ],
+      "candidateConceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-07",
+        "t-pre-08"
+      ],
+      "familyId": "pre-iron-use",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0020_0010",
+      "formatId": "source-what",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-102",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-04",
+        "t-pre-08"
+      ],
+      "candidateConceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-04",
+        "t-pre-08"
+      ],
+      "familyId": "pre-era-sequence",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010",
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 2,
       "calibratedDifficulty": null
     }
   ],
