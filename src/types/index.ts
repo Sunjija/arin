@@ -188,10 +188,24 @@ export interface ReviewPlanItem {
   conceptId?: string
   questionId?: string
   cardId?: string
-  dueOn: string
+  dueOn: string | null
   reason: string
   failCount: number
   wrongCause?: WrongCause
+}
+
+export type QuestionSelectionReason = 'new-concept' | 'lesson-practice' | 'due-review' | 'recent-wrong' | 'review-practice'
+
+/** Selection evidence and submitted-answer history; not proof of first visual exposure. */
+export interface QuestionStudyContext {
+  questionId: string
+  reason: QuestionSelectionReason
+  selectedOn: string
+  dueOn: string | null
+  lastWrongAt: string | null
+  priorAttemptCount: number
+  /** Other IDs with an explicitly matching family. null means the family is unknown. */
+  similarQuestionAttemptCount: number | null
 }
 
 export interface ConceptSchedule {
@@ -216,6 +230,7 @@ export interface ConceptSchedule {
 
 
 export interface FrozenStudyPlan {
+  questionContexts?: QuestionStudyContext[]
   conceptSchedule?: ConceptSchedule
   policyVersion: string
   date: string
@@ -353,6 +368,8 @@ export interface LibraryPracticeSession {
 }
 
 export interface ActiveSession {
+  /** Frozen at start. Legacy sessions without it retain unknown history. */
+  questionContexts?: QuestionStudyContext[]
   id: string
   date: string
   step: SessionStep

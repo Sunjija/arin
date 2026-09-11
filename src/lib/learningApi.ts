@@ -32,6 +32,7 @@ import {
 import { LEARNING_POLICY } from './learningPolicy'
 import { createInitialMastery, updateMasteryScore } from './mastery'
 import { selectStudyQuestions } from './questionSelection'
+import { makeQuestionStudyContext, questionContextCopy, recentWrongAttempts } from './questionStudyContext'
 import { pickDueCardsForToday, planDailyQuantity } from './studyPlan'
 import { gradeFromScore, normalizeSettings, scoreFromGrade, toLearningGoal } from './settingsNormalize'
 import { selectNextLesson, upsertLessonCompletion } from './lessonProgress'
@@ -174,13 +175,12 @@ export async function computeStudyPlan(today = toDateKey()): Promise<FrozenStudy
 }
 
 async function computePlan(today: string): Promise<FrozenStudyPlan> {
-  const [settings, cards, studyDay, active, meta, wrongAnswers] = await Promise.all([
+  const [settings, cards, studyDay, active, meta] = await Promise.all([
     getSettings(),
     db.cards.toArray(),
     db.studyDays.get(today),
     db.activeSession.toCollection().first(),
     db.meta.get('meta'),
-    db.wrongAnswers.orderBy('createdAt').reverse().limit(40).toArray(),
   ])
   const sameDayResume = Boolean(active && active.date === today && active.step !== 'result')
   if (active && active.step !== 'result') {
@@ -192,7 +192,7 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
       return { ...originalPlan, date: today, currentLessonId: active.lessonId,
         currentConceptIds: active.conceptIds ?? lessonConceptIds(active.lessonId), newConceptCount: active.conceptIds?.length ?? originalPlan.newConceptCount, newQuestionIds, reviewQuestionIds,
         reviewCardIds: active.cardIds, newQuestionCount: newQuestionIds.length,
-        reviewQuestionCount: reviewQuestionIds.length, reviewCardCount: active.cardIds.length, sameDayResume,
+        reviewQuestionCount: reviewQuestionIds.length, reviewCardCount: active.cardIds.length, sameDayResume, questionContexts: active.questionContexts,
         reasons: [...originalPlan.reasons, `${active.date}에 시작한 학습을 이어갑니다.`],
       }
     }
@@ -244,10 +244,11 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
     lesson.era,
     quantity.selectedCardCount,
   )
-  const dueReviewQuestionIds = dueCards
+  const dueReviewQuestionIds = dueAll
     .map((card) => card.sourceQuestionId)
     .filter((id): id is string => Boolean(id))
-  const recentWrongIds = wrongAnswers.filter(row => reviewQuestionIdsAllowed.includes(row.questionId)).map(row => row.questionId)
+  const recentWrong = recentWrongAttempts(attempts, today)
+  const recentWrongIds = [...recentWrong.keys()].filter(id => reviewQuestionIdsAllowed.includes(id))
   const understood = new Set([...completedConceptIds, ...currentConceptIds])
   const newQuestionIdsAllowed = questions.filter(question => question.conceptIds?.some(id => currentConceptIds.includes(id)) && question.conceptIds.every(id => understood.has(id))).map(question => question.id)
   const reviewBudget = reviewQuestionIdsAllowed.length ? Math.max(1, Math.floor(quantity.selectedQuestionCount * 0.3)) : 0
@@ -282,6 +283,14 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
   }
 
   const plan: FrozenStudyPlan = {
+    questionContexts: selected.all.map(question => makeQuestionStudyContext({
+      question,
+      reason: selected.reviewReasons[question.id] ?? 'new-concept',
+      selectedOn: today,
+      attempts,
+      dueOn: dueAll.filter(card => card.sourceQuestionId === question.id).map(card => card.nextReviewAt).sort()[0],
+      lastWrongAt: recentWrong.get(question.id)?.createdAt,
+    })),
     policyVersion: LEARNING_POLICY.version,
     date: today,
     createdAt: new Date().toISOString(),
@@ -317,6 +326,7 @@ async function computePlan(today: string): Promise<FrozenStudyPlan> {
     plan.newQuestionCount = plan.newQuestionIds.length
     plan.reviewQuestionCount = plan.reviewQuestionIds.length
     plan.reviewCardCount = plan.reviewCardIds.length
+    plan.questionContexts = active.questionContexts
     plan.reasons = [`${active.date}에 시작한 학습을 이어갑니다.`]
   }
   const day = studyDay ?? emptyStudyDay(today, lesson.id, plan)
@@ -339,51 +349,25 @@ function isLearnedCard(card: FlashcardRecord, learnedLessonIds: string[], comple
   return Boolean(card.lastRating && (card.userEdited || card.fromWrongAnswer || card.id.startsWith('card-user-')))
 }
 
-function toReviewItems(
-  kind: ReviewPlanItem['kind'],
-  ids: string[],
-  cards: FlashcardRecord[],
-  wrong: WrongAnswerRecord[],
-  today: string,
-): ReviewPlanItem[] {
-  return ids.map((id, index) => {
-    const card = cards.find((item) => item.sourceQuestionId === id || item.id === id)
-    const miss = wrong.filter((row) => row.questionId === id)
-    return {
-      id: `${kind}-${id}-${index}`,
-      kind,
-      questionId: card?.sourceQuestionId ?? (kind === 'recent-wrong' ? id : undefined),
-      cardId: card?.id,
-      dueOn: card?.nextReviewAt ?? today,
-      reason: kind === 'due-review' ? '복습 도래' : '최근 오답(도래와 별개)',
-      failCount: miss.length,
-      wrongCause: miss[0]?.cause,
-    }
-  })
-}
-
 export async function selectReview(today = toDateKey()): Promise<ReviewSelection> {
   const plan = await computeStudyPlan(today)
   const [cards, wrong] = await Promise.all([db.cards.toArray(), db.wrongAnswers.toArray()])
-  const dueItems = toReviewItems('due-review', plan.reviewCardIds, cards, wrong, today)
-  const recentWrongItems = toReviewItems(
-    'recent-wrong',
-    plan.reviewQuestionIds.filter((id) => wrong.some(row => row.questionId === id) && !plan.reviewCardIds.some((cardId) => {
-      const card = cards.find((item) => item.id === cardId)
-      return card?.sourceQuestionId === id
-    })),
-    cards,
-    wrong,
-    today,
-  )
-  return {
-    date: today,
-    dueItems,
-    recentWrongItems,
-    cardIds: plan.reviewCardIds,
-    questionIds: plan.reviewQuestionIds,
-    reasons: plan.reasons,
-  }
+  const dueItems: ReviewPlanItem[] = plan.reviewCardIds.flatMap(id => {
+    const card = cards.find(item => item.id === id)
+    if (!card) return []
+    const misses = wrong.filter(row => row.questionId === card.sourceQuestionId)
+    return [{ id: `due-review-${id}`, kind: 'due-review', questionId: card.sourceQuestionId,
+      cardId: id, dueOn: card.nextReviewAt, reason: '복습 예정일 도래', failCount: misses.length }]
+  })
+  const questionItems = plan.questionContexts?.filter(item => plan.reviewQuestionIds.includes(item.questionId)) ?? []
+  const recentWrongItems: ReviewPlanItem[] = questionItems.filter(item => item.reason === 'recent-wrong').map(item => ({
+    id: `recent-wrong-${item.questionId}`, kind: 'recent-wrong', questionId: item.questionId,
+    dueOn: null, reason: questionContextCopy(item).reasonDetail,
+    failCount: wrong.filter(row => row.questionId === item.questionId).length,
+    wrongCause: wrong.find(row => row.questionId === item.questionId && row.createdAt === item.lastWrongAt)?.cause,
+  }))
+  return { date: today, dueItems, recentWrongItems, questionItems,
+    cardIds: plan.reviewCardIds, questionIds: plan.reviewQuestionIds, reasons: plan.reasons }
 }
 
 export async function startLesson(input: StartLessonInput = {}): Promise<ActiveSession> {
@@ -437,7 +421,16 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
         ? 'cards'
         : 'concept'
 
+  const questionContexts = questionIds.flatMap(id => {
+    const question = questions.find(item => item.id === id)
+    if (!question) return []
+    const planned = plan.questionContexts?.find(item => item.questionId === id)
+    return [makeQuestionStudyContext({ question, attempts, selectedOn: planned?.selectedOn ?? today,
+      reason: input.lessonId && newQuestionIds.includes(id) ? 'lesson-practice' : planned?.reason ?? (plan.reviewQuestionIds.includes(id) ? 'review-practice' : 'new-concept'),
+      dueOn: planned?.dueOn, lastWrongAt: planned?.lastWrongAt })]
+  })
   const session: ActiveSession = {
+    questionContexts,
     id: `session-${today}-${crypto.randomUUID()}`,
     date: today,
     step,

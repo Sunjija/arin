@@ -1,5 +1,6 @@
-import type { EraId, Question, QuestionType } from '../types'
+import type { EraId, Question, QuestionType, QuestionSelectionReason } from '../types'
 import { masteryBand } from './mastery'
+import { LEARNING_POLICY } from './learningPolicy'
 
 export interface SelectionContext {
   questions: Question[]
@@ -24,6 +25,7 @@ export interface SelectionContext {
 }
 
 export interface SplitSelection {
+  reviewReasons: Record<string, QuestionSelectionReason>
   newQuestions: Question[]
   reviewQuestions: Question[]
   all: Question[]
@@ -70,6 +72,7 @@ export function selectStudyQuestions(ctx: SelectionContext): SplitSelection {
   const reviewCount = split ? Math.max(0, ctx.reviewCount ?? Math.max(0, ctx.count - newCount)) : 0
 
   const newQuestions = takeWeighted(newPool, newCount, used, boostTypes, boostMultiplier)
+  const reviewReasons: Record<string, QuestionSelectionReason> = {}
   const reviewQuestions = split
     ? pickReviewQuestions({
         pool: reviewPool.filter((question) => !used.has(question.id)),
@@ -81,14 +84,15 @@ export function selectStudyQuestions(ctx: SelectionContext): SplitSelection {
         masteryTypes: ctx.masteryTypes,
         boostTypes,
         boostMultiplier,
+        reasons: reviewReasons,
       })
     : []
 
   if (!split) {
-    return { newQuestions, reviewQuestions: [], all: fillLegacyMix(ctx, newPool, new Set(), boostTypes, boostMultiplier) }
+    return { newQuestions, reviewQuestions: [], reviewReasons, all: fillLegacyMix(ctx, newPool, new Set(), boostTypes, boostMultiplier) }
   }
 
-  return { newQuestions, reviewQuestions, all: ensureUnique([...newQuestions, ...reviewQuestions]) }
+  return { newQuestions, reviewQuestions, reviewReasons, all: ensureUnique([...newQuestions, ...reviewQuestions]) }
 }
 
 function fillLegacyMix(
@@ -161,6 +165,7 @@ function fillLegacyMix(
 }
 
 function pickReviewQuestions(input: {
+  reasons: Record<string, QuestionSelectionReason>
   pool: Question[]
   count: number
   used: Set<string>
@@ -171,10 +176,10 @@ function pickReviewQuestions(input: {
   boostTypes: QuestionType[]
   boostMultiplier: number
 }): Question[] {
-  const dueNeed = Math.round(input.count * 0.6)
+  const dueNeed = Math.round(input.count * LEARNING_POLICY.reviewDueShare)
   const recentNeed = Math.max(0, input.count - dueNeed)
   const picked: Question[] = []
-  const take = (filter: (q: Question) => boolean, need: number) => {
+  const take = (filter: (q: Question) => boolean, need: number, reason: QuestionSelectionReason) => {
     const candidates = weightedShuffle(
       input.pool.filter((q) => !input.used.has(q.id) && filter(q)),
       input.boostTypes,
@@ -184,13 +189,18 @@ function pickReviewQuestions(input: {
     for (const q of candidates) {
       if (picked.length >= input.count || remaining <= 0) break
       picked.push(q)
+      input.reasons[q.id] = reason
       input.used.add(q.id)
       remaining -= 1
     }
   }
-  take((q) => input.dueReviewQuestionIds.includes(q.id), dueNeed)
-  take((q) => input.recentWrongIds.includes(q.id) && !input.dueReviewQuestionIds.includes(q.id), recentNeed)
-  take(() => true, input.count - picked.length)
+  const due = (q: Question) => input.dueReviewQuestionIds.includes(q.id)
+  const wrong = (q: Question) => input.recentWrongIds.includes(q.id) && !due(q)
+  take(due, dueNeed, 'due-review')
+  take(wrong, recentNeed, 'recent-wrong')
+  take(due, input.count - picked.length, 'due-review')
+  take(wrong, input.count - picked.length, 'recent-wrong')
+  take(() => true, input.count - picked.length, 'review-practice')
   return picked
 }
 

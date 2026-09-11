@@ -66,6 +66,7 @@ export interface RecordConceptViewInput {
 
 export interface ReviewSelection {
   date: string
+  questionItems: import('./index').QuestionStudyContext[]
   dueItems: ReviewPlanItem[]
   recentWrongItems: ReviewPlanItem[]
   cardIds: string[]
