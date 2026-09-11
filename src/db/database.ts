@@ -7,6 +7,7 @@ import type {
   ConceptProgressRecord,
   FlashcardRecord,
   LessonCompletion,
+  LibraryPracticeSession,
   MasteryScores,
   MockExamResult,
   StudyDayRecord,
@@ -26,6 +27,7 @@ export class HanguksaDB extends Dexie {
   activeMock!: EntityTable<ActiveMock, 'id'>
   lessonCompletions!: EntityTable<LessonCompletion, 'lessonId'>
   conceptProgress!: EntityTable<ConceptProgressRecord, 'conceptId'>
+  libraryPractice!: EntityTable<LibraryPracticeSession, 'lessonId'>
   meta!: EntityTable<AppMeta, 'id'>
 
   constructor() {
@@ -91,6 +93,7 @@ export class HanguksaDB extends Dexie {
       conceptProgress: 'conceptId, learnState, completedAt',
       meta: 'id',
     })
+    this.version(4).stores({ libraryPractice: 'lessonId, &id, updatedAt' })
   }
 }
 

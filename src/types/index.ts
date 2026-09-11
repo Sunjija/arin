@@ -338,6 +338,20 @@ export interface MockExamResult {
 
 export type StudyEntryMode = 'daily' | 'review'
 
+/** Latest library practice run per lesson; independent from the daily session. */
+export interface LibraryPracticeSession {
+  id: string
+  lessonId: string
+  revision: number
+  step: 'question' | 'feedback' | 'result'
+  questionIndex: number
+  selectedIndex: number | null
+  questionSnapshots: QuestionSnapshot[]
+  answers: SessionAnswer[]
+  startedAt: string
+  updatedAt: string
+}
+
 export interface ActiveSession {
   id: string
   date: string
