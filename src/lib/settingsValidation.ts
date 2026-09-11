@@ -104,6 +104,30 @@ export function parseUserSettings(
     focusTypes: [...(raw.focusTypes as QuestionType[])],
     startDate: raw.startDate,
     planWeeks: raw.planWeeks as number,
+    goalGrade: raw.goalGrade === 1 || raw.goalGrade === 2 ? raw.goalGrade : undefined,
+    dailyNewConceptCount:
+      typeof raw.dailyNewConceptCount === 'number' && Number.isFinite(raw.dailyNewConceptCount)
+        ? raw.dailyNewConceptCount
+        : undefined,
+    examRound: typeof raw.examRound === 'number' ? raw.examRound : raw.examRound === null ? null : undefined,
+    examDate: typeof raw.examDate === 'string' && DATE_KEY.test(raw.examDate) ? raw.examDate : raw.examDate === null ? null : undefined,
+    examDateUndecided: typeof raw.examDateUndecided === 'boolean' ? raw.examDateUndecided : undefined,
+    experienceLevel:
+      raw.experienceLevel === 'first-time' || raw.experienceLevel === 'has-experience'
+        ? raw.experienceLevel
+        : undefined,
+    studyWeekdays: Array.isArray(raw.studyWeekdays)
+      ? raw.studyWeekdays.filter((day): day is number => typeof day === 'number' && day >= 0 && day <= 6)
+      : undefined,
+    officialScheduleSource:
+      typeof raw.officialScheduleSource === 'string' || raw.officialScheduleSource === null
+        ? raw.officialScheduleSource
+        : undefined,
+    officialScheduleCheckedAt:
+      typeof raw.officialScheduleCheckedAt === 'string' || raw.officialScheduleCheckedAt === null
+        ? raw.officialScheduleCheckedAt
+        : undefined,
+    onboardingCompleted: typeof raw.onboardingCompleted === 'boolean' ? raw.onboardingCompleted : undefined,
   }
   const errors = validateSettingsForm(settings)
   if (errors.length > 0) return { ok: false, message: errors[0]! }

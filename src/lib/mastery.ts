@@ -18,12 +18,11 @@ export interface MasteryUpdateInput {
  */
 export function updateMasteryScore(input: MasteryUpdateInput): number {
   const recency = Math.max(0.4, 1 - input.daysAgo * 0.07)
-  const slowPenalty =
-    input.responseMs == null ? 1 : input.responseMs > 30_000 ? 0.6 : input.responseMs > 15_000 ? 0.85 : 1
+  void input.responseMs
 
   let delta: number
   if (input.correct) {
-    delta = 6 * recency * slowPenalty
+    delta = 6 * recency
   } else {
     let miss = 8
     if (input.cause === 'confused-person' || input.cause === 'confused-order') {

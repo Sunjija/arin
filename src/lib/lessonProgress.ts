@@ -27,6 +27,9 @@ export function lessonsForWeek(lessons: Lesson[], week: number): Lesson[] {
  * 계획 주수가 끝나면 18개 단원 전체를 날짜 기준으로 순환한다.
  * 활성 세션 lessonId가 있으면 재개 시 바꾸지 않는다.
  */
+/**
+ * 달력으로 단원을 고르는 레거시 헬퍼. 제품 진도는 `selectNextLesson`을 쓴다.
+ */
 export function selectScheduledLesson(
   lessons: Lesson[],
   input: {

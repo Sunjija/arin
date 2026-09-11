@@ -26,7 +26,7 @@
 | 복습 | 개념 연결·복습 도래일·오답 원인·실패 횟수·출제 이유 |
 | 세션 | 종류·확정 문항 목록·현재 단계·중복 제출 방지·재개 정보 |
 
-서비스는 목표 저장/계획 산출/단원 시작/답안 기록/복습 선정/세션 완료를 한 경로로 제공한다. 총괄은 실제 export 경로·인자·반환값·에러·소유자를 명시한 API 표와 소비 예제를 코드 구현 후 추가한다. 그 전 B/C/F는 별도 저장소나 가짜 API를 만들지 않는다.
+서비스는 목표 저장/계획 산출/단원 시작/답안 기록/복습 선정/세션 완료를 한 경로로 제공한다. 실제 export 경로·인자·반환값·에러·소유자와 소비 예제는 [e-foundation-api.md](e-foundation-api.md)에 동결했다. B/C/F는 별도 저장소나 가짜 API를 만들지 않는다.
 
 ## 현재 호환성 기준
 `src/types/index.ts`, `src/types/contracts.ts`, `src/lib/studyService.ts`, `src/db/`가 기준 브랜치의 실제 계약이다. `startOrResumeSession`, `recordQuizAnswer`, `finishSession`, 백업·복원·시드 병합을 변경하면 기존 호출자와 함께 이전한다.

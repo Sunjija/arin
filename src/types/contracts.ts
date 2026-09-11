@@ -7,7 +7,10 @@ import type {
   ActiveSession,
   AttemptRecord,
   EraId,
+  ExamDateMode,
   FlashcardRecord,
+  FrozenStudyPlan,
+  LearningSource,
   Lesson,
   LessonCompletion,
   MockExamResult,
@@ -76,6 +79,10 @@ export interface QuantityPlan {
   estimatedMinutes: number
   fitsDailyMinutes: boolean
   overflowMinutes: number
+  /** heuristic: 참고 추정. 분량 상한으로 쓰지 않는다. */
+  estimateKind?: 'heuristic' | 'none'
+  newQuestionCount?: number
+  reviewQuestionCount?: number
   /** 화면/설정에 그대로 쓸 안내. 넘치면 숨기지 않는다. */
   guidance: string | null
 }
@@ -118,6 +125,12 @@ export interface TodayPlan {
   completionRate: number
   /** @deprecated B는 observedWeakAreas. 라벨 배열. */
   weakAreas: string[]
+  conceptFinishDate?: string | null
+  examDateMode?: ExamDateMode
+  planWarnings?: string[]
+  newQuestionCount?: number
+  reviewQuestionCount?: number
+  frozenPlan?: FrozenStudyPlan
 }
 
 export interface ProgressSnapshot {
@@ -146,7 +159,7 @@ export type CreateWrongCardResult =
   | { ok: false; reason: 'source-missing'; questionId: string }
 
 export type BackupRestoreResult =
-  | { ok: true; importedVersion: 1 | 2 }
+  | { ok: true; importedVersion: 1 | 2 | 3 }
   | { ok: false; code: 'import-invalid' | 'unsupported-backup'; message: string }
 
 export interface FinalizeMockResult {
@@ -196,6 +209,7 @@ export interface RecordAttemptInput {
   responseMs: number | null
   cause?: WrongCause
   source: 'practice' | 'mock'
+  learningSource?: LearningSource
   era: EraId
   tags: QuestionType[]
   resultId?: string

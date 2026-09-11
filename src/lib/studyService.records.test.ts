@@ -2,7 +2,6 @@ import 'fake-indexeddb/auto'
 import { afterEach, describe, expect, it } from 'vitest'
 import { questions } from '../data/questions'
 import { flashcardSeeds } from '../data/cards'
-import { lessons } from '../data/lessons'
 import { addDays } from './dates'
 import { buildTodayPlan, getProgressSnapshot, startOrResumeSession } from './studyService'
 import { db } from '../db/database'
@@ -14,7 +13,7 @@ afterEach(async () => {
 })
 
 describe('today plan lessons and estimated scores', () => {
-  it('covers all 18 lessons in the default 8-week plan and keeps a resumed session', async () => {
+  it('keeps the current incomplete lesson instead of walking the calendar', async () => {
     await resetAppDb()
     await seedCore({ startDate: '2026-01-05', planWeeks: 8 })
     const seen = new Set<string>()
@@ -22,8 +21,7 @@ describe('today plan lessons and estimated scores', () => {
       const plan = await buildTodayPlan(addDays('2026-01-05', day))
       seen.add(plan.lesson.id)
     }
-    expect(seen.size).toBe(18)
-    expect(seen).toEqual(new Set(lessons.map((lesson) => lesson.id)))
+    expect(seen).toEqual(new Set(['lesson-01']))
 
     const session: ActiveSession = {
       id: 'session-2026-01-06',
@@ -49,24 +47,27 @@ describe('today plan lessons and estimated scores', () => {
     expect(resumed.lesson.id).toBe('lesson-01')
   })
 
-  it('keeps daily questions and cards in the lesson era, including an old mixed session', async () => {
+  it('starts new users on the concept and reviews only after a lesson is completed', async () => {
     await resetAppDb()
     await seedCore({ dailyMinutes: 120 })
     await db.cards.bulkPut(flashcardSeeds.map((card) => ({ ...card, fingerprint: card.id, createdAt: '2026-01-05', updatedAt: '2026-01-05', nextReviewAt: '2026-01-05', intervalDays: 0, easeStreak: 0, lapses: 0 })))
     const session = await startOrResumeSession('2026-01-05')
-    const era = lessons.find((lesson) => lesson.id === session.lessonId)!.era
-    expect(session.questionIds.length).toBeGreaterThan(0)
-    expect(session.questionIds.every((id) => questions.find((q) => q.id === id)?.era === era)).toBe(true)
-    expect((await db.cards.bulkGet(session.cardIds)).every((card) => card?.era === era)).toBe(true)
-    const foreign = questions.find((q) => q.era !== era)!
-    await db.activeSession.put({ ...session, questionIds: [foreign.id, ...session.questionIds], selectedIndex: 3, step: 'quiz' })
-    const resumed = await startOrResumeSession('2026-01-05')
-    expect(resumed.questionIds.every((id) => questions.find((q) => q.id === id)?.era === era)).toBe(true)
-    expect(resumed.selectedIndex).toBeUndefined()
-    expect((await startOrResumeSession('2026-01-05')).questionIds).toEqual(resumed.questionIds)
-    await db.activeSession.clear()
+    expect(session.lessonId).toBe('lesson-01')
+    expect(session.step).toBe('concept')
+    expect(session.cardIds).toEqual([])
+    expect(session.questionIds.every((id) => questions.find((q) => q.id === id)?.lessonId === 'lesson-01')).toBe(true)
     const review = await startOrResumeSession({ today: '2026-01-05', entryMode: 'review' })
-    expect((await db.cards.bulkGet(review.cardIds)).some((card) => card?.era !== era)).toBe(true)
+    expect(review.id).toBe(session.id)
+    await db.activeSession.clear()
+    await db.studyDays.clear()
+    await db.lessonCompletions.put({
+      lessonId: 'lesson-01',
+      firstCompletedAt: '2026-01-05',
+      lastCompletedAt: '2026-01-05',
+      completionCount: 1,
+    })
+    const after = await startOrResumeSession({ today: '2026-01-06', entryMode: 'review' })
+    expect((await db.cards.bulkGet(after.cardIds)).every((card) => card?.era === 'prehistoric')).toBe(true)
   })
 
   it('uses the same estimated score on home and progress for the same records', async () => {

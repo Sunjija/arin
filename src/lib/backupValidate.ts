@@ -45,7 +45,7 @@ export function parseMasteryScores(
 
 export function validateExportPayload(raw: unknown): { ok: true; payload: ExportPayload } | { ok: false; message: string } {
   if (!isRecord(raw)) return { ok: false, message: '백업 파일이 객체가 아닙니다.' }
-  if (raw.version !== 1 && raw.version !== 2) {
+  if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3) {
     return { ok: false, message: '지원하지 않는 백업 버전입니다.' }
   }
   if (!isIsoLike(raw.exportedAt)) return { ok: false, message: '내보낸 시각이 없습니다.' }
@@ -108,9 +108,16 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
     }
   }
 
+  if (raw.conceptProgress != null) {
+    if (!Array.isArray(raw.conceptProgress)) return { ok: false, message: '개념 진도 기록이 손상되었습니다.' }
+    for (const row of raw.conceptProgress) {
+      if (!isRecord(row) || !isId(row.conceptId)) return { ok: false, message: '개념 진도 기록이 손상되었습니다.' }
+    }
+  }
+
   const payload: ExportPayload = {
     ...(raw as unknown as ExportPayload),
-    version: raw.version === 2 ? 2 : 1,
+    version: raw.version === 3 ? 3 : raw.version === 2 ? 2 : 1,
     settings: settings.value,
     mastery: mastery.value,
   }
