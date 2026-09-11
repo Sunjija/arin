@@ -1,6 +1,5 @@
 /**
- * 예상 시험 점수 계산.
- *
+ * 레거시 점수 추정. 화면 숫자는 src/lib/scoreSummary.ts를 사용한다.
  * 모의고사 최근 3회가 있으면 가중 평균 (최근일수록 가중 ↑: 3, 2, 1).
  * 없으면 일반 문제 최근 정답률로 임시 추정.
  */
@@ -13,11 +12,10 @@ export function estimateScoreFromMocks(scoresNewestFirst: number[]): number | nu
   return Math.round(weighted / weightSum)
 }
 
-export function estimateScoreFromAccuracy(correct: number, total: number): number {
-  if (total <= 0) return 40
+export function estimateScoreFromAccuracy(correct: number, total: number): number | null {
+  if (total <= 0) return null
   const rate = correct / total
-  // 심화 1급 기준으로 정답률을 100점 척도에 완만히 매핑
-  return Math.round(clamp(rate * 100, 20, 95))
+  return Math.round(clamp(rate * 100, 0, 100))
 }
 
 /**

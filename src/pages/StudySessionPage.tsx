@@ -1,33 +1,32 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { SessionProgress } from '../components/SessionProgress'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useFocusLayout } from '../components/layout/useFocusLayout'
+import { StudyFocusHeader } from '../components/study/StudyFocusHeader'
+import { CardsStep } from '../components/study/CardsStep'
+import { ConceptStep } from '../components/study/ConceptStep'
+import { QuizStep } from '../components/study/QuizStep'
+import { ResultStep } from '../components/study/ResultStep'
+import { Button, InlineStatus } from '../components/ui'
 import { lessons } from '../data/lessons'
-import { getQuestionById } from '../data/questions'
-import { buildCardChoiceSet, ratingFromQuizResult, type CardChoiceSet } from '../lib/cardQuiz'
-import { ERA_LABELS, WRONG_CAUSE_LABELS, type WrongCause } from '../types'
-import {
-  addCardFromContent,
-  finishSession,
-  rateCard,
-  recordQuizAnswer,
-  saveSession,
-  sessionAnswerStats,
-  startOrResumeSession,
-} from '../lib/studyService'
+import { finishSession, rateCard, saveSession, startOrResumeSession } from '../lib/studyService'
 import { MAX_DAILY_CARDS } from '../lib/studyLimits'
 import { db } from '../db/database'
-import type { ActiveSession, CardRating, FlashcardRecord } from '../types'
+import type { ActiveSession, FlashcardRecord, StudyEntryMode } from '../types'
+
+type StudyLocationState = { entryMode?: StudyEntryMode }
 
 export function StudySessionPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [session, setSession] = useState<ActiveSession | null>(null)
   const [cards, setCards] = useState<FlashcardRecord[]>([])
-  const [error, setError] = useState<string | null>(null)
   const [allCards, setAllCards] = useState<FlashcardRecord[]>([])
-  const questionStartedAt = useRef(0)
+  const [error, setError] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [closing, setClosing] = useState(false)
 
-  useEffect(() => {
-    questionStartedAt.current = Date.now()
-  }, [])
+  const focused = Boolean(session && session.step !== 'result')
+  useFocusLayout(focused)
 
   const refreshCards = useCallback(async (ids: string[]) => {
     const [selected, every] = await Promise.all([db.cards.bulkGet(ids), db.cards.toArray()])
@@ -37,50 +36,98 @@ export function StudySessionPage() {
 
   useEffect(() => {
     let alive = true
-    startOrResumeSession()
-      .then(async (s) => {
+    const requested: StudyEntryMode =
+      (location.state as StudyLocationState | null)?.entryMode === 'review' ? 'review' : 'daily'
+    startOrResumeSession({ entryMode: requested })
+      .then(async (started) => {
         if (!alive) return
-        setSession(s)
-        await refreshCards(s.cardIds)
+        setSession(started)
+        await refreshCards(started.cardIds)
       })
-      .catch((e: unknown) => {
-        if (alive) setError(e instanceof Error ? e.message : '세션을 시작할 수 없습니다.')
+      .catch((reason: unknown) => {
+        if (alive) setError(reason instanceof Error ? reason.message : '세션을 시작할 수 없습니다.')
       })
     return () => {
       alive = false
     }
-  }, [refreshCards])
+  }, [location.state, refreshCards])
 
   const lesson = useMemo(
-    () => lessons.find((l) => l.id === session?.lessonId) ?? lessons[0],
+    () => lessons.find((item) => item.id === session?.lessonId) ?? lessons[0],
     [session?.lessonId],
   )
 
-  const update = async (next: ActiveSession) => {
+  const persist = async (next: ActiveSession) => {
     setSession(next)
-    await saveSession(next)
+    try {
+      await saveSession(next)
+      setSaveError(null)
+    } catch (reason) {
+      setSaveError('진행을 저장하지 못했습니다. 이 화면에 머무릅니다.')
+      throw reason
+    }
+  }
+
+  const closeToHome = async () => {
+    if (!session || closing) return
+    setClosing(true)
+    try {
+      await saveSession(session)
+      setSaveError(null)
+      navigate('/')
+    } catch {
+      setSaveError('진행을 저장하지 못했습니다. 이 화면에 머무릅니다.')
+      setClosing(false)
+    }
+  }
+
+  const afterCards = async (next: ActiveSession) => {
+    if (next.entryMode === 'review') {
+      const done = { ...next, step: 'result' as const }
+      await finishSession(done)
+      await persist(done)
+      return
+    }
+    await persist({ ...next, step: 'concept' })
   }
 
   if (error) {
     return (
-      <div className="surface p-5">
-        <p role="alert">{error}</p>
-        <Link className="btn btn-secondary mt-4" to="/">
-          홈으로
-        </Link>
+      <div className="focus-reading surface p-5">
+        <InlineStatus tone="error">{error}</InlineStatus>
+        <Button className="mt-4" variant="secondary" onClick={() => navigate('/')}>
+          오늘 화면
+        </Button>
       </div>
     )
   }
 
   if (!session) {
-    return <div className="surface p-5 text-[var(--ink-muted)]">학습 세션을 불러오는 중…</div>
+    return <div className="focus-reading surface p-5 text-[var(--ink-muted)]">학습 세션을 불러오는 중…</div>
   }
 
+  const progress =
+    session.step === 'cards'
+      ? { stepLabel: '카드', current: session.cardIndex + 1, total: session.cardIds.length }
+      : session.step === 'quiz'
+        ? { stepLabel: '문제', current: session.questionIndex + 1, total: session.questionIds.length }
+        : { stepLabel: session.step === 'concept' ? '개념' : '결과' }
+
   return (
-    <div>
-      <section className="surface mb-5 p-4">
-        <SessionProgress current={session.step} />
-      </section>
+    <div className="focus-reading">
+      {session.step !== 'result' ? (
+        <StudyFocusHeader
+          onClose={() => void closeToHome()}
+          closing={closing}
+          stepLabel={progress.stepLabel}
+          current={progress.current}
+          total={progress.total}
+          saveError={saveError}
+        />
+      ) : saveError ? (
+        <InlineStatus tone="error">{saveError}</InlineStatus>
+      ) : null}
+
       {session.step === 'cards' && (
         <CardsStep
           key={`${session.cardIndex}-${cards[session.cardIndex]?.id ?? 'loading'}`}
@@ -100,485 +147,33 @@ export function StudySessionPage() {
             }
             const nextIndex = session.cardIndex + 1
             if (nextIndex >= nextIds.length) {
-              await update({ ...session, cardIds: nextIds, step: 'concept', cardIndex: nextIndex })
+              await afterCards({ ...session, cardIds: nextIds, cardIndex: nextIndex })
             } else {
-              await update({ ...session, cardIds: nextIds, cardIndex: nextIndex })
+              await persist({ ...session, cardIds: nextIds, cardIndex: nextIndex })
               await refreshCards(nextIds)
             }
           }}
-          onSkipToConcept={async () => {
-            await update({ ...session, step: 'concept' })
-          }}
+          onSkip={() => afterCards(session)}
         />
       )}
       {session.step === 'concept' && (
         <ConceptStep
           lesson={lesson}
           memo={session.conceptMemo}
-          onMemo={async (conceptMemo) => update({ ...session, conceptMemo })}
-          onDone={async () => {
-            questionStartedAt.current = Date.now()
-            await update({
+          onMemo={async (conceptMemo) => persist({ ...session, conceptMemo })}
+          onDone={() =>
+            persist({
               ...session,
               conceptDone: true,
               step: 'quiz',
               quizPhase: 'choices',
               revealedChoices: true,
             })
-          }}
-        />
-      )}
-      {session.step === 'quiz' && (
-        <QuizStep
-          session={session}
-          onChange={update}
-          getElapsedMs={() => Date.now() - questionStartedAt.current}
-          resetTimer={() => {
-            questionStartedAt.current = Date.now()
-          }}
-        />
-      )}
-      {session.step === 'result' && <ResultStep session={session} lessonTitle={lesson.title} />}
-    </div>
-  )
-}
-
-function CardsStep({
-  session,
-  cards,
-  pool,
-  onAdvance,
-  onSkipToConcept,
-}: {
-  session: ActiveSession
-  cards: FlashcardRecord[]
-  pool: FlashcardRecord[]
-  onAdvance: (rating: 'again' | 'hard' | 'good' | 'easy', requeue: boolean) => Promise<void>
-  onSkipToConcept: () => Promise<void>
-}) {
-  const card = cards[session.cardIndex]
-  const [choiceSet] = useState<CardChoiceSet | null>(() =>
-    card ? buildCardChoiceSet(card, pool.length ? pool : cards) : null,
-  )
-  const [selected, setSelected] = useState<number | null>(null)
-  const [revealed, setRevealed] = useState(false)
-  const [pendingReview, setPendingReview] = useState<{
-    rating: CardRating
-    requeue: boolean
-  } | null>(null)
-  const [advancing, setAdvancing] = useState(false)
-  const startedAt = useRef(0)
-
-  useEffect(() => {
-    startedAt.current = Date.now()
-  }, [])
-
-  const submit = async (index: number) => {
-    if (!choiceSet || revealed) return
-    setSelected(index)
-    setRevealed(true)
-    const correct = index === choiceSet.answerIndex
-    const rating = ratingFromQuizResult(correct, Date.now() - startedAt.current)
-    setPendingReview({ rating, requeue: !correct })
-  }
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (!choiceSet || revealed) return
-      const num = Number(e.key)
-      if (num >= 1 && num <= choiceSet.choices.length) {
-        e.preventDefault()
-        void submit(num - 1)
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  })
-
-  if (!card || !choiceSet) {
-    return (
-      <div className="surface p-5">
-        <h1 className="section-title">복습할 카드 없음</h1>
-        <button type="button" className="btn btn-primary mt-4" onClick={() => void onSkipToConcept()}>
-          개념 시작
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <div className="flex items-center justify-between gap-3 text-sm text-[var(--ink-muted)]">
-          <span>
-            카드 {session.cardIndex + 1} / {session.cardIds.length}
-          </span>
-          <span>
-            {ERA_LABELS[card.era]} · {choiceSet.kindLabel}
-          </span>
-        </div>
-        <div
-          className="meter"
-          role="progressbar"
-          aria-label="카드 복습 진행률"
-          aria-valuemin={0}
-          aria-valuemax={session.cardIds.length}
-          aria-valuenow={session.cardIndex}
-        >
-          <span
-            style={{
-              width: `${Math.round((session.cardIndex / Math.max(1, session.cardIds.length)) * 100)}%`,
-            }}
-          />
-        </div>
-      </div>
-      <div className="surface p-5">
-        <p className="mb-2 text-sm font-medium text-[var(--accent)]">{choiceSet.ask}</p>
-        <h1 className="font-display text-xl leading-relaxed sm:text-2xl">{choiceSet.prompt}</h1>
-      </div>
-      <div className="space-y-2" role="group" aria-label="선택지">
-        {choiceSet.choices.map((choice, index) => {
-          let cls = 'btn btn-secondary choice-option'
-          if (revealed && index === choiceSet.answerIndex) cls = 'btn btn-correct choice-option'
-          if (revealed && selected === index && index !== choiceSet.answerIndex) {
-            cls = 'btn btn-wrong choice-option'
           }
-          if (!revealed && selected === index) cls = 'btn btn-primary choice-option'
-          return (
-            <button
-              key={`${choice}-${index}`}
-              type="button"
-              className={cls}
-              disabled={revealed}
-              onClick={() => void submit(index)}
-              aria-label={`${index + 1}번 ${choice}`}
-            >
-              <span className="choice-number">{index + 1}</span>
-              <span>{choice}</span>
-              {revealed && index === choiceSet.answerIndex ? (
-                <span className="choice-status">정답</span>
-              ) : null}
-              {revealed && selected === index && index !== choiceSet.answerIndex ? (
-                <span className="choice-status">오답</span>
-              ) : null}
-            </button>
-          )
-        })}
-      </div>
-      {revealed && pendingReview ? (
-        <button
-          type="button"
-          className="btn btn-primary w-full"
-          disabled={advancing}
-          onClick={async () => {
-            setAdvancing(true)
-            try {
-              await onAdvance(pendingReview.rating, pendingReview.requeue)
-            } finally {
-              setAdvancing(false)
-            }
-          }}
-        >
-          {advancing
-            ? '저장 중…'
-            : session.cardIndex + 1 >= session.cardIds.length && !pendingReview.requeue
-              ? '카드 완료 · 개념 읽기로'
-              : '다음 카드'}
-        </button>
-      ) : null}
-    </div>
-  )
-}
-
-function ConceptStep({
-  lesson,
-  memo,
-  onMemo,
-  onDone,
-}: {
-  lesson: (typeof lessons)[number]
-  memo: string
-  onMemo: (v: string) => Promise<void>
-  onDone: () => Promise<void>
-}) {
-  return (
-    <div className="surface space-y-4 p-5">
-      <div>
-        <p className="text-sm text-[var(--accent)]">
-          {ERA_LABELS[lesson.era]} · 오늘 단원 읽기 (약 {lesson.estimatedMinutes}분)
-        </p>
-        <h1 className="font-display text-2xl">{lesson.title}</h1>
-        <p className="mt-2 text-[var(--ink-muted)]">{lesson.summary}</p>
-      </div>
-      <div>
-        <h2 className="font-semibold">핵심 키워드</h2>
-        <p className="mt-1 text-[var(--ink)]">{lesson.keywords.join(' · ')}</p>
-      </div>
-      <div>
-        <h2 className="font-semibold">반드시 구분할 체크포인트</h2>
-        <ul className="mt-2 list-disc space-y-1 pl-5">
-          {lesson.checkpoints.map((c) => (
-            <li key={c}>{c}</li>
-          ))}
-        </ul>
-      </div>
-      <label className="block">
-        <span className="text-sm font-medium">교재·강의 범위 메모 (선택)</span>
-        <textarea
-          className="field-control mt-1"
-          rows={3}
-          value={memo}
-          onChange={(e) => void onMemo(e.target.value)}
-          placeholder="예: 자습서 고려 광종·성종 단원 p.42~45"
         />
-      </label>
-      <button type="button" className="btn btn-primary w-full" onClick={() => void onDone()}>
-        읽기 완료 · 맞춤 문제 풀기
-      </button>
-    </div>
-  )
-}
-
-function QuizStep({
-  session,
-  onChange,
-  getElapsedMs,
-  resetTimer,
-}: {
-  session: ActiveSession
-  onChange: (s: ActiveSession) => Promise<void>
-  getElapsedMs: () => number
-  resetTimer: () => void
-}) {
-  const qid = session.questionIds[session.questionIndex]
-  const question = qid ? getQuestionById(qid) : undefined
-  const [message, setMessage] = useState<string | null>(null)
-
-  // 예전 다단 세션이 남아 있으면 선택지 화면으로 보정
-  useEffect(() => {
-    if (
-      session.quizPhase === 'stem' ||
-      session.quizPhase === 'era' ||
-      session.quizPhase === 'clue'
-    ) {
-      void onChange({ ...session, quizPhase: 'choices', revealedChoices: true })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only normalize legacy phases
-  }, [session.quizPhase, session.questionIndex])
-
-  if (!question) {
-    return (
-      <div className="surface p-5">
-        <p>문제가 없습니다.</p>
-        <button
-          type="button"
-          className="btn btn-primary mt-4"
-          onClick={() => void finishSession(session).then(() => onChange({ ...session, step: 'result' }))}
-        >
-          결과 보기
-        </button>
-      </div>
-    )
-  }
-
-  const goNext = async (answered = session.answered) => {
-    const nextIndex = session.questionIndex + 1
-    if (nextIndex >= session.questionIds.length) {
-      const done = { ...session, answered, step: 'result' as const }
-      await finishSession(done)
-      await onChange(done)
-      return
-    }
-    resetTimer()
-    setMessage(null)
-    await onChange({
-      ...session,
-      answered,
-      questionIndex: nextIndex,
-      quizPhase: 'choices',
-      eraGuess: undefined,
-      clueMemo: '',
-      selectedIndex: undefined,
-      revealedChoices: true,
-    })
-  }
-
-  const phase =
-    session.quizPhase === 'stem' || session.quizPhase === 'era' || session.quizPhase === 'clue'
-      ? 'choices'
-      : session.quizPhase
-
-  return (
-    <div className="surface space-y-4 p-5">
-      <p className="text-sm text-[var(--ink-muted)]">
-        문제 {session.questionIndex + 1} / {session.questionIds.length} · 배점 {question.difficulty}점 ·{' '}
-        {ERA_LABELS[question.era]}
-      </p>
-      {question.passage ? (
-        <blockquote className="rounded-xl bg-[var(--accent-soft)]/50 p-4 text-[0.95rem] leading-relaxed whitespace-pre-line">
-          {question.passage}
-        </blockquote>
-      ) : null}
-      <h1 className="text-lg font-semibold leading-relaxed">{question.stem}</h1>
-
-      {phase === 'choices' && (
-        <div className="space-y-2">
-          {question.choices.map((choice, index) => (
-            <button
-              key={choice}
-              type="button"
-              className={`btn choice-option ${session.selectedIndex === index ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => void onChange({ ...session, selectedIndex: index, quizPhase: 'choices' })}
-            >
-              <span className="choice-number">{index + 1}</span>
-              <span>{choice}</span>
-            </button>
-          ))}
-          <button
-            type="button"
-            className="btn btn-primary w-full"
-            disabled={session.selectedIndex == null}
-            onClick={async () => {
-              if (session.selectedIndex == null) return
-              const correct = session.selectedIndex === question.answerIndex
-              const responseMs = getElapsedMs()
-              if (correct) {
-                await recordQuizAnswer({
-                  question,
-                  selectedIndex: session.selectedIndex,
-                  correct: true,
-                  responseMs,
-                  source: 'practice',
-                })
-                const answered = [
-                  ...session.answered,
-                  {
-                    questionId: question.id,
-                    correct: true,
-                    selectedIndex: session.selectedIndex,
-                    responseMs,
-                    eraGuess: session.eraGuess,
-                    clueMemo: session.clueMemo,
-                  },
-                ]
-                await onChange({ ...session, answered, quizPhase: 'feedback' })
-              } else {
-                await onChange({ ...session, quizPhase: 'cause' })
-              }
-            }}
-          >
-            정답 제출
-          </button>
-        </div>
       )}
-
-      {phase === 'cause' && (
-        <div className="space-y-2">
-          <p className="font-medium">오답 원인</p>
-          {(Object.keys(WRONG_CAUSE_LABELS) as WrongCause[]).map((cause) => (
-            <button
-              key={cause}
-              type="button"
-              className="btn btn-secondary w-full justify-start"
-              onClick={async () => {
-                if (session.selectedIndex == null) return
-                const responseMs = getElapsedMs()
-                await recordQuizAnswer({
-                  question,
-                  selectedIndex: session.selectedIndex,
-                  correct: false,
-                  responseMs,
-                  cause,
-                  source: 'practice',
-                })
-                const answered = [
-                  ...session.answered,
-                  {
-                    questionId: question.id,
-                    correct: false,
-                    selectedIndex: session.selectedIndex,
-                    cause,
-                    responseMs,
-                    eraGuess: session.eraGuess,
-                    clueMemo: session.clueMemo,
-                  },
-                ]
-                await onChange({ ...session, answered, quizPhase: 'feedback' })
-              }}
-            >
-              {WRONG_CAUSE_LABELS[cause]}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {phase === 'feedback' && (
-        <div className="space-y-3">
-          <p
-            className={`font-semibold ${session.answered.at(-1)?.correct ? 'text-[var(--correct)]' : 'text-[var(--wrong)]'}`}
-          >
-            {session.answered.at(-1)?.correct ? '정답입니다' : '오답입니다'}
-            <span className="ml-2 text-sm font-normal text-[var(--ink-muted)]">
-              (정답: {question.answerIndex + 1}번)
-            </span>
-          </p>
-          <p className="leading-relaxed">{question.explanation}</p>
-          {!session.answered.at(-1)?.correct && (
-            <button
-              type="button"
-              className="btn btn-secondary w-full"
-              onClick={async () => {
-                const { created } = await addCardFromContent({
-                  front: question.stem,
-                  back: `${question.choices[question.answerIndex]} — ${question.explanation}`,
-                  kind: 'concept',
-                  era: question.era,
-                  tags: question.tags,
-                  fromWrongAnswer: true,
-                })
-                setMessage(created ? '암기카드에 추가했습니다.' : '같은 카드가 이미 있어 추가하지 않았습니다.')
-              }}
-            >
-              카드로 추가
-            </button>
-          )}
-          {message ? <p className="text-sm text-[var(--accent)]">{message}</p> : null}
-          <button type="button" className="btn btn-primary w-full" onClick={() => void goNext()}>
-            {session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'}
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTitle: string }) {
-  const stats = sessionAnswerStats(session.answered)
-  return (
-    <div className="surface space-y-4 p-5">
-      <h1 className="font-display text-2xl">오늘 학습 결과</h1>
-      <p className="text-sm text-[var(--ink-muted)]">{lessonTitle}</p>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="metric-card">
-          <p className="metric-label">복습 카드</p>
-          <p className="metric-value">{session.cardIds.length}장</p>
-        </div>
-        <div className="metric-card">
-          <p className="metric-label">문제 정답률</p>
-          <p className="metric-value">{stats.accuracy}%</p>
-          <p className="mt-1 text-xs text-[var(--ink-muted)]">
-            {stats.correct}/{stats.total}
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Link to="/" className="btn btn-primary">
-          홈으로
-        </Link>
-        <Link to="/cards" className="btn btn-secondary">
-          오답·카드 보기
-        </Link>
-      </div>
+      {session.step === 'quiz' && <QuizStep session={session} onChange={persist} />}
+      {session.step === 'result' && <ResultStep session={session} lessonTitle={lesson.title} />}
     </div>
   )
 }

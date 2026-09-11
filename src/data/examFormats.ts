@@ -202,7 +202,7 @@ export const EXAM_FORMAT_BY_ID: Record<ExamFormatId, ExamFormatSpec> = Object.fr
   EXAM_FORMATS.map((f) => [f.id, f]),
 ) as Record<ExamFormatId, ExamFormatSpec>
 
-/** 은행 작성 시 목표 비중(심화 감각, 합=100) */
+/** 은행 작성 시 내부 포맷 목표(합=100). 공식 회차 태깅 전 임시값이며 공식 출제 비율이 아니다. */
 export const TARGET_FORMAT_MIX: Partial<Record<ExamFormatId, number>> = {
   'source-who': 11,
   'source-what': 10,

@@ -1,5 +1,7 @@
 import type { CardKind, FlashcardRecord } from '../types'
 
+export type CardQuizMode = 'choices' | 'recall'
+
 export interface CardChoiceSet {
   /** 화면에 크게 보이는 주제 (왕 이름, 업적 문구 등) */
   prompt: string
@@ -7,8 +9,11 @@ export interface CardChoiceSet {
   ask: string
   /** 카드 종류 한 줄 안내 */
   kindLabel: string
+  mode: CardQuizMode
   choices: string[]
   answerIndex: number
+  /** 회상 모드·채점 후 정답 확인용. 선지 원문이며 새로 만든 문장이 아니다. */
+  answerText: string
 }
 
 export interface ComparisonPair {
@@ -38,8 +43,9 @@ const KIND_COPY: Record<CardKind, { ask: string; kindLabel: string }> = {
 }
 
 /**
- * 듀오링고형 선택지 생성.
- * 같은 종류 카드의 뒷면을 오답으로 섞되, 비교 카드는 짝을 뒤바꿔 출제한다.
+ * 같은 kind를 우선하고, 그다음 같은 시대 카드의 뒷면을 오답으로 쓴다.
+ * 비교 카드는 짝을 뒤바꿔 출제한다. 후보가 없으면 회상/정답 확인으로 넘긴다.
+ * placeholder 선지나 검증되지 않은 문장은 만들지 않는다.
  */
 export function buildCardChoiceSet(
   card: FlashcardRecord,
@@ -51,23 +57,61 @@ export function buildCardChoiceSet(
 
   const correct = card.back.trim()
   const copy = KIND_COPY[card.kind]
-  const distractors = uniqueStrings(
-    pool
-      .filter((c) => c.id !== card.id)
-      .filter((c) => c.kind === card.kind && !parseComparison(c))
-      .map((c) => c.back.trim())
-      .filter((text) => text.length > 0 && normalize(text) !== normalize(correct)),
-  )
+  const prompt = resolvePrompt(card, pool)
+  const ask = card.kind === 'deed-to-king' && prompt !== card.front.trim()
+    ? '다음 설명에 해당하는 인물은?'
+    : copy.ask
+
+  if (promptLeaksAnswer(prompt, correct)) {
+    return {
+      prompt,
+      ask,
+      kindLabel: copy.kindLabel,
+      mode: 'recall',
+      choices: [],
+      answerIndex: 0,
+      answerText: correct,
+    }
+  }
+
+  const distractors = collectKindBacks(card, pool, random)
 
   return assembleChoices({
-    prompt: card.front,
-    ask: copy.ask,
+    prompt,
+    ask,
     kindLabel: copy.kindLabel,
     correct,
     distractors,
-    fallback: () => fallbackDistractor(card, distractors.length),
     random,
   })
+}
+
+/** 업적→왕 카드는 짝이 되는 왕→업적 뒷면(설명)을 문항으로 쓴다. */
+export function resolvePrompt(card: FlashcardRecord, pool: FlashcardRecord[]): string {
+  if (card.kind !== 'deed-to-king') return card.front.trim()
+  const pair = pool.find(
+    (item) =>
+      item.id !== card.id &&
+      item.kind === 'king-to-deed' &&
+      personKey(item.front) === personKey(card.back),
+  )
+  const fromPair = pair?.back.trim() ?? ''
+  if (fromPair.length > card.front.trim().length) return fromPair
+  return card.front.trim()
+}
+
+export function promptLeaksAnswer(prompt: string, answer: string): boolean {
+  const key = personKey(answer)
+  if (key.length < 2) return false
+  return normalize(prompt).includes(key)
+}
+
+export function personKey(text: string): string {
+  return text
+    .replace(/\(.*?\)/g, '')
+    .replace(/고려|조선|신라|고구려|백제|발해|후기/g, '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
 }
 
 export function parseComparison(card: FlashcardRecord): ComparisonPair | null {
@@ -91,17 +135,7 @@ function buildComparisonChoiceSet(
 ): CardChoiceSet {
   const { left, leftDeed, right, rightDeed } = pair
   const correct = formatPair(left, leftDeed, right, rightDeed)
-  const nearbyDeeds = uniqueStrings(
-    pool
-      .filter((item) => item.id !== card.id && item.kind === 'king-to-deed')
-      .map((item) => shortenDeed(item.back))
-      .filter(
-        (deed) =>
-          deed.length > 0 &&
-          normalize(deed) !== normalize(leftDeed) &&
-          normalize(deed) !== normalize(rightDeed),
-      ),
-  )
+  const nearbyDeeds = collectNearbyDeeds(card, pair, pool, random)
 
   const distractors = uniqueStrings(
     [
@@ -120,9 +154,63 @@ function buildComparisonChoiceSet(
     kindLabel: '비교',
     correct,
     distractors,
-    fallback: (index) => comparisonFallback(pair, index),
     random,
   })
+}
+
+function collectKindBacks(
+  card: FlashcardRecord,
+  pool: FlashcardRecord[],
+  random: () => number,
+): string[] {
+  const correct = card.back.trim()
+  const sameKind = pool.filter(
+    (item) => item.id !== card.id && item.kind === card.kind && !parseComparison(item),
+  )
+  const ranked = [
+    ...shuffle(
+      sameKind.filter((item) => item.era === card.era),
+      random,
+    ),
+    ...shuffle(
+      sameKind.filter((item) => item.era !== card.era),
+      random,
+    ),
+  ]
+  return uniqueStrings(
+    ranked
+      .map((item) => item.back.trim())
+      .filter((text) => text.length > 0 && normalize(text) !== normalize(correct)),
+  )
+}
+
+function collectNearbyDeeds(
+  card: FlashcardRecord,
+  pair: ComparisonPair,
+  pool: FlashcardRecord[],
+  random: () => number,
+): string[] {
+  const deedCards = pool.filter((item) => item.id !== card.id && item.kind === 'king-to-deed')
+  const ranked = [
+    ...shuffle(
+      deedCards.filter((item) => item.era === card.era),
+      random,
+    ),
+    ...shuffle(
+      deedCards.filter((item) => item.era !== card.era),
+      random,
+    ),
+  ]
+  return uniqueStrings(
+    ranked
+      .map((item) => shortenDeed(item.back))
+      .filter(
+        (deed) =>
+          deed.length > 0 &&
+          normalize(deed) !== normalize(pair.leftDeed) &&
+          normalize(deed) !== normalize(pair.rightDeed),
+      ),
+  )
 }
 
 function assembleChoices({
@@ -131,7 +219,6 @@ function assembleChoices({
   kindLabel,
   correct,
   distractors,
-  fallback,
   random,
 }: {
   prompt: string
@@ -139,21 +226,23 @@ function assembleChoices({
   kindLabel: string
   correct: string
   distractors: string[]
-  fallback: (index: number) => string
   random: () => number
 }): CardChoiceSet {
-  const pool = [...distractors]
-  while (pool.length < 3) {
-    const extra = fallback(pool.length)
-    if (!pool.some((item) => normalize(item) === normalize(extra)) && normalize(extra) !== normalize(correct)) {
-      pool.push(extra)
-    } else {
-      pool.push(`${extra} ${pool.length + 1}`)
+  const real = uniqueStrings(distractors).filter((item) => normalize(item) !== normalize(correct))
+  if (real.length === 0) {
+    return {
+      prompt,
+      ask,
+      kindLabel,
+      mode: 'recall',
+      choices: [],
+      answerIndex: 0,
+      answerText: correct,
     }
   }
 
-  const picked = shuffle(pool.slice(0, 3), random)
-  const answerIndex = Math.floor(random() * 4)
+  const picked = real.slice(0, 3)
+  const answerIndex = Math.floor(random() * (picked.length + 1))
   const choices = [...picked]
   choices.splice(answerIndex, 0, correct)
 
@@ -161,8 +250,10 @@ function assembleChoices({
     prompt,
     ask,
     kindLabel,
-    choices: choices.slice(0, 4),
+    mode: 'choices',
+    choices,
     answerIndex,
+    answerText: correct,
   }
 }
 
@@ -170,22 +261,14 @@ function formatPair(left: string, leftDeed: string, right: string, rightDeed: st
   return `${left}: ${leftDeed} / ${right}: ${rightDeed}`
 }
 
-function comparisonFallback(pair: ComparisonPair, index: number): string {
-  const extras = [
-    ['반원 개혁', '탕평책'],
-    ['사병 혁파', '훈민정음 창제'],
-    ['균역법 시행', '노비안검법'],
-  ]
-  const [leftDeed, rightDeed] = extras[index % extras.length] ?? extras[0]!
-  return formatPair(pair.left, leftDeed, pair.right, rightDeed)
-}
-
 function shortenDeed(text: string): string {
-  return text
-    .trim()
-    .split(/\s*[→,/]\s*/)[0]
-    ?.trim()
-    .replace(/[.。]$/, '') ?? text.trim()
+  return (
+    text
+      .trim()
+      .split(/\s*[→,/]\s*/)[0]
+      ?.trim()
+      .replace(/[.。]$/, '') ?? text.trim()
+  )
 }
 
 /** 정답/오답 + 응답 속도로 복습 평가 매핑 */
@@ -219,19 +302,4 @@ function uniqueStrings(values: string[]): string[] {
 
 function normalize(text: string): string {
   return text.replace(/\s+/g, '').toLowerCase()
-}
-
-function fallbackDistractor(card: FlashcardRecord, index: number): string {
-  const samples: Record<CardKind, string[]> = {
-    'king-to-deed': [
-      '같은 시대 다른 인물의 정책',
-      '목적은 비슷하지만 다른 제도',
-      '시기가 다른 대표 업적',
-    ],
-    'deed-to-king': ['같은 시대의 다른 왕', '정책을 건의한 다른 인물', '시기가 다른 군주'],
-    chronology: ['앞뒤가 바뀐 사건 순서', '중간 사건이 빠진 순서', '시기가 다른 사건 흐름'],
-    concept: ['적용 시기가 다른 제도', '목적이 다른 유사 개념', '결과가 다른 정책 설명'],
-  }
-  const options = samples[card.kind]
-  return `${options[index % options.length]} (${card.era})`
 }

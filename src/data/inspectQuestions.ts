@@ -275,18 +275,14 @@ export function inspectQuestionBank(list: Question[] = bank): InspectionReport {
     })
   }
 
-  const idealAnswersPerPosition = list.length / answerPositionCounts.length
-  const answerPositionTolerance = Math.max(2, Math.ceil(list.length * 0.05))
-  if (
-    answerPositionCounts.some(
-      (count) => Math.abs(count - idealAnswersPerPosition) > answerPositionTolerance,
-    )
-  ) {
+  const cyclicAnswerIndex =
+    list.length >= 5 && list.every((question, index) => question.answerIndex === index % 5)
+  if (cyclicAnswerIndex) {
     findings.push({
       questionId: 'BANK',
       severity: 'error',
-      code: 'ANSWER_POSITION_SKEW',
-      message: `정답 위치 분포가 치우침 (${answerPositionCounts.join('/')})`,
+      code: 'CYCLIC_ANSWER_INDEX',
+      message: '정답 위치가 문항 순서의 index % 5로 반복된다. 순환 배치는 풀이 단서가 된다.',
     })
   }
 

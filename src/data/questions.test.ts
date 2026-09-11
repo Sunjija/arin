@@ -48,12 +48,28 @@ describe('question bank quality', () => {
     expect(tags.filter((t) => t === 'source').length).toBeGreaterThanOrEqual(10)
   })
 
-  it('distributes correct answers evenly across all five positions', () => {
-    const counts = Array.from({ length: 5 }, () => 0)
-    questions.forEach((question) => {
-      counts[question.answerIndex] += 1
-    })
-    expect(counts).toEqual([20, 20, 20, 20, 20])
+  it('does not cycle correct answers by item index', () => {
+    const cyclic = questions.every((question, index) => question.answerIndex === index % 5)
+    expect(cyclic).toBe(false)
+    const freeIndexes = questions
+      .filter((question) => question.choiceOrder !== 'keep')
+      .map((question) => question.answerIndex)
+    expect(new Set(freeIndexes).size).toBeGreaterThan(2)
+  })
+
+  it('keeps compatible review defaults and does not mark the bank as approved', () => {
+    expect(questions).toHaveLength(100)
+    expect(questions.every((question) => question.reviewStatus !== 'retired')).toBe(true)
+    expect(questions.every((question) => question.reviewStatus !== 'approved')).toBe(true)
+    expect(questions.every((question) => (question.purpose ?? []).includes('mock'))).toBe(true)
+    expect(questions.filter((question) => question.reviewStatus === 'in-review')).toHaveLength(10)
+    expect(
+      questions.every(
+        (question) =>
+          question.provenance?.similarityAudit.reviewed !== true &&
+          question.provenance?.reviewAgent !== 'human',
+      ),
+    ).toBe(true)
   })
 
   it('connects every question to a lesson from the same era', () => {

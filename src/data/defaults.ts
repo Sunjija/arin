@@ -15,7 +15,7 @@ export function defaultSettings(): UserSettings {
 }
 
 export function defaultMastery() {
-  return createInitialMastery(ALL_ERAS, ALL_TYPES, 22)
+  return createInitialMastery(ALL_ERAS, ALL_TYPES, 50)
 }
 
 export const APP_NAME = '한사코치'
