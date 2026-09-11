@@ -31,6 +31,9 @@ export function mergeSeedCard(
   existing: FlashcardRecord,
   seeded: FlashcardRecord,
 ): FlashcardRecord {
+  if (existing.userEdited || existing.fromWrongAnswer || existing.id.startsWith('card-user-')) {
+    return existing
+  }
   return {
     ...existing,
     front: seeded.front,
@@ -67,6 +70,8 @@ export async function ensureSeeded(): Promise<void> {
       db.studyDays,
       db.mockResults,
       db.activeSession,
+      db.activeMock,
+      db.lessonCompletions,
     ],
     async () => {
       if (!settings) await db.settings.put({ id: 'settings', ...defaultSettings() })
@@ -112,6 +117,8 @@ export async function restoreSampleData(): Promise<void> {
       db.studyDays,
       db.mockResults,
       db.activeSession,
+      db.activeMock,
+      db.lessonCompletions,
     ],
     async () => {
       await Promise.all([
@@ -121,6 +128,8 @@ export async function restoreSampleData(): Promise<void> {
         db.studyDays.clear(),
         db.mockResults.clear(),
         db.activeSession.clear(),
+        db.activeMock.clear(),
+        db.lessonCompletions.clear(),
       ])
       await db.settings.put({ id: 'settings', ...defaultSettings() })
       await db.mastery.put({ id: 'mastery', ...defaultMastery() })
@@ -150,6 +159,8 @@ export async function clearAllLearningData(): Promise<void> {
       db.studyDays,
       db.mockResults,
       db.activeSession,
+      db.activeMock,
+      db.lessonCompletions,
     ],
     async () => {
       await Promise.all([
@@ -162,6 +173,8 @@ export async function clearAllLearningData(): Promise<void> {
         db.studyDays.clear(),
         db.mockResults.clear(),
         db.activeSession.clear(),
+        db.activeMock.clear(),
+        db.lessonCompletions.clear(),
       ])
     },
   )

@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { PageHeader, InlineStatus } from '../components/ui'
+import { db } from '../db/database'
 import { ensureSeeded } from '../db/seed'
+import { buildHomeViewModel, isInProgressSession } from '../components/dashboard/todayCopy'
 import { buildTodayPlan, type TodayPlan } from '../lib/studyService'
-import { formatMinutes } from '../lib/dates'
+import type { ActiveSession } from '../types'
 
 export function HomePage() {
   const [plan, setPlan] = useState<TodayPlan | null>(null)
+  const [session, setSession] = useState<ActiveSession | undefined>()
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -13,8 +17,13 @@ export function HomePage() {
     ;(async () => {
       try {
         await ensureSeeded()
-        const p = await buildTodayPlan()
-        if (alive) setPlan(p)
+        const [nextPlan, active] = await Promise.all([
+          buildTodayPlan(),
+          db.activeSession.toCollection().first(),
+        ])
+        if (!alive) return
+        setPlan(nextPlan)
+        setSession(active)
       } catch (e: unknown) {
         if (alive) setError(e instanceof Error ? e.message : '불러오기 실패')
       }
@@ -40,119 +49,38 @@ export function HomePage() {
     )
   }
 
+  const model = buildHomeViewModel(plan, isInProgressSession(session, plan.date))
+
   return (
-    <div className="space-y-6">
-      <header className="page-header">
-        <p className="eyebrow">
-          계획 {plan.week}주차 · 오늘의 학습
-        </p>
-        <h1 className="page-title">{plan.focusLine}</h1>
-      </header>
+    <div className="max-w-[720px] space-y-3">
+      <PageHeader eyebrow={model.eyebrow} title={model.title} />
 
-      <section className="grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]">
-        <article className="surface p-5 sm:p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="eyebrow">오늘 범위</p>
-              <h2 className="mt-1 text-xl font-bold tracking-[-0.025em]">{plan.lesson.title}</h2>
-            </div>
-            <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-bold text-[var(--accent)]">
-              {plan.timeLine}
-            </span>
-          </div>
+      <article className="surface surface-raised p-5">
+        <p className="meta-text">{model.reviewLine}</p>
+        <p className="mt-2 text-[var(--text-body)]">{model.quantityLine}</p>
 
-          <ol className="mt-5 grid gap-2 sm:grid-cols-3">
-            <RoutineStep number="1" label="카드 복습" value={`${plan.reviewCardCount}장`} />
-            <RoutineStep number="2" label="핵심 개념" value="요약 읽기" />
-            <RoutineStep number="3" label="맞춤 문제" value={`${plan.questionCount}문항`} />
-          </ol>
+        <Link
+          to={model.primaryCta.to}
+          className="btn btn-primary mt-4 w-full"
+          data-testid="home-primary-cta"
+        >
+          {model.primaryCta.label}
+        </Link>
 
-          <Link
-            to="/study"
-            className="btn btn-primary mt-5 w-full text-base sm:w-auto sm:min-w-[220px]"
-            aria-label="오늘 학습 시작"
-          >
-            {plan.todayDone ? '이어서 복습하기' : '오늘 학습 시작'}
+        {model.extraReviewCta ? (
+          <Link to={model.extraReviewCta.to} className="btn btn-secondary mt-2 w-full">
+            {model.extraReviewCta.label}
           </Link>
-        </article>
+        ) : null}
 
-        <aside className="surface p-5 sm:p-6">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <p className="metric-label">오늘 완료율</p>
-              <p className="mt-1 text-4xl font-bold tracking-[-0.05em]">{plan.completionRate}%</p>
-            </div>
-            <p className="text-right text-sm text-[var(--ink-muted)]">
-              예상 점수
-              <strong className="mt-0.5 block text-lg text-[var(--ink)]">
-                {plan.estimatedScore}점
-              </strong>
-            </p>
+        {model.guidance ? (
+          <div className="mt-3">
+            <InlineStatus tone="neutral">{model.guidance}</InlineStatus>
           </div>
-          <div
-            className="meter mt-4"
-            role="meter"
-            aria-label="오늘 학습 완료율"
-            aria-valuenow={plan.completionRate}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <span style={{ width: `${plan.completionRate}%` }} />
-          </div>
-          <p className="mt-4 border-t border-[var(--line)] pt-4 text-sm leading-relaxed text-[var(--ink-muted)]">
-            목표 {plan.goalScore}점 · <strong className="text-[var(--ink)]">차이 {plan.remainingToGoal}점</strong>
-          </p>
-        </aside>
-      </section>
+        ) : null}
+      </article>
 
-      <section>
-        <h2 className="section-title">학습 현황</h2>
-        <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <Stat label="예상 학습 시간" value={formatMinutes(plan.estimatedMinutes)} />
-          <Stat label="연속 학습" value={`${plan.streak}일`} />
-          <Stat label="진행 주차" value={`${plan.planWeeks}주 중 ${plan.week}주차`} />
-          <Stat label="맞춤 문제" value={`${plan.questionCount}문항`} />
-        </div>
-      </section>
-
-      {plan.streak > 0 || plan.completionRate > 0 ? (
-        <section className="surface p-5 sm:p-6">
-          <h2 className="section-title">집중할 영역</h2>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {plan.weakAreas.map((area) => (
-              <li
-                key={area}
-                className="rounded-full border border-[var(--line)] bg-[var(--bg)] px-3 py-1.5 text-sm"
-              >
-                {area}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      {model.recordHint ? <p className="meta-text px-1">{model.recordHint}</p> : null}
     </div>
-  )
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="metric-card">
-      <p className="metric-label">{label}</p>
-      <p className="metric-value">{value}</p>
-    </div>
-  )
-}
-
-function RoutineStep({ number, label, value }: { number: string; label: string; value: string }) {
-  return (
-    <li className="rounded-xl border border-[var(--line)] p-3">
-      <div className="flex items-center gap-2">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-[var(--accent-soft)] text-xs font-bold text-[var(--accent)]">
-          {number}
-        </span>
-        <span className="text-sm font-semibold">{label}</span>
-      </div>
-      <p className="mt-2 text-sm text-[var(--ink-muted)]">{value}</p>
-    </li>
   )
 }

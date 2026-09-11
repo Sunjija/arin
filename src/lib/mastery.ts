@@ -1,27 +1,25 @@
-import type { EraId, QuestionType, WrongCause } from '../types'
+import type { AttemptRecord, EraId, QuestionType, WrongCause } from '../types'
+import type { WeakArea } from '../types/contracts'
+import { ALL_ERAS, ALL_TYPES, ERA_LABELS, TYPE_LABELS } from '../types'
 
 export interface MasteryUpdateInput {
   current: number
   correct: boolean
-  /** 응답 시간(ms). 느리면 숙련도 상승을 억제 */
-  responseMs: number
+  /** 응답 시간(ms). 측정 불가면 null이며 속도 보너스/불이익을 주지 않는다. */
+  responseMs: number | null
   /** 며칠 전 시도인지 (0 = 오늘). 최근일수록 반영 비중 ↑ */
   daysAgo: number
   cause?: WrongCause
 }
 
 /**
- * 단일 영역 숙련도(0~100) 갱신.
- *
- * 반영 요소:
- * 1) 정답 여부 — 정답 +4~8, 오답 -6~12
- * 2) 최근성 — 오늘 시도는 100%, 7일 전은 약 50%
- * 3) 응답 시간 — 30초 초과 시 정답 보너스 감소
- * 4) 오답 원인 — 인물 혼동·순서 혼동은 추가 감점
+ * 단일 영역 숙련도(0~100) 갱신 — 문항 선택용 내부 값.
+ * 화면 진단에는 observedWeakAreas를 쓴다.
  */
 export function updateMasteryScore(input: MasteryUpdateInput): number {
   const recency = Math.max(0.4, 1 - input.daysAgo * 0.07)
-  const slowPenalty = input.responseMs > 30_000 ? 0.6 : input.responseMs > 15_000 ? 0.85 : 1
+  const slowPenalty =
+    input.responseMs == null ? 1 : input.responseMs > 30_000 ? 0.6 : input.responseMs > 15_000 ? 0.85 : 1
 
   let delta: number
   if (input.correct) {
@@ -62,22 +60,75 @@ export function averageScore(values: number[]): number {
   return values.reduce((sum, v) => sum + v, 0) / values.length
 }
 
+/** 내부 선택용 중립 시작값. 사용자 진단처럼 특정 시대를 낮추지 않는다. */
 export function createInitialMastery(
-  eraIds: EraId[],
-  typeIds: QuestionType[],
-  starter = 22,
+  eraIds: EraId[] = ALL_ERAS,
+  typeIds: QuestionType[] = ALL_TYPES,
+  starter = 50,
 ): { eras: Record<EraId, number>; types: Record<QuestionType, number> } {
   const eras = Object.fromEntries(eraIds.map((id) => [id, starter])) as Record<EraId, number>
   const types = Object.fromEntries(typeIds.map((id) => [id, starter])) as Record<
     QuestionType,
     number
   >
-  // 사용자 취약점 초기 가중: 연도·순서 / 왕·업적
-  types.chronology = 15
-  types['king-figure'] = 16
-  eras.goryeo = 18
-  eras['joseon-early'] = 18
   return { eras, types }
+}
+
+export function observedWeakAreas(attempts: AttemptRecord[], minAttempts = 3): WeakArea[] {
+  const eraStats = emptyStats(ALL_ERAS)
+  const typeStats = emptyStats(ALL_TYPES)
+
+  for (const attempt of attempts) {
+    bump(eraStats, attempt.era, attempt.correct)
+    for (const tag of attempt.tags) bump(typeStats, tag, attempt.correct)
+  }
+
+  const areas: WeakArea[] = [
+    ...ALL_ERAS.map((key) => toWeakArea(key, 'era', ERA_LABELS[key], eraStats[key]!, minAttempts)),
+    ...ALL_TYPES.map((key) =>
+      toWeakArea(key, 'type', TYPE_LABELS[key], typeStats[key]!, minAttempts),
+    ),
+  ]
+
+  return areas
+    .filter((area) => area.measured)
+    .sort((a, b) => (a.accuracy ?? 100) - (b.accuracy ?? 100) || a.label.localeCompare(b.label))
+}
+
+function emptyStats<T extends string>(keys: T[]): Record<T, { correct: number; total: number }> {
+  return Object.fromEntries(keys.map((key) => [key, { correct: 0, total: 0 }])) as Record<
+    T,
+    { correct: number; total: number }
+  >
+}
+
+function bump<T extends string>(
+  stats: Record<T, { correct: number; total: number }>,
+  key: T,
+  correct: boolean,
+) {
+  const row = stats[key]
+  if (!row) return
+  row.total += 1
+  if (correct) row.correct += 1
+}
+
+function toWeakArea(
+  key: EraId | QuestionType,
+  kind: 'era' | 'type',
+  label: string,
+  stats: { correct: number; total: number },
+  minAttempts: number,
+): WeakArea {
+  const measured = stats.total >= minAttempts
+  return {
+    key,
+    kind,
+    label,
+    attemptCount: stats.total,
+    accuracy: stats.total === 0 ? null : Math.round((stats.correct / stats.total) * 100),
+    measured,
+  }
 }
 
 function clamp(n: number, min: number, max: number): number {

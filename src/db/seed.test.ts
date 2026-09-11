@@ -44,4 +44,18 @@ describe('seed content migration', () => {
     expect(merged.easeStreak).toBe(4)
     expect(merged.lapses).toBe(2)
   })
+
+  it('does not overwrite user-edited or wrong-answer cards', () => {
+    const edited = mergeSeedCard(
+      card({ userEdited: true, front: '내가 고친 앞' }),
+      card({ front: 'new front', back: 'new back', fingerprint: 'new' }),
+    )
+    expect(edited.front).toBe('내가 고친 앞')
+
+    const fromWrong = mergeSeedCard(
+      card({ fromWrongAnswer: true, front: '오답 앞' }),
+      card({ front: 'new front' }),
+    )
+    expect(fromWrong.front).toBe('오답 앞')
+  })
 })

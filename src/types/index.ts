@@ -31,6 +31,7 @@ export type WrongCause =
   | 'confused-person'
   | 'confused-order'
   | 'missed-clue'
+  | 'unknown'
 
 export type CardRating = 'again' | 'hard' | 'good' | 'easy'
 
@@ -105,6 +106,14 @@ export interface FlashcardRecord extends FlashcardSeed {
   lastRating?: CardRating
   lapses: number
   fingerprint: string
+  /** 오답에서 만든 카드의 원문항 ID */
+  sourceQuestionId?: string
+  /** 당시 선지. 정답 인덱스만 저장하지 않는다. */
+  sourceChoices?: string[]
+  sourceAnswerIndex?: number
+  sourcePassage?: string
+  /** 사용자가 앞뒤를 고치면 시드 병합이 내용을 덮어쓰지 않는다. */
+  userEdited?: boolean
 }
 
 export interface WrongAnswerRecord {
@@ -122,17 +131,23 @@ export interface WrongAnswerRecord {
   retryAt?: string
 }
 
+export type ResponseMsSource = 'measured' | 'legacy-untrusted' | 'unavailable'
+
 export interface AttemptRecord {
   id: string
   questionId: string
   correct: boolean
   selectedIndex: number
-  responseMs: number
+  /** 관찰된 활성 풀이 시간. 측정 불가면 null. */
+  responseMs: number | null
+  responseMsSource?: ResponseMsSource
   cause?: WrongCause
   era: EraId
   tags: QuestionType[]
   createdAt: string
   source: 'practice' | 'mock'
+  /** 동일 제출 재시도에서 중복 attempt를 묶는 키 */
+  resultId?: string
 }
 
 export interface StudyDayRecord {
@@ -144,6 +159,10 @@ export interface StudyDayRecord {
   correctCount: number
   lessonId?: string
   minutesSpent: number
+  /** 측정할 수 없으면 false. 강제 최소 학습시간으로 채우지 않는다. */
+  minutesMeasured?: boolean
+  /** 같은 세션 finish 재호출이 통계를 중복 누적하지 않게 한다. */
+  finishedSessionIds?: string[]
 }
 
 export interface MockExamResult {
@@ -162,6 +181,8 @@ export interface MockExamResult {
   byEra: Partial<Record<EraId, { correct: number; total: number }>>
   byType: Partial<Record<QuestionType, { correct: number; total: number }>>
 }
+
+export type StudyEntryMode = 'daily' | 'review'
 
 export interface ActiveSession {
   id: string
@@ -182,6 +203,8 @@ export interface ActiveSession {
   answered: SessionAnswer[]
   startedAt: string
   updatedAt: string
+  /** daily: 카드→개념→문제. review: 카드만 마친 뒤 복습으로 돌아간다. */
+  entryMode?: StudyEntryMode
 }
 
 export type QuizPhase =
@@ -197,9 +220,10 @@ export interface SessionAnswer {
   correct: boolean
   selectedIndex: number
   cause?: WrongCause
-  responseMs: number
+  responseMs: number | null
   eraGuess?: EraId
   clueMemo?: string
+  attemptId?: string
 }
 
 export interface AppMeta {
@@ -212,8 +236,46 @@ export interface AppMeta {
   estimatedScore: number
 }
 
+export interface LessonCompletion {
+  lessonId: string
+  firstCompletedAt: string
+  lastCompletedAt: string
+  completionCount: number
+}
+
+export interface QuestionSnapshot {
+  questionId: string
+  stem: string
+  passage?: string
+  choices: string[]
+  answerIndex: number
+  explanation: string
+  era: EraId
+  tags: QuestionType[]
+  difficulty: Difficulty
+  lessonId?: string
+}
+
+export type MockSessionStatus = 'in-progress' | 'submitted'
+
+export interface ActiveMock {
+  id: string
+  revision: number
+  mode: 'full' | 'sample'
+  status: MockSessionStatus
+  questionSnapshots: QuestionSnapshot[]
+  answers: Array<number | null>
+  /** 문항별 누적 활성 풀이 시간. 측정 불가면 null. */
+  itemElapsedMs: Array<number | null>
+  currentIndex: number
+  startedAt: string
+  deadlineAt: string
+  updatedAt: string
+  submittedResultId?: string
+}
+
 export interface ExportPayload {
-  version: 1
+  version: 1 | 2
   exportedAt: string
   settings: UserSettings
   mastery: MasteryScores
@@ -224,6 +286,8 @@ export interface ExportPayload {
   mockResults: MockExamResult[]
   activeSession: ActiveSession | null
   meta: AppMeta
+  lessonCompletions?: LessonCompletion[]
+  activeMock?: ActiveMock | null
 }
 
 export const ERA_LABELS: Record<EraId, string> = {
@@ -253,6 +317,7 @@ export const WRONG_CAUSE_LABELS: Record<WrongCause, string> = {
   'confused-person': '왕·인물을 혼동함',
   'confused-order': '사건 순서가 헷갈림',
   'missed-clue': '사료의 단서를 놓침',
+  unknown: '미확인',
 }
 
 export const CARD_RATING_LABELS: Record<CardRating, string> = {
@@ -283,3 +348,24 @@ export const ALL_TYPES: QuestionType[] = [
   'independence-org',
   'political-system',
 ]
+
+export type {
+  BackupRestoreResult,
+  CreateWrongCardResult,
+  DataErrorCode,
+  FinalizeMockResult,
+  FullMockIneligibilityReason,
+  ProgressSnapshot,
+  QuantityPlan,
+  RecentMockSummary,
+  RecordAttemptInput,
+  SaveMockProgressInput,
+  SaveMockProgressResult,
+  ScoreSummary,
+  StartMockInput,
+  StartMockResult,
+  StartStudyInput,
+  TodayCompletion,
+  TodayPlan,
+  WeakArea,
+} from './contracts'
