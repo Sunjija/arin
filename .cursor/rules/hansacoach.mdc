@@ -1,0 +1,9 @@
+---
+description: 한사코치 작업 진입점과 최신 제품 정책
+alwaysApply: true
+---
+
+먼저 저장소 루트 `AGENTS.md`를 읽고 따른다.
+최신 작업 목록은 `docs/parallel-redesign/README.md`, 학습 정책은 `docs/parallel-redesign/contracts.md`, 담당 경로는 `docs/parallel-redesign/ownership.md`에 있다.
+`docs/archive/`와 과거 `artifacts/` 리포트를 현재 구현 지시로 사용하지 않는다.
+기존 열린 PR과 현재 분기 상태를 확인한 뒤 배정된 작업만 수행한다. 문서의 목표 기능과 실제 구현 상태를 구분한다.

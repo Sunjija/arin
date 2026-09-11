@@ -1,28 +1,20 @@
-# 담당 F 지시문 — 자료실 · 연표
+# F — 자료실·개념 학습
 
-이 채팅에서 **F만** 구현한다. 총괄 채팅의 단계 0 커밋(`cursor/redesign-foundation-1da6`)에서 분기한다.
+개정: 2026-09-11. AGENTS.md와 docs/parallel-redesign/contracts.md, ownership.md를 먼저 읽는다. 배정된 역할만 수행한다.
 
-필수 문서: `docs/parallel-redesign/contracts.md`, `ownership.md`.
+## 의존성과 범위
+현재 ConceptExplorer/LessonPractice를 기반으로 E 기록 계약과 G 콘텐츠를 연결한다.
+공유 타입·DB·API·CSS는 총괄 계약을 따른다. 문서의 목표 기능을 구현 완료로 가정하지 않는다. 소유 경로 밖의 변경은 의존성으로 보고한다.
 
-## 소유 파일만 수정
-`src/pages/TimelinePage.tsx`, 신규 `src/pages/LibraryPage.tsx`, `src/components/library/**`, 해당 UI 테스트.
+## 요구 사항
+- 단원 목록·읽기 영역·Pretendard·검색 query·키보드·긴 글 가독성 유지.
+- 배경 → 설명 → 비교 → 확인 문제. JSX에 별도 사실/정답 원문을 복제하지 않는다.
+- 단원 바로 풀기는 해당 개념/단원만 선택하고 E 서비스로 시도·오답·복습 기록.
+- 오늘 계획을 몰래 교체하거나 열람만으로 완료 처리하지 않는다.
+- 문화사를 시대별로 연결하고 종합 비교 제공. 기존 culture ID와 URL 호환 보존.
 
-금지: `src/data/timeline.ts` 등 원문 내용/개수/ID, App.tsx, AppShell, index.css, types, DB.
+## 수용 기준
+다른 단원 문제 배제, 기록 반영, 단원 변경, 검색 0건, 긴 한글, 중복 제출, 재개, 저장 실패.
 
-## 자료실
-`LibraryPage`를 export한다. 상단 “자료실”, 탭 “연표 / 개념”. 연표 본문은 Timeline과 공유 컴포넌트로 추출해 헤더/필터가 두 번 나오지 않게 한다. `/timeline` 직접 진입도 같은 연표 기능을 제공한다(메뉴 활성은 A가 `/timeline`을 자료실로 처리함).
-
-A에게 넘길 것: `export function LibraryPage()` 경로. 총괄이 A에게 `/library` 라우트 연결을 요청한다. 빈 페이지를 배포 상태로 남기지 말 것 — 실제 콘텐츠가 있는 페이지만 제출.
-
-Query: `tab`, `era`, `q`, `sort` (`navConfig.ts`의 `LIBRARY_QUERY_KEYS`). `sort=asc` 오래된 순, `desc` 최근 순.
-
-## 연표
-모바일 시대 선택은 native select. 10개 버튼을 4행으로 펼치지 않음. 390×844에서 첫 사건 상단 y 360px 이내 목표. 사건: 연도 / 사건명 / chevron + `aria-expanded`. 펼치면 기존 detail만. 검색 0건에 지우기/초기화. 빈출/오답 배지·숙련도 꾸밈 금지.
-
-## 개념
-기존 18개 `lessons`를 시대별 목록+검색. 같은 화면에서 summary/keywords/checkpoints. 열람만으로 학습 완료를 기록하지 않음. “오늘 학습으로”가 임의 단원 시작처럼 보이게 하지 않음. 그 기능이 필요하면 E 계약을 총괄에 요청.
-
-## 검증
-중복 헤더 없음, 모바일에서 콘텐츠가 필터보다 먼저, 긴 제목·기원전·검색 0건, 한글 검색, 시대/정렬, URL 복원, 키보드 펼치기. 원본 데이터 불변.
-
-제출 형식은 총괄 00과 동일.
+## 제출
+기준 SHA, 변경 파일, 계약/이전 영향, 기존 PR 재사용 결정, 수용 기준별 증거, 검증 명령·결과, 남은 실패, 커밋/PR을 제출한다. 미실행 검증과 배포 여부를 명시한다.

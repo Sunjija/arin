@@ -1,3 +1,5 @@
+> 과거 분석·초안 기록입니다. 최신 실행 지침이나 현행 문항의 검수 완료를 의미하지 않습니다. 적용 전 기준 버전·문항·출처를 확인하고 [최신 지시](../docs/parallel-redesign/README.md)와 [문항 검수](../agents/question-inspector.md)를 따르세요.
+
 # 한능검 심화 문제 유형(포맷) 커버리지 갭
 
 - 생성 기준: `questions.ts` 40문항 + `guessFormat` (`inspectQuestions.ts`) + `TARGET_FORMAT_MIX`
