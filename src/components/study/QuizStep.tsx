@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button, ChoiceOption, InlineStatus } from '../ui'
 import { getQuestionById } from '../../data/questions'
+import { questionFromSnapshot } from '../../lib/examScoring'
 import { finishSession, recordQuizAnswer, updateAttemptCause } from '../../lib/studyService'
 import { createWrongCardFromQuestion, snapshotFromQuestion } from '../../lib/wrongCard'
 import {
@@ -24,7 +25,8 @@ export function QuizStep({
   onChange: (next: ActiveSession) => Promise<void>
 }) {
   const questionId = session.questionIds[session.questionIndex]
-  const question = questionId ? getQuestionById(questionId) : undefined
+  const frozenQuestion = session.questionSnapshots?.find((snapshot) => snapshot.questionId === questionId)
+  const question = frozenQuestion ? questionFromSnapshot(frozenQuestion) : questionId ? getQuestionById(questionId) : undefined
   const [message, setMessage] = useState<string | null>(null)
   const [messageTone, setMessageTone] = useState<'success' | 'error' | 'neutral'>('neutral')
   const [causeSkipped, setCauseSkipped] = useState(false)
@@ -108,16 +110,17 @@ export function QuizStep({
         responseMs,
         cause: 'unknown',
         source: 'practice',
+        learningSource: session.entryMode === 'review' ? 'review' : 'today',
         attemptId,
       })
       const answered: SessionAnswer[] = [
         ...session.answered.filter((item) => item.questionId !== question.id),
         {
           questionId: question.id,
-          correct: isCorrect,
-          selectedIndex: chosen,
-          cause: isCorrect ? undefined : 'unknown',
-          responseMs,
+          correct: attempt.correct,
+          selectedIndex: attempt.selectedIndex,
+          cause: attempt.cause,
+          responseMs: attempt.responseMs,
           eraGuess: session.eraGuess,
           clueMemo: session.clueMemo,
           attemptId: attempt.id,
@@ -182,7 +185,11 @@ export function QuizStep({
     try {
       const nextIndex = session.questionIndex + 1
       if (nextIndex >= session.questionIds.length) {
-        const done = { ...session, step: 'result' as const }
+        if (session.cardIndex < session.cardIds.length) {
+          await onChange({ ...session, questionIndex: nextIndex, step: 'cards' })
+          return
+        }
+        const done = { ...session, questionIndex: nextIndex, step: 'result' as const }
         await finishSession(done)
         await onChange(done)
         return
@@ -240,7 +247,7 @@ export function QuizStep({
           <Button variant="secondary" className="w-full mt-3" disabled={busy} onClick={() => void addWrongCard()}>이 개념을 복습 카드로 추가</Button>
         </div>}
         {message && <InlineStatus tone={messageTone}>{message}</InlineStatus>}
-        <div className="cta-dock"><Button className="w-full" disabled={busy} onClick={() => void goNext()}>{session.questionIndex + 1 >= session.questionIds.length ? '결과 보기' : '다음 문제'}</Button></div>
+        <div className="cta-dock"><Button className="w-full" disabled={busy} onClick={() => void goNext()}>{session.questionIndex + 1 >= session.questionIds.length ? (session.cardIndex < session.cardIds.length ? '누적 복습 시작' : '결과 보기') : '다음 문제'}</Button></div>
       </section>}
     </div>
   )

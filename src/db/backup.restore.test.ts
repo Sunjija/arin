@@ -16,9 +16,9 @@ describe('backup restore', () => {
     await db.attempts.put(practiceAttempt('keep-1', true, '2026-09-01T00:00:00.000Z'))
 
     const exported = await exportAllData()
-    expect(exported.version).toBe(2)
+    expect(exported.version).toBe(3)
     const restored = await restoreBackup(exported)
-    expect(restored).toEqual({ ok: true, importedVersion: 2 })
+    expect(restored).toEqual({ ok: true, importedVersion: 3 })
     expect(await db.attempts.count()).toBe(1)
 
     const version1 = {

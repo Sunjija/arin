@@ -149,6 +149,9 @@ export function freezeQuestionSnapshot(
     tags: [...question.tags],
     difficulty: question.difficulty,
     lessonId: question.lessonId,
+    conceptIds: question.conceptIds ? [...question.conceptIds] : undefined,
+    contentVersion: question.contentVersion,
+    familyId: question.familyId,
   }
 }
 
@@ -174,6 +177,9 @@ export function questionFromSnapshot(snapshot: QuestionSnapshot): Question {
     tags: [...snapshot.tags],
     difficulty: snapshot.difficulty,
     lessonId: snapshot.lessonId,
+    conceptIds: snapshot.conceptIds ? [...snapshot.conceptIds] : undefined,
+    contentVersion: snapshot.contentVersion,
+    familyId: snapshot.familyId,
     source: '',
     sourceUrl: '',
     license: '',

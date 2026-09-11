@@ -22,7 +22,7 @@ describe('updateMasteryScore', () => {
     expect(down).toBeLessThan(40)
   })
 
-  it('느린 응답과 오래된 시도는 반영이 약해짐', () => {
+  it('느린 응답으로 숙련도를 깎지 않는다', () => {
     const fast = updateMasteryScore({
       current: 50,
       correct: true,
@@ -41,7 +41,7 @@ describe('updateMasteryScore', () => {
       responseMs: 3000,
       daysAgo: 7,
     })
-    expect(fast).toBeGreaterThan(slow)
+    expect(slow).toBe(fast)
     expect(fast).toBeGreaterThan(old)
   })
 
@@ -65,7 +65,7 @@ describe('updateMasteryScore', () => {
       daysAgo: 0,
     })
     expect(unknown).toBe(measuredFast)
-    expect(unknown).toBeGreaterThan(slow)
+    expect(unknown).toBe(slow)
   })
 
   it('0~100으로 클램프', () => {

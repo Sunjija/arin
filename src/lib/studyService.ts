@@ -1,19 +1,24 @@
 import { lessons } from '../data/lessons'
 import { questions } from '../data/questions'
 import { cardFingerprint } from './cardFingerprint'
-import { addDays, daysBetween, isDue, planWeekNumber, toDateKey } from './dates'
-import { observedWeakAreas, updateMasteryScore } from './mastery'
-import { selectDailyQuestions } from './questionSelection'
+import { addDays, daysBetween, planWeekNumber, toDateKey } from './dates'
+import { observedWeakAreas } from './mastery'
 import {
   buildScoreSummary,
   estimatedScoreFromRecords,
   isConsecutiveGoalStable,
 } from './scoreSummary'
 import { calculateNextInterval } from './spacedRepetition'
-import { MAX_DAILY_CARDS, normalizeDailyCardCount } from './studyLimits'
-import { pickDueCardsForToday, planDailyQuantity, quantitySettingsCopy } from './studyPlan'
-import { selectScheduledLesson, upsertLessonCompletion } from './lessonProgress'
+import { MAX_DAILY_CARDS } from './studyLimits'
+import { quantitySettingsCopy } from './studyPlan'
 import { db } from '../db/database'
+import {
+  completeSession,
+  computeStudyPlan,
+  getSettings as readLearningSettings,
+  recordAnswer,
+  startLesson,
+} from './learningApi'
 import type {
   ActiveSession,
   AttemptRecord,
@@ -25,10 +30,8 @@ import type {
   Question,
   QuestionType,
   SessionAnswer,
-  StudyDayRecord,
   StudyEntryMode,
   UserSettings,
-  WrongAnswerRecord,
   WrongCause,
 } from '../types'
 import { ALL_ERAS, ALL_TYPES } from '../types'
@@ -76,10 +79,7 @@ function nextStepAfterCards(session: ActiveSession): ActiveSession['step'] {
 }
 
 export async function getSettings(): Promise<UserSettings> {
-  const row = await db.settings.get('settings')
-  if (!row) throw new Error('설정이 없습니다.')
-  const { id: _id, ...settings } = row
-  return settings
+  return readLearningSettings()
 }
 
 export async function getMastery(): Promise<MasteryScores> {
@@ -103,55 +103,51 @@ export async function getScoreSummary() {
 }
 
 export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
-  const [settings, cards, meta, studyDay, mocks, attempts, active] = await Promise.all([
+  const [settings, meta, studyDay, mocks, attempts] = await Promise.all([
     getSettings(),
-    db.cards.toArray(),
     db.meta.get('meta'),
     db.studyDays.get(today),
     db.mockResults.orderBy('createdAt').reverse().toArray(),
     db.attempts.toArray(),
-    db.activeSession.toCollection().first(),
   ])
-
+  const frozen = await computeStudyPlan(today)
+  const lesson = lessons.find((item) => item.id === frozen.currentLessonId) ?? lessons[0]!
+  const dueCards = (await db.cards.bulkGet(frozen.reviewCardIds)).filter(
+    (card): card is FlashcardRecord => Boolean(card),
+  )
   const week = planWeekNumber(settings.startDate, today, settings.planWeeks)
-  const resumeLessonId =
-    active && active.date === today && active.step !== 'result' ? active.lessonId : undefined
-  const lesson = selectScheduledLesson(lessons, {
-    startDate: settings.startDate,
-    today,
-    planWeeks: settings.planWeeks,
-    activeLessonId: resumeLessonId,
-  }).lesson
-
-  const dailyCardCount = normalizeDailyCardCount(settings.dailyCardCount)
-  const dueAll = cards.filter((c) => isDue(c.nextReviewAt, today))
-  const quantity = planDailyQuantity({
+  const quantity = {
     dailyMinutes: settings.dailyMinutes,
-    dailyQuestionCap: Math.min(settings.dailyQuestionCount, questions.filter((q) => q.era === lesson.era).length),
-    dailyCardCap: dailyCardCount,
-    dueCardCount: dueAll.filter((card) => card.era === lesson.era).length,
-    lesson,
-  })
-  const dueCards = pickDueCardsForToday(dueAll.filter((card) => card.era === lesson.era), lesson.era, quantity.selectedCardCount)
-
+    dailyQuestionCap: settings.dailyQuestionCount,
+    dailyCardCap: settings.dailyCardCount,
+    selectedCardCount: frozen.reviewCardCount,
+    selectedQuestionCount: frozen.newQuestionCount + frozen.reviewQuestionCount,
+    estimatedMinutes: Math.max(1, lesson.estimatedMinutes),
+    fitsDailyMinutes: true,
+    overflowMinutes: 0,
+    estimateKind: 'heuristic' as const,
+    newQuestionCount: frozen.newQuestionCount,
+    reviewQuestionCount: frozen.reviewQuestionCount,
+    guidance: frozen.reasons[0] ?? null,
+  }
   const scoreSummary = buildScoreSummary({
     attempts,
     mockResultsNewestFirst: mocks,
     goalScore: settings.goalScore,
   })
   const weakAreas = observedWeakAreas(attempts)
-  const reviewHasEvidence = weakAreas.length > 0
-  const reviewLabel = reviewHasEvidence ? (weakAreas[0]?.label ?? '기초 복습') : '기초 복습'
+  const reviewHasEvidence = frozen.reviewCardCount > 0 || frozen.reviewQuestionCount > 0
+  const reviewLabel = reviewHasEvidence ? (weakAreas[0]?.label ?? '누적 복습') : '배운 범위 복습 대기'
   const estimatedScore = estimatedScoreFromRecords({
     attempts,
     mockResultsNewestFirst: mocks,
   })
-
+  const questionCount = frozen.newQuestionCount + frozen.reviewQuestionCount
   const completionRate = studyDay
     ? Math.round(
         ((studyDay.conceptDone ? 1 : 0) +
-          Math.min(1, studyDay.cardsReviewed / Math.max(1, quantity.selectedCardCount || 1)) +
-          Math.min(1, studyDay.questionsAnswered / Math.max(1, quantity.selectedQuestionCount))) /
+          Math.min(1, studyDay.cardsReviewed / Math.max(1, frozen.reviewCardCount || 1)) +
+          Math.min(1, studyDay.questionsAnswered / Math.max(1, questionCount || 1))) /
           3 *
           100,
       )
@@ -166,8 +162,8 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     reviewHasEvidence,
     dueCards,
     quantity,
-    reviewCardCount: dueCards.length,
-    questionCount: Math.min(quantity.selectedQuestionCount, questions.filter((q) => q.era === lesson.era).length),
+    reviewCardCount: frozen.reviewCardCount,
+    questionCount,
     estimatedMinutes: quantity.estimatedMinutes,
     completion: {
       todayDone: Boolean(studyDay?.completed),
@@ -186,11 +182,15 @@ export async function buildTodayPlan(today = toDateKey()): Promise<TodayPlan> {
     remainingToGoal:
       estimatedScore == null ? null : Math.max(0, settings.goalScore - estimatedScore),
     focusLine: `오늘 학습: ${lesson.title}`,
-    timeLine: quantity.fitsDailyMinutes
-      ? `약 ${quantity.estimatedMinutes}분`
-      : quantity.guidance ?? `약 ${quantity.estimatedMinutes}분`,
+    timeLine: `개념 ${frozen.newConceptCount}개 · 문제 ${frozen.newQuestionCount}개 · 복습 ${frozen.reviewCardCount}장`,
     todayDone: Boolean(studyDay?.completed),
     completionRate,
+    conceptFinishDate: frozen.conceptFinishDate,
+    examDateMode: frozen.examDateMode,
+    planWarnings: frozen.warnings,
+    newQuestionCount: frozen.newQuestionCount,
+    reviewQuestionCount: frozen.reviewQuestionCount,
+    frozenPlan: frozen,
   }
 }
 
@@ -203,82 +203,13 @@ export async function startOrResumeSession(
   const entryMode: StudyEntryMode = input.entryMode ?? 'daily'
 
   const existing = await db.activeSession.toCollection().first()
-  if (existing && existing.date === today && existing.step !== 'result') {
-    let normalized = normalizeResumedSession(existing)
-    const lesson = lessons.find((item) => item.id === normalized.lessonId)
-    if (normalized.entryMode !== 'review' && lesson) {
-      const currentId = normalized.questionIds[normalized.questionIndex]
-      const wrongScope = normalized.questionIds.slice(normalized.questionIndex)
-        .some((id) => !questions.some((q) => q.id === id && q.era === lesson.era))
-      if (wrongScope) {
-        const currentAnswered = normalized.answered.some((answer) => answer.questionId === currentId)
-        const priorIds = normalized.questionIds.slice(0, normalized.questionIndex + Number(currentAnswered))
-        const answeredIds = new Set([...priorIds, ...normalized.answered.map((answer) => answer.questionId)])
-        const remainingIds = questions.filter((q) => q.era === lesson.era && !answeredIds.has(q.id))
-          .slice(0, Math.max(0, normalized.questionIds.length - priorIds.length)).map((q) => q.id)
-        normalized = { ...normalized, questionIds: [...priorIds, ...remainingIds], questionIndex: priorIds.length,
-          selectedIndex: undefined, quizPhase: 'choices', revealedChoices: true, clueMemo: '' }
-      }
-      const priorCards = normalized.cardIds.slice(0, normalized.cardIndex)
-      const remainingCards = await db.cards.bulkGet(normalized.cardIds.slice(normalized.cardIndex))
-      const nextCards = [...priorCards, ...remainingCards.filter((card) => card?.era === lesson.era).map((card) => card!.id)]
-      normalized = { ...normalized, cardIds: nextCards }
-      if (normalized.step === 'cards' && normalized.cardIndex >= nextCards.length) normalized.step = 'concept'
-    }
-    if (normalized !== existing) {
-      await db.activeSession.put(normalized)
-    }
+  if (existing && existing.step !== 'result') {
+    const normalized = normalizeResumedSession(existing)
+    if (normalized !== existing) await db.activeSession.put(normalized)
     return normalized
   }
 
-  const plan = await buildTodayPlan(today)
-  const settings = await getSettings()
-  const mastery = await getMastery()
-  const wrong = await db.wrongAnswers.orderBy('createdAt').reverse().limit(40).toArray()
-  const recentWrongIds = wrong.map((w) => w.questionId)
-
-  const selected =
-    entryMode === 'review'
-      ? []
-      : selectDailyQuestions({
-          questions,
-          masteryEras: mastery.eras,
-          masteryTypes: mastery.types,
-          recentWrongIds,
-          dueReviewQuestionIds: recentWrongIds,
-          todayLessonEra: plan.lesson.era,
-          todayLessonId: plan.lesson.id,
-          count: plan.questionCount,
-          boostTypes: settings.focusTypes,
-        })
-
-  const sessionCards = entryMode === 'review'
-    ? pickDueCardsForToday((await db.cards.toArray()).filter((card) => isDue(card.nextReviewAt, today)), plan.lesson.era, normalizeDailyCardCount(settings.dailyCardCount))
-    : plan.dueCards
-
-  const session: ActiveSession = {
-    id: `session-${today}-${Date.now()}`,
-    date: today,
-    step: sessionCards.length > 0 ? 'cards' : entryMode === 'review' ? 'result' : 'concept',
-    lessonId: plan.lesson.id,
-    cardIds: sessionCards.map((c) => c.id),
-    cardIndex: 0,
-    conceptDone: false,
-    conceptMemo: '',
-    questionIds: selected.map((q) => q.id),
-    questionIndex: 0,
-    quizPhase: 'choices',
-    clueMemo: '',
-    revealedChoices: true,
-    answered: [],
-    startedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    entryMode,
-  }
-
-  await db.activeSession.clear()
-  await db.activeSession.put(session)
-  return session
+  return startLesson({ today, entryMode })
 }
 
 export async function saveSession(session: ActiveSession): Promise<void> {
@@ -351,74 +282,27 @@ export async function recordQuizAnswer(params: {
   responseMs: number | null
   cause?: WrongCause
   source: 'practice' | 'mock'
+  learningSource?: 'today' | 'review' | 'library' | 'mock' | 'practice'
   resultId?: string
   attemptId?: string
 }): Promise<AttemptRecord> {
-  const today = toDateKey()
-  const attemptId = params.attemptId ?? `att-${Date.now()}-${params.question.id}`
-  if (params.attemptId) {
-    const existing = await db.attempts.get(params.attemptId)
-    if (existing) return existing
-  }
-
-  const attempt: AttemptRecord = {
-    id: attemptId,
-    questionId: params.question.id,
-    correct: params.correct,
+  return recordAnswer({
+    question: params.question,
     selectedIndex: params.selectedIndex,
-    responseMs: params.responseMs,
-    responseMsSource: params.responseMs == null ? 'unavailable' : 'measured',
-    cause: params.correct ? undefined : (params.cause ?? 'unknown'),
-    era: params.question.era,
-    tags: params.question.tags,
-    createdAt: new Date().toISOString(),
-    source: params.source,
-    resultId: params.resultId,
-  }
-  await db.attempts.put(attempt)
-
-  if (!params.correct) {
-    const wrong: WrongAnswerRecord = {
-      id: `wrong-${attempt.id}`,
-      questionId: params.question.id,
-      selectedIndex: params.selectedIndex,
-      correctIndex: params.question.answerIndex,
-      cause: attempt.cause ?? 'unknown',
-      createdAt: today,
-      stem: params.question.stem,
-      explanation: params.question.explanation,
-      era: params.question.era,
-      tags: params.question.tags,
-    }
-    await db.wrongAnswers.put(wrong)
-  }
-
-  const mastery = await getMastery()
-  const eraScore = mastery.eras[params.question.era] ?? 50
-  mastery.eras[params.question.era] = updateMasteryScore({
-    current: eraScore,
     correct: params.correct,
     responseMs: params.responseMs,
-    daysAgo: 0,
-    cause: attempt.cause,
+    cause: params.cause,
+    learningSource: params.learningSource ?? (params.source === 'mock' ? 'mock' : 'practice'),
+    resultId: params.resultId,
+    attemptId: params.attemptId,
   })
-  for (const tag of params.question.tags) {
-    mastery.types[tag] = updateMasteryScore({
-      current: mastery.types[tag] ?? 50,
-      correct: params.correct,
-      responseMs: params.responseMs,
-      daysAgo: 0,
-      cause: attempt.cause,
-    })
-  }
-  await db.mastery.put({ id: 'mastery', ...mastery })
-  return attempt
 }
 
 export async function updateAttemptCause(
   attemptId: string,
   cause: WrongCause,
 ): Promise<AttemptRecord> {
+  return db.transaction('rw', [db.attempts, db.wrongAnswers], async () => {
   const attempt = await db.attempts.get(attemptId)
   if (!attempt) throw new Error('시도 기록을 찾을 수 없습니다.')
   const updated: AttemptRecord = { ...attempt, cause }
@@ -426,67 +310,18 @@ export async function updateAttemptCause(
   const wrong = await db.wrongAnswers.get(`wrong-${attemptId}`)
   if (wrong) await db.wrongAnswers.put({ ...wrong, cause })
   return updated
+  })
 }
 
 export async function finishSession(session: ActiveSession): Promise<void> {
-  const today = session.date
-  const existingDay = await db.studyDays.get(today)
-  if (existingDay?.finishedSessionIds?.includes(session.id)) {
-    await db.activeSession.put({ ...session, step: 'result', updatedAt: new Date().toISOString() })
-    return
-  }
-
-  const started = Date.parse(session.startedAt)
-  const minutesMeasured = Number.isFinite(started)
-  const minutesSpent = minutesMeasured
-    ? Math.max(0, Math.round((Date.now() - started) / 60000))
-    : 0
-  const cardsReviewedCount =
-    session.step === 'cards' ? session.cardIndex : session.cardIds.length
-
-  const day: StudyDayRecord = {
-    date: today,
-    completed: true,
-    cardsReviewed: (existingDay?.cardsReviewed ?? 0) + cardsReviewedCount,
-    conceptDone: Boolean(existingDay?.conceptDone || session.conceptDone),
-    questionsAnswered: (existingDay?.questionsAnswered ?? 0) + session.answered.length,
-    correctCount: (existingDay?.correctCount ?? 0) + session.answered.filter((a) => a.correct).length,
-    lessonId: existingDay?.lessonId ?? session.lessonId,
-    minutesSpent: (existingDay?.minutesSpent ?? 0) + minutesSpent,
-    minutesMeasured: Boolean(existingDay?.minutesMeasured || minutesMeasured),
-    finishedSessionIds: [...(existingDay?.finishedSessionIds ?? []), session.id],
-  }
-  await db.studyDays.put(day)
-
-  if (session.entryMode !== 'review') {
-    const current = await db.lessonCompletions.get(session.lessonId)
-    await db.lessonCompletions.put(upsertLessonCompletion(current, session.lessonId, today))
-  }
-
-  const meta = await db.meta.get('meta')
-  if (meta) {
-    const yesterday = addDays(today, -1)
-    const streak =
-      meta.lastStudyDate === today
-        ? meta.streak
-        : meta.lastStudyDate === yesterday
-          ? meta.streak + 1
-          : 1
-    await db.meta.put({
-      ...meta,
-      streak,
-      lastStudyDate: today,
-    })
-  }
-
-  await db.activeSession.put({ ...session, step: 'result', updatedAt: new Date().toISOString() })
+  await completeSession(session)
 }
 
 export async function saveMockResult(result: MockExamResult): Promise<MockExamResult> {
   const existing = await db.mockResults.get(result.id)
   if (existing) return existing
 
-  await db.transaction('rw', [db.mockResults, db.attempts, db.wrongAnswers, db.mastery], async () => {
+  await db.transaction('rw', [db.mockResults, db.attempts, db.wrongAnswers, db.mastery, db.conceptProgress], async () => {
     const again = await db.mockResults.get(result.id)
     if (again) return
     await db.mockResults.put(result)

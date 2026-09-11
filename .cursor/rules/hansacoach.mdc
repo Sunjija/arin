@@ -8,3 +8,5 @@ alwaysApply: true
 `docs/archive/`와 과거 `artifacts/` 리포트를 현재 구현 지시로 사용하지 않는다.
 기존 열린 PR과 현재 분기 상태를 확인한 뒤 배정된 작업만 수행한다. 문서의 목표 기능과 실제 구현 상태를 구분한다.
 로드맵의 권장 담당은 배정 완료가 아니다. 작업 완료 시 해당 ID와 검증 증거·커밋/PR을 보고한다.
+
+현재 공통 API와 남은 게이트는 `docs/parallel-redesign/e-foundation-api.md`, 기존 PR 부분 재사용 판단은 `docs/pr-integration-review.md`, 재집계한 공백은 `docs/content-coverage.md`를 따른다. PR #14 원본을 그대로 병합하거나 계획 API 전체가 동결됐다고 가정하지 않는다.

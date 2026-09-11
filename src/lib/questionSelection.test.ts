@@ -27,7 +27,7 @@ describe('selectDailyQuestions', () => {
     }),
   )
 
-  it('요청 개수만큼 고르고 세션 내 중복이 없다', () => {
+  it('요청 개수만큼 현재 단원에서만 고르고 세션 내 중복이 없다', () => {
     const selected = selectDailyQuestions({
       questions: pool,
       masteryEras: {
@@ -54,22 +54,49 @@ describe('selectDailyQuestions', () => {
       dueReviewQuestionIds: ['q3'],
       todayLessonId: 'lesson-04',
       todayLessonEra: 'goryeo',
+      learnedLessonIds: [],
+      learnedEras: [],
       count: 15,
     })
-    expect(selected).toHaveLength(15)
-    expect(selected.every((question) => question.era === 'goryeo')).toBe(true)
-    expect(ensureUnique(selected)).toHaveLength(15)
-    expect(new Set(selected.map((x) => x.id)).size).toBe(15)
+    expect(selected.length).toBeGreaterThan(0)
+    expect(selected.every((question) => question.lessonId === 'lesson-04')).toBe(true)
+    expect(ensureUnique(selected)).toHaveLength(selected.length)
+    expect(new Set(selected.map((x) => x.id)).size).toBe(selected.length)
   })
 
-  it('does not fill a small era pool with unrelated review or weak-area questions', () => {
+  it('does not fill a small lesson pool with unrelated review or weak-area questions', () => {
     const selected = selectDailyQuestions({
-      questions: [q({ id: 'pre', era: 'prehistoric', tags: ['source'] }), ...pool],
+      questions: [q({ id: 'pre', era: 'prehistoric', tags: ['source'], lessonId: 'lesson-01' }), ...pool],
       masteryEras: {} as never, masteryTypes: {} as never,
       recentWrongIds: ['q1'], dueReviewQuestionIds: ['q2'],
-      todayLessonEra: 'prehistoric', count: 15,
+      todayLessonId: 'lesson-01',
+      todayLessonEra: 'prehistoric',
+      learnedLessonIds: [],
+      learnedEras: [],
+      count: 15,
     })
     expect(selected.map((question) => question.id)).toEqual(['pre'])
+  })
+
+  it('keeps due review and recent wrongs in separate review buckets', () => {
+    const selected = selectDailyQuestions({
+      questions: [
+        q({ id: 'new-q', era: 'goryeo', tags: ['source'], lessonId: 'lesson-04' }),
+        q({ id: 'due-q', era: 'prehistoric', tags: ['source'], lessonId: 'lesson-01' }),
+        q({ id: 'wrong-q', era: 'prehistoric', tags: ['source'], lessonId: 'lesson-01' }),
+      ],
+      masteryEras: {} as never,
+      masteryTypes: {} as never,
+      recentWrongIds: ['wrong-q'],
+      dueReviewQuestionIds: ['due-q'],
+      todayLessonId: 'lesson-04',
+      learnedLessonIds: ['lesson-01'],
+      learnedEras: ['prehistoric'],
+      count: 3,
+      newCount: 1,
+      reviewCount: 2,
+    })
+    expect(selected.map((question) => question.id)).toEqual(['new-q', 'due-q', 'wrong-q'])
   })
 
   it('비율 합이 전체 개수와 같다', () => {

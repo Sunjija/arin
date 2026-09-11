@@ -1,5 +1,7 @@
 import { Button } from '../ui'
 import { ERA_LABELS, type Lesson } from '../../types'
+import { guideForLesson } from '../../data/lessonGuides'
+import { LessonGuideContent } from './LessonGuideContent'
 
 export function ConceptStep({
   lesson,
@@ -12,15 +14,17 @@ export function ConceptStep({
   onMemo: (value: string) => Promise<void>
   onDone: () => Promise<void>
 }) {
+  const guide = guideForLesson(lesson.id)
   return (
     <div className="concept-content space-y-4">
       <div>
         <p className="meta-text">
-          {ERA_LABELS[lesson.era]} · 오늘 단원 읽기 (약 {lesson.estimatedMinutes}분)
+          {ERA_LABELS[lesson.era]} · 오늘 단원 읽기
         </p>
         <h1 className="font-display text-2xl">{lesson.title}</h1>
         <p className="mt-2 text-[var(--ink-muted)]">{lesson.summary}</p>
       </div>
+      {guide && <LessonGuideContent guide={guide} />}
       <div>
         <h2 className="font-semibold">핵심 키워드</h2>
         <p className="mt-1 text-[var(--ink)]">{lesson.keywords.join(' · ')}</p>

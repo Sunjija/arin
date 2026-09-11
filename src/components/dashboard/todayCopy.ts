@@ -12,9 +12,9 @@ export const BANNED_HOME_PHRASES = [
 
 export function isInProgressSession(
   session: Pick<ActiveSession, 'date' | 'step'> | null | undefined,
-  today: string,
+  _today: string,
 ): boolean {
-  return Boolean(session && session.date === today && session.step !== 'result')
+  return Boolean(session && session.step !== 'result')
 }
 
 export function todayEyebrow(week: number): string {
@@ -34,7 +34,7 @@ export function todayQuantityLine(input: {
   questionCount: number
   estimatedMinutes: number
 }): string {
-  return `카드 ${input.reviewCardCount}장 · 개념 1개 · 문제 ${input.questionCount}개 · 약 ${input.estimatedMinutes}분`
+  return `개념 1단원 · 문제 ${input.questionCount}개 · 복습 카드 ${input.reviewCardCount}장`
 }
 
 export function homeRecordHint(plan: Pick<TodayPlan, 'scoreSummary'>): string | null {

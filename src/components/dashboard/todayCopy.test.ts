@@ -83,7 +83,7 @@ describe('home view model — 새 사용자', () => {
     expect(model.title).toBe('오늘 학습: 고려 광종과 성종')
     expect(model.reviewLine).toBe('복습: 기초 복습')
     expect(model.reviewHasEvidence).toBe(false)
-    expect(model.quantityLine).toBe('카드 8장 · 개념 1개 · 문제 12개 · 약 48분')
+    expect(model.quantityLine).toBe('개념 1단원 · 문제 12개 · 복습 카드 8장')
     expect(model.primaryCta).toEqual({ label: '오늘 학습 시작', to: '/study' })
     expect(model.extraReviewCta).toBeNull()
     expect(model.recordHint).toBe(HOME_RECORD_EMPTY)
@@ -107,7 +107,7 @@ describe('home view model — 진행 중 / 당일 완료', () => {
   it('uses 이어서 학습 when a same-day session is in progress', () => {
     expect(isInProgressSession({ date: '2026-09-08', step: 'quiz' }, '2026-09-08')).toBe(true)
     expect(isInProgressSession({ date: '2026-09-08', step: 'result' }, '2026-09-08')).toBe(false)
-    expect(isInProgressSession({ date: '2026-09-07', step: 'cards' }, '2026-09-08')).toBe(false)
+    expect(isInProgressSession({ date: '2026-09-07', step: 'cards' }, '2026-09-08')).toBe(true)
 
     const model = buildHomeViewModel(plan(), true)
     expect(model.primaryCta.label).toBe('이어서 학습')

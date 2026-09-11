@@ -32,6 +32,9 @@ jobs:
         env:
           AUDIT_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node scripts/automation/audit.mjs
+      - name: Verify content inventory
+        if: ${{ !cancelled() }}
+        run: node scripts/automation/content-coverage.mjs --check
       - name: Type check
         if: ${{ !cancelled() }}
         run: npm run typecheck

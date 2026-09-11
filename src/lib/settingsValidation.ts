@@ -1,5 +1,27 @@
 import { ALL_TYPES, type QuestionType, type UserSettings } from '../types'
 import { MAX_DAILY_CARDS, MIN_DAILY_CARDS } from './studyLimits'
+import { isDateKey } from './dates'
+import type { SaveGoalInput } from '../types/learning'
+
+export function validateGoalInput(input: SaveGoalInput): string | null {
+  const ranges: Array<[number | undefined | null, number, number, string]> = [
+    [input.goalScore, 60, 100, '목표 점수'], [input.dailyQuestionCount, 5, 40, '하루 문제 수'],
+    [input.dailyCardCount, MIN_DAILY_CARDS, MAX_DAILY_CARDS, '하루 카드 수'],
+    [input.dailyNewConceptCount, 1, 20, '하루 새 개념 수'], [input.planWeeks, 4, 16, '계획 주수'], [input.examRound, 1, 9999, '시험 회차'],
+  ]
+  for (const [value, min, max, label] of ranges) {
+    if (value != null && (!Number.isInteger(value) || value < min || value > max)) return `${label}는 ${min}에서 ${max} 사이의 정수로 입력하세요.`
+  }
+  if (input.examDate != null && !isDateKey(input.examDate)) return '실제로 존재하는 시험 날짜를 입력하세요.'
+  if (input.startDate !== undefined && !isDateKey(input.startDate)) return '학습 시작일이 올바르지 않습니다.'
+  if (input.goalGrade !== undefined && ![1, 2, 3].includes(input.goalGrade)) return '목표 급수가 올바르지 않습니다.'
+  if (input.experienceLevel !== undefined && !['first-time', 'has-experience'].includes(input.experienceLevel)) return '학습 경험이 올바르지 않습니다.'
+  if (input.studyWeekdays !== undefined && (!Array.isArray(input.studyWeekdays) || !input.studyWeekdays.length || input.studyWeekdays.some(day => !Number.isInteger(day) || day < 0 || day > 6))) return '학습 요일을 하루 이상 선택하세요.'
+  if ([input.onboardingCompleted, input.examDateUndecided].some(value => value !== undefined && typeof value !== 'boolean')) return '목표 설정 상태가 올바르지 않습니다.'
+  if (input.officialScheduleSource != null && (typeof input.officialScheduleSource !== 'string' || !/^https?:\/\//.test(input.officialScheduleSource))) return '공식 일정 출처 URL이 올바르지 않습니다.'
+  if (input.officialScheduleCheckedAt != null && !isDateKey(input.officialScheduleCheckedAt)) return '일정 확인 날짜가 올바르지 않습니다.'
+  return null
+}
 
 export const GOAL_SCORE_MIN = 60
 export const GOAL_SCORE_MAX = 100
@@ -92,9 +114,12 @@ export function parseUserSettings(
   if (invalidType) {
     return { ok: false, message: '집중 유형이 올바르지 않습니다.' }
   }
-  if (typeof raw.startDate !== 'string' || !DATE_KEY.test(raw.startDate)) {
+  if (!isDateKey(raw.startDate)) {
     return { ok: false, message: '학습 시작일이 올바르지 않습니다.' }
   }
+
+  const goalError = validateGoalInput(raw as SaveGoalInput)
+  if (goalError) return { ok: false, message: goalError }
 
   const settings: UserSettings = {
     goalScore: raw.goalScore as number,
@@ -104,6 +129,30 @@ export function parseUserSettings(
     focusTypes: [...(raw.focusTypes as QuestionType[])],
     startDate: raw.startDate,
     planWeeks: raw.planWeeks as number,
+    goalGrade: raw.goalGrade === 1 || raw.goalGrade === 2 || raw.goalGrade === 3 ? raw.goalGrade : undefined,
+    dailyNewConceptCount:
+      typeof raw.dailyNewConceptCount === 'number' && Number.isFinite(raw.dailyNewConceptCount)
+        ? raw.dailyNewConceptCount
+        : undefined,
+    examRound: typeof raw.examRound === 'number' ? raw.examRound : raw.examRound === null ? null : undefined,
+    examDate: typeof raw.examDate === 'string' && DATE_KEY.test(raw.examDate) ? raw.examDate : raw.examDate === null ? null : undefined,
+    examDateUndecided: typeof raw.examDateUndecided === 'boolean' ? raw.examDateUndecided : undefined,
+    experienceLevel:
+      raw.experienceLevel === 'first-time' || raw.experienceLevel === 'has-experience'
+        ? raw.experienceLevel
+        : undefined,
+    studyWeekdays: Array.isArray(raw.studyWeekdays)
+      ? raw.studyWeekdays.filter((day): day is number => typeof day === 'number' && day >= 0 && day <= 6)
+      : undefined,
+    officialScheduleSource:
+      typeof raw.officialScheduleSource === 'string' || raw.officialScheduleSource === null
+        ? raw.officialScheduleSource
+        : undefined,
+    officialScheduleCheckedAt:
+      typeof raw.officialScheduleCheckedAt === 'string' || raw.officialScheduleCheckedAt === null
+        ? raw.officialScheduleCheckedAt
+        : undefined,
+    onboardingCompleted: typeof raw.onboardingCompleted === 'boolean' ? raw.onboardingCompleted : undefined,
   }
   const errors = validateSettingsForm(settings)
   if (errors.length > 0) return { ok: false, message: errors[0]! }

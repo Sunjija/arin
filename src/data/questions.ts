@@ -32,6 +32,10 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-01',
     formatId: 'source-underline',
     ...META,
+    conceptIds: ['t-pre-01'],
+    familyId: 'pre-neolithic-evidence',
+    contentVersion: 2,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010',
   },
   {
     id: 'q-02',
@@ -54,6 +58,10 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-01',
     formatId: 'source-what',
     ...META,
+    conceptIds: ['t-pre-04', 't-pre-05'],
+    familyId: 'pre-gojoseon-state',
+    contentVersion: 2,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020',
   },
   {
     id: 'q-03',
@@ -73,6 +81,10 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-01',
     formatId: 'wrong-statement',
     ...META,
+    conceptIds: ['t-pre-01', 't-pre-02'],
+    familyId: 'pre-bronze-evidence',
+    contentVersion: 2,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0010',
   },
   // ─── 삼국 ───
   {
@@ -1026,6 +1038,10 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-01',
     formatId: 'wrong-statement',
     ...META,
+    conceptIds: ['t-pre-03', 't-pre-04', 't-pre-05'],
+    familyId: 'pre-gojoseon-state',
+    contentVersion: 2,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0030',
   },
   // ─── 고려 ───
   {
@@ -1603,6 +1619,10 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-01',
     formatId: 'source-who',
     ...META,
+    conceptIds: ['t-pre-04'],
+    familyId: 'pre-wiman',
+    contentVersion: 2,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020',
   },
   // ─── 개항기 ───
   {
@@ -1709,6 +1729,10 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-01',
     formatId: 'heritage-period',
     ...META,
+    conceptIds: ['t-pre-02'],
+    familyId: 'pre-bronze-evidence',
+    contentVersion: 2,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0030',
   },
   // ─── 고려 ───
   {

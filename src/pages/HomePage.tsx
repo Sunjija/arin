@@ -54,11 +54,16 @@ export function HomePage() {
 
   const ongoing = isInProgressSession(session, plan.date)
   const done = plan.completion.todayDone
-  const stepIndex = done ? 3 : ongoing ? ['cards', 'concept', 'quiz', 'result'].indexOf(session!.step) : plan.reviewCardCount ? 0 : 1
+  const stepIndex = done ? 3 : ongoing ? ['concept', 'quiz', 'cards', 'result'].indexOf(session!.step) : 0
+  const completedSteps = [
+    done || (ongoing ? session!.conceptDone : plan.completion.conceptDone),
+    done || (ongoing ? session!.questionIds.length > 0 && session!.questionIds.every(id => session!.answered.some(answer => answer.questionId === id)) : plan.questionCount > 0 && plan.completion.questionsAnswered >= plan.questionCount),
+    done || (ongoing ? session!.cardIds.length > 0 && session!.cardIndex >= session!.cardIds.length : plan.reviewCardCount > 0 && plan.completion.cardsReviewed >= plan.reviewCardCount),
+  ]
   const steps = [
-    ['기억 깨우기', `복습 카드 ${ongoing ? session!.cardIds.length : plan.reviewCardCount}장`],
     ['개념 연결하기', plan.lesson.title],
     ['문제로 확인하기', `핵심 문제 ${ongoing ? session!.questionIds.length : plan.questionCount}개`],
+    ['누적 복습하기', `배운 범위의 카드 ${ongoing ? session!.cardIds.length : plan.reviewCardCount}장`],
   ]
   return (
     <div className="today-page">
@@ -79,12 +84,12 @@ export function HomePage() {
           {model.extraReviewCta && <Link to={model.extraReviewCta.to} className="btn btn-secondary w-full">{model.extraReviewCta.label}</Link>}
         </section>
         <section className="today-sequence">
-          <div className="section-heading"><h2>오늘의 순서</h2><span>{Math.min(stepIndex, 3)} / 3 완료</span></div>
+          <div className="section-heading"><h2>오늘의 순서</h2><span>{completedSteps.filter(Boolean).length} / 3 완료</span></div>
           <ol className="learning-sequence">
-            {steps.map(([title, detail], i) => <li key={title} className={i < stepIndex ? 'done' : i === stepIndex ? 'current' : ''}>
-              <span className="sequence-number">{i < stepIndex ? '✓' : i + 1}</span>
+            {steps.map(([title, detail], i) => <li key={title} className={completedSteps[i] ? 'done' : i === stepIndex ? 'current' : ''}>
+              <span className="sequence-number">{completedSteps[i] ? '✓' : i + 1}</span>
               <div><h3>{title}</h3><p>{detail}</p></div>
-              {i < stepIndex ? <span className="sequence-status">완료</span> : i === stepIndex ? <Link className="pill blue touch-target" to="/study">{ongoing ? '이어하기' : '시작하기'}</Link> : <span aria-hidden="true">›</span>}
+              {completedSteps[i] ? <span className="sequence-status">완료</span> : i === stepIndex ? <Link className="pill blue touch-target" to="/study">{ongoing ? '이어하기' : '시작하기'}</Link> : <span aria-hidden="true">›</span>}
             </li>)}
           </ol>
           {model.guidance && <InlineStatus tone="neutral">{model.guidance}</InlineStatus>}

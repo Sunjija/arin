@@ -2,7 +2,8 @@ import { inspectFullMockPool } from './mockEligibility'
 import { db } from '../db/database'
 import { snapshotFromQuestion } from './wrongCardContent'
 import { questions } from '../data/questions'
-import { scoreFromAnswers } from './examScoring'
+import { scoreFromAnswers, questionFromSnapshot } from './examScoring'
+import { recordAnswer } from './learningApi'
 import type { ActiveMock, MockExamResult, QuestionSnapshot } from '../types'
 import type {
   FinalizeMockResult,
@@ -83,7 +84,7 @@ export async function finalizeMock(input: {
   answers?: Array<number | null>
   itemElapsedMs?: Array<number | null>
 }): Promise<FinalizeMockResult> {
-  return db.transaction('rw', [db.activeMock, db.mockResults], async () => {
+  return db.transaction('rw', [db.activeMock, db.mockResults, db.attempts, db.wrongAnswers, db.mastery, db.conceptProgress], async () => {
     const current = await db.activeMock.get(input.id)
     if (!current) throw new Error('진행 중인 시험을 찾을 수 없습니다.')
     if (current.status === 'submitted' && current.submittedResultId) {
@@ -99,6 +100,15 @@ export async function finalizeMock(input: {
     const result = gradeActiveMock({ ...current, answers, itemElapsedMs }, Date.now())
 
     await db.mockResults.put(result)
+    for (const [index, snapshot] of current.questionSnapshots.entries()) {
+      const selectedIndex = answers[index]
+      if (selectedIndex == null) continue
+      await recordAnswer({
+        question: questionFromSnapshot(snapshot), snapshot, selectedIndex,
+        correct: selectedIndex === snapshot.answerIndex, responseMs: itemElapsedMs[index] ?? null,
+        learningSource: 'mock', resultId: result.id, attemptId: `att-${result.id}-${index}-${snapshot.questionId}`,
+      })
+    }
     await db.activeMock.put({
       ...current,
       answers,

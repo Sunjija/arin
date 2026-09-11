@@ -58,6 +58,29 @@ export interface Question {
   lessonId?: string
   /** examFormats.ts의 ExamFormatId (선택; 없으면 휴리스틱 추정) */
   formatId?: string
+  /** Explicit, reviewed scope; never inferred from answer/distractor keywords. */
+  conceptIds?: string[]
+  familyId?: string
+  contentVersion?: number
+  /** Observation only; difficulty remains the legacy point value. */
+  stats?: { attemptCount: number | null; correctRate: number | null; discrimination: number | null }
+}
+
+export interface LessonGuide {
+  lessonId: string
+  contentVersion: number
+  reviewStatus: 'draft' | 'source-checked' | 'approved'
+  checkedAt: string
+  introduction: string
+  sections: Array<{
+    conceptId: string
+    title: string
+    paragraphs: string[]
+    recallPrompt: string
+    expectedElements: string[]
+    sourceUrl: string
+    additionalSourceUrls?: string[]
+  }>
 }
 
 export interface Lesson {
@@ -82,14 +105,113 @@ export interface FlashcardSeed {
   fromWrongAnswer?: boolean
 }
 
+export type GoalGrade = 1 | 2 | 3
+export type ExperienceLevel = 'first-time' | 'has-experience'
+export type ExamDateMode = 'scheduled' | 'undecided' | 'past'
+export type ConceptLearnState = 'unseen' | 'learning' | 'completed'
+export type LearningSource = 'today' | 'review' | 'library' | 'mock' | 'practice'
+export type ReviewItemKind = 'due-review' | 'recent-wrong'
+
+/** 목표·일정. dailyMinutes는 구형 백업 호환 필드이며 분량 약속이 아니다. */
 export interface UserSettings {
   goalScore: number
+  goalGrade?: GoalGrade
   dailyQuestionCount: number
   dailyCardCount: number
+  dailyNewConceptCount?: number
   dailyMinutes: number
   focusTypes: QuestionType[]
   startDate: string
   planWeeks: number
+  examRound?: number | null
+  examDate?: string | null
+  examDateUndecided?: boolean
+  experienceLevel?: ExperienceLevel
+  studyWeekdays?: number[]
+  officialScheduleSource?: string | null
+  officialScheduleCheckedAt?: string | null
+  onboardingCompleted?: boolean
+}
+
+export type LearningGoal = Required<
+  Pick<
+    UserSettings,
+    | 'goalScore'
+    | 'goalGrade'
+    | 'dailyQuestionCount'
+    | 'dailyCardCount'
+    | 'dailyNewConceptCount'
+    | 'startDate'
+    | 'planWeeks'
+    | 'examRound'
+    | 'examDate'
+    | 'examDateUndecided'
+    | 'experienceLevel'
+    | 'studyWeekdays'
+    | 'officialScheduleSource'
+    | 'officialScheduleCheckedAt'
+    | 'onboardingCompleted'
+  >
+>
+
+export interface Concept {
+  id: string
+  title: string
+  era: EraId
+  lessonId?: string
+  prerequisiteIds: string[]
+  summary: string
+  keywords: string[]
+  source: string
+  contentVersion: number
+}
+
+export interface ConceptProgressRecord {
+  conceptId: string
+  learnState: ConceptLearnState
+  /** 복습 숙련(0~100). 미학습·열람만 있으면 null. 완료와 분리한다. */
+  reviewMastery: number | null
+  firstLearnedAt: string | null
+  completedAt: string | null
+  lastAttemptAt: string | null
+  lastAttemptId: string | null
+  viewedAt: string | null
+}
+
+export interface ReviewPlanItem {
+  id: string
+  kind: ReviewItemKind
+  conceptId?: string
+  questionId?: string
+  cardId?: string
+  dueOn: string
+  reason: string
+  failCount: number
+  wrongCause?: WrongCause
+}
+
+export interface FrozenStudyPlan {
+  policyVersion: string
+  date: string
+  createdAt: string
+  currentLessonId: string
+  currentConceptIds: string[]
+  newQuestionIds: string[]
+  reviewQuestionIds: string[]
+  reviewCardIds: string[]
+  newConceptCount: number
+  newQuestionCount: number
+  reviewQuestionCount: number
+  reviewCardCount: number
+  reasons: string[]
+  warnings: string[]
+  conceptFinishDate: string | null
+  examDate: string | null
+  examDateMode: ExamDateMode
+  reviewPeriodStart: string | null
+  remainingNewLessons: number
+  missedStudyDays: number
+  sameDayResume: boolean
 }
 
 export interface MasteryScores {
@@ -146,6 +268,10 @@ export interface AttemptRecord {
   tags: QuestionType[]
   createdAt: string
   source: 'practice' | 'mock'
+  /** 오늘 학습·복습·자료실·실전을 구분. 없으면 source로 추정. */
+  learningSource?: LearningSource
+  conceptId?: string
+  snapshot?: QuestionSnapshot
   /** 동일 제출 재시도에서 중복 attempt를 묶는 키 */
   resultId?: string
 }
@@ -163,6 +289,8 @@ export interface StudyDayRecord {
   minutesMeasured?: boolean
   /** 같은 세션 finish 재호출이 통계를 중복 누적하지 않게 한다. */
   finishedSessionIds?: string[]
+  /** 같은 날 고정된 학습 목록. 재개 시 다시 뽑지 않는다. */
+  plan?: FrozenStudyPlan
 }
 
 export interface MockExamResult {
@@ -205,6 +333,10 @@ export interface ActiveSession {
   updatedAt: string
   /** daily: 카드→개념→문제. review: 카드만 마친 뒤 복습으로 돌아간다. */
   entryMode?: StudyEntryMode
+  newQuestionIds?: string[]
+  reviewQuestionIds?: string[]
+  /** Frozen when the session starts; absent on legacy sessions. */
+  questionSnapshots?: QuestionSnapshot[]
 }
 
 export type QuizPhase =
@@ -254,6 +386,9 @@ export interface QuestionSnapshot {
   tags: QuestionType[]
   difficulty: Difficulty
   lessonId?: string
+  conceptIds?: string[]
+  familyId?: string
+  contentVersion?: number
 }
 
 export type MockSessionStatus = 'in-progress' | 'submitted'
@@ -275,7 +410,7 @@ export interface ActiveMock {
 }
 
 export interface ExportPayload {
-  version: 1 | 2
+  version: 1 | 2 | 3
   exportedAt: string
   settings: UserSettings
   mastery: MasteryScores
@@ -288,6 +423,7 @@ export interface ExportPayload {
   meta: AppMeta
   lessonCompletions?: LessonCompletion[]
   activeMock?: ActiveMock | null
+  conceptProgress?: ConceptProgressRecord[]
 }
 
 export const ERA_LABELS: Record<EraId, string> = {

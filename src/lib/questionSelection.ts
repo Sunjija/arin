@@ -9,38 +9,93 @@ export interface SelectionContext {
   dueReviewQuestionIds: string[]
   todayLessonEra?: EraId
   todayLessonId?: string
+  /** 완료한 단원. 없으면 복습 풀이 비고, 미학습 시대로 채우지 않는다. */
+  learnedLessonIds?: string[]
+  learnedEras?: EraId[]
   count: number
+  newCount?: number
+  reviewCount?: number
   /** 집중 가중 유형 (기본: 연도·순서, 왕·업적) */
   boostTypes?: QuestionType[]
   boostMultiplier?: number
   excludeIds?: string[]
 }
 
+export interface SplitSelection {
+  newQuestions: Question[]
+  reviewQuestions: Question[]
+  all: Question[]
+}
+
 /**
  * 오늘의 맞춤 문제 선택.
  *
- * 오늘 단원 시대 안에서만 선택하며, 부족해도 다른 시대에서 보충하지 않는다.
- * 범위 내 구성 비율:
- * - 40% 가장 취약한 영역
- * - 30% 최근 오답·복습 도래
- * - 20% 오늘 새 학습 범위
- * - 10% 잘하는 영역 유지
- *
- * 같은 세션에서 동일 문제 중복 출제 금지.
- * 왕·업적 / 연도·사건 순서 유형은 가중치 1.5배.
+ * 새 문항: 현재 단원(lessonId) 안에서만.
+ * 복습 문항: 완료한 단원·시대에서만. 미학습 시대로 보충하지 않는다.
+ * 최근 오답과 복습 도래 ID는 다른 버킷이다.
  */
 export function selectDailyQuestions(ctx: SelectionContext): Question[] {
+  return selectStudyQuestions(ctx).all
+}
+
+export function selectStudyQuestions(ctx: SelectionContext): SplitSelection {
   const boostTypes = ctx.boostTypes ?? ['chronology', 'king-figure']
   const boostMultiplier = ctx.boostMultiplier ?? 1.5
   const exclude = new Set(ctx.excludeIds ?? [])
   const used = new Set<string>()
-  const pool = ctx.questions.filter((q) =>
-    !exclude.has(q.id) && (!ctx.todayLessonEra || q.era === ctx.todayLessonEra),
-  )
+  const learnedLessons = new Set(ctx.learnedLessonIds ?? [])
+  const learnedEras = new Set(ctx.learnedEras ?? [])
+  const split = ctx.learnedLessonIds != null || ctx.learnedEras != null || ctx.newCount != null
 
+  const newPool = ctx.questions.filter((question) => {
+    if (exclude.has(question.id)) return false
+    if (ctx.todayLessonId) return question.lessonId === ctx.todayLessonId
+    if (ctx.todayLessonEra) return question.era === ctx.todayLessonEra
+    return true
+  })
+
+  const reviewPool = ctx.questions.filter((question) => {
+    if (exclude.has(question.id)) return false
+    if (question.lessonId) return learnedLessons.has(question.lessonId)
+    return learnedEras.has(question.era)
+  })
+
+  const newCount = split
+    ? Math.max(0, ctx.newCount ?? Math.max(0, ctx.count - (ctx.reviewCount ?? 0)))
+    : ctx.count
+  const reviewCount = split ? Math.max(0, ctx.reviewCount ?? Math.max(0, ctx.count - newCount)) : 0
+
+  const newQuestions = takeWeighted(newPool, newCount, used, boostTypes, boostMultiplier)
+  const reviewQuestions = split
+    ? pickReviewQuestions({
+        pool: reviewPool.filter((question) => !used.has(question.id)),
+        count: reviewCount,
+        used,
+        recentWrongIds: ctx.recentWrongIds,
+        dueReviewQuestionIds: ctx.dueReviewQuestionIds,
+        masteryEras: ctx.masteryEras,
+        masteryTypes: ctx.masteryTypes,
+        boostTypes,
+        boostMultiplier,
+      })
+    : []
+
+  if (!split) {
+    return { newQuestions, reviewQuestions: [], all: fillLegacyMix(ctx, newPool, new Set(), boostTypes, boostMultiplier) }
+  }
+
+  return { newQuestions, reviewQuestions, all: ensureUnique([...newQuestions, ...reviewQuestions]) }
+}
+
+function fillLegacyMix(
+  ctx: SelectionContext,
+  pool: Question[],
+  used: Set<string>,
+  boostTypes: QuestionType[],
+  boostMultiplier: number,
+): Question[] {
   const quotas = splitQuotas(ctx.count)
   const picked: Question[] = []
-
   const weakestEras = rankWeak(ctx.masteryEras)
   const weakestTypes = rankWeak(ctx.masteryTypes)
   const strongEras = rankStrong(ctx.masteryEras)
@@ -54,8 +109,7 @@ export function selectDailyQuestions(ctx: SelectionContext): Question[] {
     },
     {
       need: quotas.review,
-      filter: (q) =>
-        ctx.recentWrongIds.includes(q.id) || ctx.dueReviewQuestionIds.includes(q.id),
+      filter: (q) => ctx.dueReviewQuestionIds.includes(q.id),
     },
     {
       need: quotas.today,
@@ -86,7 +140,6 @@ export function selectDailyQuestions(ctx: SelectionContext): Question[] {
     }
   }
 
-  // 부족분은 같은 시대의 풀 안에서만 가중 보충
   if (picked.length < ctx.count) {
     const rest = weightedShuffle(
       pool.filter((q) => !used.has(q.id)),
@@ -101,6 +154,61 @@ export function selectDailyQuestions(ctx: SelectionContext): Question[] {
   }
 
   return ensureUnique(picked).slice(0, ctx.count)
+}
+
+function pickReviewQuestions(input: {
+  pool: Question[]
+  count: number
+  used: Set<string>
+  recentWrongIds: string[]
+  dueReviewQuestionIds: string[]
+  masteryEras: Record<EraId, number>
+  masteryTypes: Record<QuestionType, number>
+  boostTypes: QuestionType[]
+  boostMultiplier: number
+}): Question[] {
+  const dueNeed = Math.round(input.count * 0.6)
+  const recentNeed = Math.max(0, input.count - dueNeed)
+  const picked: Question[] = []
+  const take = (filter: (q: Question) => boolean, need: number) => {
+    const candidates = weightedShuffle(
+      input.pool.filter((q) => !input.used.has(q.id) && filter(q)),
+      input.boostTypes,
+      input.boostMultiplier,
+    )
+    let remaining = need
+    for (const q of candidates) {
+      if (picked.length >= input.count || remaining <= 0) break
+      picked.push(q)
+      input.used.add(q.id)
+      remaining -= 1
+    }
+  }
+  take((q) => input.dueReviewQuestionIds.includes(q.id), dueNeed)
+  take((q) => input.recentWrongIds.includes(q.id) && !input.dueReviewQuestionIds.includes(q.id), recentNeed)
+  take(() => true, input.count - picked.length)
+  return picked
+}
+
+function takeWeighted(
+  pool: Question[],
+  count: number,
+  used: Set<string>,
+  boostTypes: QuestionType[],
+  boostMultiplier: number,
+): Question[] {
+  const picked: Question[] = []
+  const candidates = weightedShuffle(
+    pool.filter((q) => !used.has(q.id)),
+    boostTypes,
+    boostMultiplier,
+  )
+  for (const q of candidates) {
+    if (picked.length >= count) break
+    picked.push(q)
+    used.add(q.id)
+  }
+  return picked
 }
 
 /** 세션 내 중복 ID 제거 */

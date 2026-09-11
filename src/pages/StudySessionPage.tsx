@@ -56,9 +56,9 @@ export function StudySessionPage() {
   )
 
   const persist = async (next: ActiveSession) => {
-    setSession(next)
     try {
       await saveSession(next)
+      setSession(next)
       setSaveError(null)
     } catch (reason) {
       setSaveError('진행을 저장하지 못했습니다. 이 화면에 머무릅니다.')
@@ -80,7 +80,11 @@ export function StudySessionPage() {
   }
 
   const afterCards = async (next: ActiveSession) => {
-    if (next.entryMode === 'review') {
+    if (next.conceptDone && next.questionIndex < next.questionIds.length) {
+      await persist({ ...next, step: 'quiz' })
+      return
+    }
+    if (next.entryMode === 'review' || next.conceptDone) {
       const done = { ...next, step: 'result' as const }
       await finishSession(done)
       await persist(done)

@@ -4,6 +4,7 @@ import type {
   ActiveSession,
   AppMeta,
   AttemptRecord,
+  ConceptProgressRecord,
   FlashcardRecord,
   LessonCompletion,
   MasteryScores,
@@ -24,6 +25,7 @@ export class HanguksaDB extends Dexie {
   activeSession!: EntityTable<ActiveSession, 'id'>
   activeMock!: EntityTable<ActiveMock, 'id'>
   lessonCompletions!: EntityTable<LessonCompletion, 'lessonId'>
+  conceptProgress!: EntityTable<ConceptProgressRecord, 'conceptId'>
   meta!: EntityTable<AppMeta, 'id'>
 
   constructor() {
@@ -75,6 +77,20 @@ export class HanguksaDB extends Dexie {
           await tx.table('lessonCompletions').bulkPut([...completions.values()])
         }
       })
+    this.version(3).stores({
+      settings: 'id',
+      mastery: 'id',
+      cards: 'id, nextReviewAt, era, kind, fingerprint, fromWrongAnswer, sourceQuestionId',
+      wrongAnswers: 'id, questionId, createdAt, cause',
+      attempts: 'id, questionId, createdAt, source, resultId',
+      studyDays: 'date',
+      mockResults: 'id, createdAt, mode',
+      activeSession: 'id',
+      activeMock: 'id, status',
+      lessonCompletions: 'lessonId',
+      conceptProgress: 'conceptId, learnState, completedAt',
+      meta: 'id',
+    })
   }
 }
 

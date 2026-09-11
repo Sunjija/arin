@@ -1,6 +1,8 @@
 # 한사코치 개발 지시 — 2026-09-11 개정
 
 ## 기준과 현재 상태
+
+P0-01 코드 검토 후 부분 통합을 진행했다. [PR 검토](../pr-integration-review.md), [콘텐츠 공백](../content-coverage.md), [현재 API/남은 게이트](e-foundation-api.md), [검증 기록](../p0-validation.md)을 우선 확인한다. 새 작업 배정은 아직 하지 않았다. 아래 과거 감사 SHA는 이번 통합의 전체 동작 기준이 아니다.
 감사 기준: `codex/arin-design-v3`의 `34c0f104dfd41a2c422cc5c74d01df2e2b633819`.
 이 SHA는 현황 확인 지점이며 영구 분기점이 아니다. 새 작업은 총괄이 검증한 최신 통합 SHA에서 시작한다. 이전 `cursor/redesign-foundation-1da6` 고정 분기 지시는 폐기한다.
 

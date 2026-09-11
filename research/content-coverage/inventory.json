@@ -1,0 +1,6212 @@
+{
+  "method": "literal-source-inventory-v1",
+  "inputHashes": {
+    "src/data/lessons.ts": "36c6247817ed88ad11a84b5ee3c25a72f01eb169a7eb2994c4cefae90ad3746c",
+    "src/data/questions.ts": "45357f8cbce79888427bf7cda8bfcbf6004bb4b8f1b2a2ccf4db5cdeaf4af5a7",
+    "src/data/cards.ts": "734cf1df9cd8d9f9bdce7f0c6041255aefdc9ba3528fde30a481daa5a05f3cdb",
+    "src/data/timeline.ts": "692792c6de4c37297cfa40621b90df6278ec5b23440b2d81fa4c873826efdc32",
+    "src/data/topicCatalog.ts": "eedf578379555fc3362b37f3746fae59c4c7ac94be8ea026477c4224a5ba3bbe",
+    "src/data/lessonGuides.ts": "16355f9cc28d4b45b56f581e7e0254ba2a5645ae41c324574e6edc76d7d48a8b"
+  },
+  "caveat": "Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.",
+  "counts": {
+    "lessons": 18,
+    "questions": 100,
+    "cards": 95,
+    "timeline": 70,
+    "concepts": 88,
+    "guides": 1
+  },
+  "summary": {
+    "conceptsWithGuide": 7,
+    "conceptsWithoutGuide": 81,
+    "questionsExplicitlyMapped": 6,
+    "questionsWithSourceUrl": 6,
+    "questionsWithPassage": 44,
+    "actualImageQuestions": 0,
+    "calibratedQuestions": 0
+  },
+  "lessons": [
+    {
+      "id": "lesson-01",
+      "title": "선사 문화와 고조선",
+      "era": "prehistoric",
+      "oldCalendarOrder": [
+        1,
+        1
+      ],
+      "status": "source-checked-guide-expert-review-pending",
+      "conceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-03",
+        "t-pre-04",
+        "t-pre-05",
+        "t-pre-06",
+        "t-pre-07",
+        "t-pre-08"
+      ],
+      "questionIds": [
+        "q-01",
+        "q-02",
+        "q-03",
+        "q-51",
+        "q-79",
+        "q-84"
+      ]
+    },
+    {
+      "id": "lesson-02",
+      "title": "삼국의 성립과 발전",
+      "era": "three-kingdoms",
+      "oldCalendarOrder": [
+        1,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-tk-01",
+        "t-tk-03",
+        "t-tk-05",
+        "t-tk-06",
+        "t-tk-07",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "questionIds": [
+        "q-04",
+        "q-05",
+        "q-06",
+        "q-07",
+        "q-39",
+        "q-50",
+        "q-53",
+        "q-67"
+      ]
+    },
+    {
+      "id": "lesson-03",
+      "title": "남북국 시대의 변화",
+      "era": "north-south",
+      "oldCalendarOrder": [
+        2,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-ns-01",
+        "t-ns-03",
+        "t-ns-07",
+        "t-ns-08"
+      ],
+      "questionIds": [
+        "q-08",
+        "q-09",
+        "q-10",
+        "q-64",
+        "q-72",
+        "q-73",
+        "q-81"
+      ]
+    },
+    {
+      "id": "lesson-04",
+      "title": "고려 광종과 성종",
+      "era": "goryeo",
+      "oldCalendarOrder": [
+        2,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-go-02",
+        "t-go-03",
+        "t-go-04"
+      ],
+      "questionIds": [
+        "q-11",
+        "q-12",
+        "q-13",
+        "q-16",
+        "q-17",
+        "q-46"
+      ]
+    },
+    {
+      "id": "lesson-05",
+      "title": "고려 무신정권과 대몽항쟁",
+      "era": "goryeo",
+      "oldCalendarOrder": [
+        3,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-go-06",
+        "t-go-07",
+        "t-go-10",
+        "t-go-12"
+      ],
+      "questionIds": [
+        "q-14",
+        "q-15",
+        "q-41",
+        "q-42"
+      ]
+    },
+    {
+      "id": "lesson-06",
+      "title": "조선 전기 통치 체제",
+      "era": "joseon-early",
+      "oldCalendarOrder": [
+        3,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-je-01",
+        "t-je-02",
+        "t-je-03",
+        "t-je-04",
+        "t-je-05",
+        "t-je-06",
+        "t-je-07"
+      ],
+      "questionIds": [
+        "q-18",
+        "q-19",
+        "q-20",
+        "q-43",
+        "q-44",
+        "q-60"
+      ]
+    },
+    {
+      "id": "lesson-07",
+      "title": "조선 후기 사회 변동",
+      "era": "joseon-late",
+      "oldCalendarOrder": [
+        4,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-jl-01",
+        "t-jl-05",
+        "t-jl-06",
+        "t-jl-08"
+      ],
+      "questionIds": [
+        "q-21",
+        "q-22",
+        "q-23",
+        "q-38",
+        "q-45",
+        "q-54",
+        "q-61",
+        "q-66",
+        "q-68",
+        "q-71",
+        "q-75"
+      ]
+    },
+    {
+      "id": "lesson-08",
+      "title": "개항과 개혁 운동",
+      "era": "opening",
+      "oldCalendarOrder": [
+        5,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-op-01",
+        "t-op-02",
+        "t-op-03",
+        "t-op-05",
+        "t-op-07",
+        "t-op-08"
+      ],
+      "questionIds": [
+        "q-24",
+        "q-25",
+        "q-26",
+        "q-47",
+        "q-62",
+        "q-63",
+        "q-80",
+        "q-86",
+        "q-87",
+        "q-88"
+      ]
+    },
+    {
+      "id": "lesson-09",
+      "title": "일제강점과 독립운동",
+      "era": "colonial",
+      "oldCalendarOrder": [
+        6,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-col-01",
+        "t-col-03",
+        "t-col-04",
+        "t-col-05",
+        "t-col-09",
+        "t-col-10"
+      ],
+      "questionIds": [
+        "q-27",
+        "q-28",
+        "q-29",
+        "q-30",
+        "q-55",
+        "q-57",
+        "q-74",
+        "q-82"
+      ]
+    },
+    {
+      "id": "lesson-10",
+      "title": "광복 이후 현대사",
+      "era": "modern",
+      "oldCalendarOrder": [
+        7,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-mo-01",
+        "t-mo-06",
+        "t-mo-08"
+      ],
+      "questionIds": [
+        "q-31",
+        "q-32",
+        "q-33",
+        "q-56",
+        "q-59",
+        "q-69",
+        "q-76",
+        "q-83",
+        "q-92",
+        "q-93",
+        "q-94",
+        "q-95",
+        "q-100"
+      ]
+    },
+    {
+      "id": "lesson-11",
+      "title": "문화유산으로 읽는 한국사",
+      "era": "culture",
+      "oldCalendarOrder": [
+        8,
+        1
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-tk-08",
+        "t-ns-06",
+        "t-go-11",
+        "t-je-08",
+        "t-cu-01",
+        "t-cu-02",
+        "t-cu-03",
+        "t-cu-04",
+        "t-cu-05",
+        "t-cu-06",
+        "t-cu-07",
+        "t-cu-08"
+      ],
+      "questionIds": [
+        "q-34",
+        "q-35",
+        "q-36",
+        "q-37",
+        "q-49",
+        "q-70",
+        "q-77"
+      ]
+    },
+    {
+      "id": "lesson-12",
+      "title": "고려 태조·전시과·공민왕",
+      "era": "goryeo",
+      "oldCalendarOrder": [
+        2,
+        3
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-go-01",
+        "t-go-05",
+        "t-go-08",
+        "t-go-09"
+      ],
+      "questionIds": [
+        "q-40",
+        "q-48",
+        "q-52",
+        "q-78",
+        "q-85"
+      ]
+    },
+    {
+      "id": "lesson-13",
+      "title": "삼국의 공간·천도",
+      "era": "three-kingdoms",
+      "oldCalendarOrder": [
+        1,
+        3
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-tk-02",
+        "t-tk-04"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "lesson-14",
+      "title": "조선 후기 수취·탕평",
+      "era": "joseon-late",
+      "oldCalendarOrder": [
+        4,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-jl-02",
+        "t-jl-03",
+        "t-jl-04",
+        "t-jl-07"
+      ],
+      "questionIds": [
+        "q-65"
+      ]
+    },
+    {
+      "id": "lesson-15",
+      "title": "통일신라 제도·발해",
+      "era": "north-south",
+      "oldCalendarOrder": [
+        2,
+        4
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-ns-02",
+        "t-ns-04",
+        "t-ns-05"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "lesson-16",
+      "title": "동학·대한제국",
+      "era": "opening",
+      "oldCalendarOrder": [
+        5,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-op-04",
+        "t-op-06"
+      ],
+      "questionIds": [
+        "q-97"
+      ]
+    },
+    {
+      "id": "lesson-17",
+      "title": "식민 통치와 실력 양성",
+      "era": "colonial",
+      "oldCalendarOrder": [
+        6,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-col-02",
+        "t-col-06",
+        "t-col-07",
+        "t-col-08"
+      ],
+      "questionIds": [
+        "q-58",
+        "q-89",
+        "q-90",
+        "q-91",
+        "q-96",
+        "q-99"
+      ]
+    },
+    {
+      "id": "lesson-18",
+      "title": "현대 민주화와 체제 변화",
+      "era": "modern",
+      "oldCalendarOrder": [
+        7,
+        2
+      ],
+      "status": "needs-guide",
+      "conceptIds": [
+        "t-mo-02",
+        "t-mo-03",
+        "t-mo-04",
+        "t-mo-05",
+        "t-mo-07"
+      ],
+      "questionIds": [
+        "q-98"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "t-pre-01",
+      "title": "신석기 표지와 사회",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010",
+      "descriptionBlocks": 2,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-01",
+        "q-03"
+      ],
+      "candidateQuestionIds": [
+        "q-01",
+        "q-03",
+        "q-84"
+      ],
+      "candidateCardIds": [
+        "c-14"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-02",
+      "title": "청동기·군장 사회",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0030",
+      "descriptionBlocks": 2,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-03",
+        "q-84"
+      ],
+      "candidateQuestionIds": [
+        "q-01",
+        "q-03",
+        "q-84"
+      ],
+      "candidateCardIds": [
+        "c-15",
+        "c-45"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-03",
+      "title": "고조선 성립과 전승",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0010",
+      "descriptionBlocks": 1,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-51"
+      ],
+      "candidateQuestionIds": [
+        "q-51",
+        "q-79"
+      ],
+      "candidateCardIds": [
+        "c-45"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-04",
+      "title": "위만 집권과 후기 고조선",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020",
+      "descriptionBlocks": 1,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-02",
+        "q-51",
+        "q-79"
+      ],
+      "candidateQuestionIds": [
+        "q-02",
+        "q-51",
+        "q-79"
+      ],
+      "candidateCardIds": [
+        "c-16",
+        "c-44"
+      ],
+      "candidateTimelineIds": [
+        "tl-02"
+      ],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-05",
+      "title": "8조법 전승과 사회규범",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0030",
+      "descriptionBlocks": 1,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-02",
+        "q-51"
+      ],
+      "candidateQuestionIds": [
+        "q-02",
+        "q-51"
+      ],
+      "candidateCardIds": [
+        "c-43"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-06",
+      "title": "부여·옥저·동예·삼한",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [
+        "c-46"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-07",
+      "title": "철기 보급과 농업 생산",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0020_0010",
+      "descriptionBlocks": 1,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-pre-08",
+      "title": "선사~고조선 연표",
+      "era": "prehistoric",
+      "lessonId": "lesson-01",
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020",
+      "descriptionBlocks": 1,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-01",
+        "q-02",
+        "q-03",
+        "q-51",
+        "q-79",
+        "q-84"
+      ],
+      "candidateCardIds": [
+        "c-14",
+        "c-15",
+        "c-16",
+        "c-43",
+        "c-45"
+      ],
+      "candidateTimelineIds": [
+        "tl-01",
+        "tl-03"
+      ],
+      "requiredNext": [
+        "independent-confirmation-question",
+        "comparison-or-source-application",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-01",
+      "title": "고구려 전성기 왕",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-04",
+        "q-05",
+        "q-53",
+        "q-67"
+      ],
+      "candidateCardIds": [
+        "c-12",
+        "c-47",
+        "c-48",
+        "c-49",
+        "c-50"
+      ],
+      "candidateTimelineIds": [
+        "tl-09",
+        "tl-10"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-02",
+      "title": "백제 전성·천도",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-13",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-06",
+        "q-50"
+      ],
+      "candidateCardIds": [
+        "c-13",
+        "c-51",
+        "c-52",
+        "c-53"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-03",
+      "title": "신라 불교 공인",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-04",
+        "q-05",
+        "q-07"
+      ],
+      "candidateCardIds": [
+        "c-08",
+        "c-09",
+        "c-54"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-04",
+      "title": "진흥왕 한강·순수",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-13",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-04",
+        "q-07",
+        "q-53"
+      ],
+      "candidateCardIds": [
+        "c-10",
+        "c-11",
+        "c-47"
+      ],
+      "candidateTimelineIds": [
+        "tl-12"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-05",
+      "title": "골품제",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-06",
+      "title": "화랑·중앙집권",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-07",
+      "title": "삼국 전쟁과 나당",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-08",
+      "title": "삼국 불교·문화",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-09",
+      "title": "삼국 왕 비교",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-04",
+        "q-05",
+        "q-06",
+        "q-07",
+        "q-39",
+        "q-67"
+      ],
+      "candidateCardIds": [
+        "c-08",
+        "c-09",
+        "c-10",
+        "c-11",
+        "c-12",
+        "c-13",
+        "c-47",
+        "c-48",
+        "c-51",
+        "c-54"
+      ],
+      "candidateTimelineIds": [
+        "tl-09",
+        "tl-12"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-tk-10",
+      "title": "삼국 왕대 연표",
+      "era": "three-kingdoms",
+      "lessonId": "lesson-02",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-04",
+        "q-05",
+        "q-07",
+        "q-39",
+        "q-53",
+        "q-67"
+      ],
+      "candidateCardIds": [
+        "c-08",
+        "c-09",
+        "c-10",
+        "c-11",
+        "c-12",
+        "c-47",
+        "c-48",
+        "c-49",
+        "c-50",
+        "c-54"
+      ],
+      "candidateTimelineIds": [
+        "tl-09",
+        "tl-10",
+        "tl-12"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-01",
+      "title": "신라 삼국 통일",
+      "era": "north-south",
+      "lessonId": "lesson-03",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [
+        "c-55",
+        "c-56"
+      ],
+      "candidateTimelineIds": [
+        "tl-15"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-02",
+      "title": "녹읍·관료전·정전",
+      "era": "north-south",
+      "lessonId": "lesson-15",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-08",
+        "q-81"
+      ],
+      "candidateCardIds": [
+        "c-20",
+        "c-57",
+        "c-58"
+      ],
+      "candidateTimelineIds": [
+        "tl-16"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-03",
+      "title": "골품 모순과 사회 동요",
+      "era": "north-south",
+      "lessonId": "lesson-03",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-64",
+        "q-73"
+      ],
+      "candidateCardIds": [
+        "c-20"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-04",
+      "title": "발해 건국",
+      "era": "north-south",
+      "lessonId": "lesson-15",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-09"
+      ],
+      "candidateCardIds": [
+        "c-18",
+        "c-19"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-05",
+      "title": "발해 통치·5경",
+      "era": "north-south",
+      "lessonId": "lesson-15",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-09",
+        "q-81"
+      ],
+      "candidateCardIds": [
+        "c-57",
+        "c-58"
+      ],
+      "candidateTimelineIds": [
+        "tl-16"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-06",
+      "title": "남북국 문화",
+      "era": "north-south",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-07",
+      "title": "후삼국 성립",
+      "era": "north-south",
+      "lessonId": "lesson-03",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-73"
+      ],
+      "candidateCardIds": [
+        "c-59",
+        "c-60",
+        "c-61"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-ns-08",
+      "title": "남북국 큰 흐름",
+      "era": "north-south",
+      "lessonId": "lesson-03",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-08",
+        "q-09",
+        "q-10",
+        "q-64",
+        "q-72",
+        "q-73"
+      ],
+      "candidateCardIds": [
+        "c-17",
+        "c-18",
+        "c-19",
+        "c-20",
+        "c-55",
+        "c-56",
+        "c-59",
+        "c-60",
+        "c-61"
+      ],
+      "candidateTimelineIds": [
+        "tl-17",
+        "tl-18"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-01",
+      "title": "태조 통합 정책",
+      "era": "goryeo",
+      "lessonId": "lesson-12",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-52"
+      ],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-02",
+      "title": "광종 왕권 강화",
+      "era": "goryeo",
+      "lessonId": "lesson-04",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-11",
+        "q-16",
+        "q-17"
+      ],
+      "candidateCardIds": [
+        "c-01",
+        "c-02"
+      ],
+      "candidateTimelineIds": [
+        "tl-21"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-03",
+      "title": "성종·최승로",
+      "era": "goryeo",
+      "lessonId": "lesson-04",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-12",
+        "q-16",
+        "q-17",
+        "q-46"
+      ],
+      "candidateCardIds": [
+        "c-03",
+        "c-04",
+        "c-41",
+        "c-42"
+      ],
+      "candidateTimelineIds": [
+        "tl-22"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-04",
+      "title": "광종 vs 성종",
+      "era": "goryeo",
+      "lessonId": "lesson-04",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-11",
+        "q-12",
+        "q-13",
+        "q-16"
+      ],
+      "candidateCardIds": [
+        "c-01",
+        "c-03",
+        "c-05",
+        "c-41"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-05",
+      "title": "전시과·토지제도",
+      "era": "goryeo",
+      "lessonId": "lesson-12",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-48"
+      ],
+      "candidateCardIds": [
+        "c-64"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-06",
+      "title": "무신 정변·최씨",
+      "era": "goryeo",
+      "lessonId": "lesson-05",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-42"
+      ],
+      "candidateCardIds": [
+        "c-65"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-07",
+      "title": "대몽항쟁·강화 천도",
+      "era": "goryeo",
+      "lessonId": "lesson-05",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-14",
+        "q-15",
+        "q-41"
+      ],
+      "candidateCardIds": [
+        "c-06",
+        "c-07",
+        "c-65"
+      ],
+      "candidateTimelineIds": [
+        "tl-27",
+        "tl-29"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-08",
+      "title": "원 간섭기",
+      "era": "goryeo",
+      "lessonId": "lesson-12",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-85"
+      ],
+      "candidateCardIds": [
+        "c-66"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-09",
+      "title": "공민왕 개혁",
+      "era": "goryeo",
+      "lessonId": "lesson-12",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-40",
+        "q-85"
+      ],
+      "candidateCardIds": [
+        "c-62",
+        "c-63"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-10",
+      "title": "묘청·서경 / 이자겸",
+      "era": "goryeo",
+      "lessonId": "lesson-05",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-78"
+      ],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [
+        "tl-25"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-11",
+      "title": "고려 문화·불교",
+      "era": "goryeo",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-go-12",
+      "title": "고려 중·후기 연표",
+      "era": "goryeo",
+      "lessonId": "lesson-05",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-11",
+        "q-14",
+        "q-15",
+        "q-40",
+        "q-41",
+        "q-42",
+        "q-85"
+      ],
+      "candidateCardIds": [
+        "c-01",
+        "c-03",
+        "c-05",
+        "c-06",
+        "c-07",
+        "c-62",
+        "c-63",
+        "c-65"
+      ],
+      "candidateTimelineIds": [
+        "tl-26",
+        "tl-27",
+        "tl-29"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-01",
+      "title": "태종 왕권",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-18",
+        "q-43"
+      ],
+      "candidateCardIds": [
+        "c-21",
+        "c-22",
+        "c-71"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-02",
+      "title": "세종 문물",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-19"
+      ],
+      "candidateCardIds": [
+        "c-23",
+        "c-24"
+      ],
+      "candidateTimelineIds": [
+        "tl-33"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-03",
+      "title": "태종 vs 세종",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-44"
+      ],
+      "candidateCardIds": [
+        "c-21",
+        "c-71"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-04",
+      "title": "경국대전",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-20"
+      ],
+      "candidateCardIds": [
+        "c-25"
+      ],
+      "candidateTimelineIds": [
+        "tl-34"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-05",
+      "title": "과전법·수취",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-06",
+      "title": "의정부·6조",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-44"
+      ],
+      "candidateCardIds": [
+        "c-21",
+        "c-71"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-07",
+      "title": "사화·훈구 vs 사림",
+      "era": "joseon-early",
+      "lessonId": "lesson-06",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-60"
+      ],
+      "candidateCardIds": [
+        "c-68",
+        "c-69"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-je-08",
+      "title": "전기 문화·과학",
+      "era": "joseon-early",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-01",
+      "title": "대동법",
+      "era": "joseon-late",
+      "lessonId": "lesson-07",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-21",
+        "q-22",
+        "q-38",
+        "q-54"
+      ],
+      "candidateCardIds": [
+        "c-26",
+        "c-27",
+        "c-28",
+        "c-78"
+      ],
+      "candidateTimelineIds": [
+        "tl-38"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-02",
+      "title": "균역법",
+      "era": "joseon-late",
+      "lessonId": "lesson-14",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-21",
+        "q-22",
+        "q-23",
+        "q-45",
+        "q-54"
+      ],
+      "candidateCardIds": [
+        "c-27",
+        "c-78"
+      ],
+      "candidateTimelineIds": [
+        "tl-39"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-03",
+      "title": "실학",
+      "era": "joseon-late",
+      "lessonId": "lesson-14",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-68"
+      ],
+      "candidateCardIds": [
+        "c-28",
+        "c-76"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-04",
+      "title": "붕당·탕평",
+      "era": "joseon-late",
+      "lessonId": "lesson-14",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-65",
+        "q-66"
+      ],
+      "candidateCardIds": [
+        "c-72",
+        "c-73",
+        "c-74",
+        "c-75"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-05",
+      "title": "세도정치·농민봉기",
+      "era": "joseon-late",
+      "lessonId": "lesson-07",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-22",
+        "q-61",
+        "q-71"
+      ],
+      "candidateCardIds": [
+        "c-28",
+        "c-77"
+      ],
+      "candidateTimelineIds": [
+        "tl-41",
+        "tl-42"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-06",
+      "title": "양란 전후",
+      "era": "joseon-late",
+      "lessonId": "lesson-07",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-07",
+      "title": "정조·화성",
+      "era": "joseon-late",
+      "lessonId": "lesson-14",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-65",
+        "q-66"
+      ],
+      "candidateCardIds": [
+        "c-74",
+        "c-75"
+      ],
+      "candidateTimelineIds": [
+        "tl-40"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-jl-08",
+      "title": "후기 사회변동 연표",
+      "era": "joseon-late",
+      "lessonId": "lesson-07",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-21",
+        "q-22",
+        "q-38",
+        "q-54",
+        "q-61",
+        "q-68",
+        "q-71"
+      ],
+      "candidateCardIds": [
+        "c-26",
+        "c-27",
+        "c-28",
+        "c-76",
+        "c-77",
+        "c-78"
+      ],
+      "candidateTimelineIds": [
+        "tl-38",
+        "tl-42"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-01",
+      "title": "강화도조약·개항",
+      "era": "opening",
+      "lessonId": "lesson-08",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-47",
+        "q-62",
+        "q-86"
+      ],
+      "candidateCardIds": [
+        "c-29"
+      ],
+      "candidateTimelineIds": [
+        "tl-43"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-02",
+      "title": "임오·갑신",
+      "era": "opening",
+      "lessonId": "lesson-08",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-24",
+        "q-47"
+      ],
+      "candidateCardIds": [
+        "c-30",
+        "c-81"
+      ],
+      "candidateTimelineIds": [
+        "tl-44",
+        "tl-45"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-03",
+      "title": "갑오·을미 개혁",
+      "era": "opening",
+      "lessonId": "lesson-08",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-47",
+        "q-86",
+        "q-87",
+        "q-97"
+      ],
+      "candidateCardIds": [
+        "c-29",
+        "c-81"
+      ],
+      "candidateTimelineIds": [
+        "tl-47"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-04",
+      "title": "동학농민운동",
+      "era": "opening",
+      "lessonId": "lesson-16",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-63",
+        "q-80",
+        "q-97"
+      ],
+      "candidateCardIds": [
+        "c-81"
+      ],
+      "candidateTimelineIds": [
+        "tl-46"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-05",
+      "title": "독립협회·만민공동회",
+      "era": "opening",
+      "lessonId": "lesson-08",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-26",
+        "q-80"
+      ],
+      "candidateCardIds": [
+        "c-31"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-06",
+      "title": "대한제국",
+      "era": "opening",
+      "lessonId": "lesson-16",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-80",
+        "q-86"
+      ],
+      "candidateCardIds": [
+        "c-29",
+        "c-79",
+        "c-80",
+        "c-82"
+      ],
+      "candidateTimelineIds": [
+        "tl-48"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-07",
+      "title": "을사 전후 국권 침탈",
+      "era": "opening",
+      "lessonId": "lesson-08",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-87"
+      ],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [
+        "tl-49"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-op-08",
+      "title": "개항기 필수 연표",
+      "era": "opening",
+      "lessonId": "lesson-08",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-24",
+        "q-47",
+        "q-62",
+        "q-80",
+        "q-86",
+        "q-87",
+        "q-97"
+      ],
+      "candidateCardIds": [
+        "c-29",
+        "c-30",
+        "c-79",
+        "c-80",
+        "c-81",
+        "c-82"
+      ],
+      "candidateTimelineIds": [
+        "tl-43",
+        "tl-45",
+        "tl-47",
+        "tl-48"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-01",
+      "title": "국권 피탈 과정",
+      "era": "colonial",
+      "lessonId": "lesson-09",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-27"
+      ],
+      "candidateCardIds": [
+        "c-32",
+        "c-83"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-02",
+      "title": "무단·문화 통치",
+      "era": "colonial",
+      "lessonId": "lesson-17",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-58",
+        "q-89",
+        "q-90",
+        "q-99"
+      ],
+      "candidateCardIds": [
+        "c-84"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-03",
+      "title": "3·1운동",
+      "era": "colonial",
+      "lessonId": "lesson-09",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-28",
+        "q-58",
+        "q-90",
+        "q-99"
+      ],
+      "candidateCardIds": [
+        "c-33"
+      ],
+      "candidateTimelineIds": [
+        "tl-51"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-04",
+      "title": "임시정부",
+      "era": "colonial",
+      "lessonId": "lesson-09",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-28",
+        "q-30",
+        "q-82"
+      ],
+      "candidateCardIds": [
+        "c-33",
+        "c-35",
+        "c-86"
+      ],
+      "candidateTimelineIds": [
+        "tl-52",
+        "tl-56"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-05",
+      "title": "의열·무장 노선",
+      "era": "colonial",
+      "lessonId": "lesson-09",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-29",
+        "q-57",
+        "q-74"
+      ],
+      "candidateCardIds": [
+        "c-34",
+        "c-85"
+      ],
+      "candidateTimelineIds": [
+        "tl-53"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-06",
+      "title": "실력 양성·문화운동",
+      "era": "colonial",
+      "lessonId": "lesson-17",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-74",
+        "q-96"
+      ],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [
+        "tl-57"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-07",
+      "title": "식민 경제·수탈",
+      "era": "colonial",
+      "lessonId": "lesson-17",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-91"
+      ],
+      "candidateCardIds": [
+        "c-87"
+      ],
+      "candidateTimelineIds": [
+        "tl-55"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-08",
+      "title": "전시 동원",
+      "era": "colonial",
+      "lessonId": "lesson-17",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-09",
+      "title": "외교 독립 운동",
+      "era": "colonial",
+      "lessonId": "lesson-09",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-col-10",
+      "title": "일제강점 연표",
+      "era": "colonial",
+      "lessonId": "lesson-09",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-28",
+        "q-30",
+        "q-55",
+        "q-58",
+        "q-82",
+        "q-90",
+        "q-99"
+      ],
+      "candidateCardIds": [
+        "c-33",
+        "c-35",
+        "c-83",
+        "c-86"
+      ],
+      "candidateTimelineIds": [
+        "tl-51",
+        "tl-52",
+        "tl-56"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-01",
+      "title": "정부 수립",
+      "era": "modern",
+      "lessonId": "lesson-10",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-31",
+        "q-93",
+        "q-95",
+        "q-100"
+      ],
+      "candidateCardIds": [
+        "c-36",
+        "c-88"
+      ],
+      "candidateTimelineIds": [
+        "tl-60"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-02",
+      "title": "6·25전쟁",
+      "era": "modern",
+      "lessonId": "lesson-18",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-76"
+      ],
+      "candidateCardIds": [
+        "c-36",
+        "c-91"
+      ],
+      "candidateTimelineIds": [
+        "tl-62",
+        "tl-63"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-03",
+      "title": "4·19혁명",
+      "era": "modern",
+      "lessonId": "lesson-18",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-33",
+        "q-56",
+        "q-83",
+        "q-95"
+      ],
+      "candidateCardIds": [
+        "c-36",
+        "c-89"
+      ],
+      "candidateTimelineIds": [
+        "tl-64"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-04",
+      "title": "5·18 민주화 운동",
+      "era": "modern",
+      "lessonId": "lesson-18",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-33",
+        "q-56",
+        "q-98"
+      ],
+      "candidateCardIds": [
+        "c-37",
+        "c-89"
+      ],
+      "candidateTimelineIds": [
+        "tl-67"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-05",
+      "title": "6월 민주 항쟁",
+      "era": "modern",
+      "lessonId": "lesson-18",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-32",
+        "q-95",
+        "q-98"
+      ],
+      "candidateCardIds": [
+        "c-37",
+        "c-89"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-06",
+      "title": "경제 개발·산업화",
+      "era": "modern",
+      "lessonId": "lesson-10",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-94"
+      ],
+      "candidateCardIds": [
+        "c-90"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-07",
+      "title": "헌법·체제 변화",
+      "era": "modern",
+      "lessonId": "lesson-18",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-32",
+        "q-95"
+      ],
+      "candidateCardIds": [
+        "c-37",
+        "c-89"
+      ],
+      "candidateTimelineIds": [
+        "tl-66"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-mo-08",
+      "title": "현대사 필수 연표",
+      "era": "modern",
+      "lessonId": "lesson-10",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-32",
+        "q-33",
+        "q-56",
+        "q-59",
+        "q-76",
+        "q-83",
+        "q-95",
+        "q-98",
+        "q-100"
+      ],
+      "candidateCardIds": [
+        "c-36",
+        "c-37",
+        "c-88",
+        "c-89",
+        "c-91"
+      ],
+      "candidateTimelineIds": [
+        "tl-61",
+        "tl-62",
+        "tl-64",
+        "tl-67",
+        "tl-68"
+      ],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-01",
+      "title": "통일신라 불교 미술",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-34"
+      ],
+      "candidateCardIds": [
+        "c-38",
+        "c-95"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-02",
+      "title": "고려 대장경·청자",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-35",
+        "q-49",
+        "q-70",
+        "q-77"
+      ],
+      "candidateCardIds": [
+        "c-39",
+        "c-92",
+        "c-93",
+        "c-95"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-03",
+      "title": "훈민정음·문자",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-36"
+      ],
+      "candidateCardIds": [
+        "c-95"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-04",
+      "title": "수원 화성",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-37"
+      ],
+      "candidateCardIds": [
+        "c-40",
+        "c-94",
+        "c-95"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-05",
+      "title": "인쇄·기록 문화",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-49"
+      ],
+      "candidateCardIds": [
+        "c-92"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-06",
+      "title": "과학·기술 문화",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-07",
+      "title": "사상사 횡단",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [
+        "q-34",
+        "q-37",
+        "q-70"
+      ],
+      "candidateCardIds": [
+        "c-38",
+        "c-40"
+      ],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    },
+    {
+      "id": "t-cu-08",
+      "title": "유산→시기 추론",
+      "era": "culture",
+      "lessonId": "lesson-11",
+      "status": "needs-guide",
+      "sourceUrl": null,
+      "descriptionBlocks": 0,
+      "recallPrompts": 0,
+      "explicitQuestionIds": [],
+      "candidateQuestionIds": [],
+      "candidateCardIds": [],
+      "candidateTimelineIds": [],
+      "requiredNext": [
+        "learner-explanation",
+        "comparison",
+        "recall",
+        "explicit-question-mapping",
+        "fact-source",
+        "expert-review"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-01",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-01"
+      ],
+      "candidateConceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-08"
+      ],
+      "familyId": "pre-neolithic-evidence",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010",
+      "formatId": "source-underline",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-02",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-04",
+        "t-pre-05"
+      ],
+      "candidateConceptIds": [
+        "t-pre-04",
+        "t-pre-05",
+        "t-pre-08"
+      ],
+      "familyId": "pre-gojoseon-state",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020",
+      "formatId": "source-what",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-03",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-01",
+        "t-pre-02"
+      ],
+      "candidateConceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-08"
+      ],
+      "familyId": "pre-bronze-evidence",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0010",
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-04",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-03",
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "map-region",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-05",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-03",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-06",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-02",
+        "t-tk-09"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-policy-match",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-07",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-policy-match",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-08",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-02",
+        "t-ns-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-09",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-04",
+        "t-ns-05",
+        "t-ns-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-10",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-11",
+      "lessonId": "lesson-04",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-02",
+        "t-go-04",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-12",
+      "lessonId": "lesson-04",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-03",
+        "t-go-04"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-policy-match",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-13",
+      "lessonId": "lesson-04",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-04"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-compare",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-14",
+      "lessonId": "lesson-05",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-15",
+      "lessonId": "lesson-05",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-16",
+      "lessonId": "lesson-04",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-02",
+        "t-go-03",
+        "t-go-04"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-17",
+      "lessonId": "lesson-04",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-02",
+        "t-go-03"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-policy-match",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-18",
+      "lessonId": "lesson-06",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-je-01"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-policy-match",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-19",
+      "lessonId": "lesson-06",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-je-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-20",
+      "lessonId": "lesson-06",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-je-04"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-21",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-02",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-22",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-02",
+        "t-jl-05",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-23",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-24",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-02",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-what",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-25",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-26",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-05"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-27",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-01"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-28",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-03",
+        "t-col-04",
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-29",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-05"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-30",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-04",
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-31",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-01"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-32",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-05",
+        "t-mo-07",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-33",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-03",
+        "t-mo-04",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-what",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-34",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-01",
+        "t-cu-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "heritage-period",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-35",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "heritage-period",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-36",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-03"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-name",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-37",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-04",
+        "t-cu-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "heritage-period",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-38",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-name",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-39",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-40",
+      "lessonId": "lesson-12",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-09",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-41",
+      "lessonId": "lesson-05",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "map-region",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-42",
+      "lessonId": "lesson-05",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-06",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-underline",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-43",
+      "lessonId": "lesson-06",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-je-01"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-underline",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-44",
+      "lessonId": "lesson-06",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-je-03",
+        "t-je-06"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-compare",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-45",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-name",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-46",
+      "lessonId": "lesson-04",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-03"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-47",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-01",
+        "t-op-02",
+        "t-op-03",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-48",
+      "lessonId": "lesson-12",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-05"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-49",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-02",
+        "t-cu-05"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "heritage-period",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-50",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "map-region",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-51",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-03",
+        "t-pre-04",
+        "t-pre-05"
+      ],
+      "candidateConceptIds": [
+        "t-pre-03",
+        "t-pre-04",
+        "t-pre-05",
+        "t-pre-08"
+      ],
+      "familyId": "pre-gojoseon-state",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0030",
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-52",
+      "lessonId": "lesson-12",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-01"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-name",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-53",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-04",
+        "t-tk-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "map-region",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-54",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-02",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-compare",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-55",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-56",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-03",
+        "t-mo-04",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-57",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-05"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-58",
+      "lessonId": "lesson-17",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-02",
+        "t-col-03",
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-59",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-60",
+      "lessonId": "lesson-06",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-je-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-61",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-05",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-62",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-01",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-underline",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-63",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-04"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-64",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-03",
+        "t-ns-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-65",
+      "lessonId": "lesson-14",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-04",
+        "t-jl-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-66",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-04",
+        "t-jl-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-67",
+      "lessonId": "lesson-02",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-68",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-03",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-what",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-69",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-70",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-02",
+        "t-cu-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "heritage-period",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-71",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-jl-05",
+        "t-jl-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-72",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-73",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-03",
+        "t-ns-07",
+        "t-ns-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-74",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-05",
+        "t-col-06"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-compare",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-75",
+      "lessonId": "lesson-07",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-name",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-76",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-02",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-77",
+      "lessonId": "lesson-11",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-cu-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-underline",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-78",
+      "lessonId": "lesson-12",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-what",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-79",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-04"
+      ],
+      "candidateConceptIds": [
+        "t-pre-03",
+        "t-pre-04",
+        "t-pre-08"
+      ],
+      "familyId": "pre-wiman",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020",
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-80",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-04",
+        "t-op-05",
+        "t-op-06",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-81",
+      "lessonId": "lesson-03",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-ns-02",
+        "t-ns-05"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-82",
+      "lessonId": "lesson-09",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-04",
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "org-activity",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-83",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-03",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-84",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-02"
+      ],
+      "candidateConceptIds": [
+        "t-pre-01",
+        "t-pre-02",
+        "t-pre-08"
+      ],
+      "familyId": "pre-bronze-evidence",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0030",
+      "formatId": "heritage-period",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-85",
+      "lessonId": "lesson-12",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-go-08",
+        "t-go-09",
+        "t-go-12"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-86",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-01",
+        "t-op-03",
+        "t-op-06",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-87",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-03",
+        "t-op-07",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-underline",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-88",
+      "lessonId": "lesson-08",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-89",
+      "lessonId": "lesson-17",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-02"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-90",
+      "lessonId": "lesson-17",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-02",
+        "t-col-03",
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-91",
+      "lessonId": "lesson-17",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-07"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-92",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-93",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-01"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-94",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-06"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-95",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-01",
+        "t-mo-03",
+        "t-mo-05",
+        "t-mo-07",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "chronology-events",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-96",
+      "lessonId": "lesson-17",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-06"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "source-who",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-97",
+      "lessonId": "lesson-16",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-op-03",
+        "t-op-04",
+        "t-op-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "cause-effect",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-98",
+      "lessonId": "lesson-18",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-04",
+        "t-mo-05",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-compare",
+      "actualStimulus": "none",
+      "points": 3,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-99",
+      "lessonId": "lesson-17",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-col-02",
+        "t-col-03",
+        "t-col-10"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "king-compare",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-100",
+      "lessonId": "lesson-10",
+      "status": "needs-source-and-review",
+      "conceptIds": [],
+      "candidateConceptIds": [
+        "t-mo-01",
+        "t-mo-08"
+      ],
+      "familyId": null,
+      "sourceUrl": null,
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    }
+  ],
+  "cards": [
+    {
+      "id": "c-01",
+      "front": "고려 광종",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-02",
+        "t-go-04",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-02",
+      "front": "노비안검법 · 과거제 · 공복 제정",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-02"
+      ]
+    },
+    {
+      "id": "c-03",
+      "front": "고려 성종",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-03",
+        "t-go-04",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-04",
+      "front": "시무 28조 · 12목",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-03"
+      ]
+    },
+    {
+      "id": "c-05",
+      "front": "광종 vs 성종, 정책 목적 차이",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-04",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-06",
+      "front": "무신정변 → ? → 삼별초",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-07",
+      "front": "삼별초",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-08",
+      "front": "신라 법흥왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-09",
+      "front": "불교 공인 (신라)",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-10",
+      "front": "신라 진흥왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-11",
+      "front": "진흥왕순수비 · 한강 유역 확보",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-12",
+      "front": "광개토대왕 → 장수왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-13",
+      "front": "백제 근초고왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-02",
+        "t-tk-09"
+      ]
+    },
+    {
+      "id": "c-14",
+      "front": "빗살무늬토기",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-01",
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "c-15",
+      "front": "비파형동검 · 고인돌",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-02",
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "c-16",
+      "front": "위만",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-04",
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "c-17",
+      "front": "삼국 통일 → 발해 건국 → 후삼국",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-18",
+      "front": "대조영",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-04",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-19",
+      "front": "발해 건국",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-04",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-20",
+      "front": "통일신라 녹읍",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-02",
+        "t-ns-03",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-21",
+      "front": "조선 태종",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-01",
+        "t-je-03",
+        "t-je-06"
+      ]
+    },
+    {
+      "id": "c-22",
+      "front": "사병 혁파 · 호패법",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-01"
+      ]
+    },
+    {
+      "id": "c-23",
+      "front": "조선 세종",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-02"
+      ]
+    },
+    {
+      "id": "c-24",
+      "front": "훈민정음 · 집현전",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-02"
+      ]
+    },
+    {
+      "id": "c-25",
+      "front": "경국대전",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-04"
+      ]
+    },
+    {
+      "id": "c-26",
+      "front": "대동법",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "c-27",
+      "front": "균역법",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-02",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "c-28",
+      "front": "대동법 확대 → 실학 → 세도정치·농민봉기",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-03",
+        "t-jl-05",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "c-29",
+      "front": "강화도조약(1876) 다음 큰 흐름",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-01",
+        "t-op-03",
+        "t-op-06",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "c-30",
+      "front": "갑신정변",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-02",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "c-31",
+      "front": "독립협회",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-05"
+      ]
+    },
+    {
+      "id": "c-32",
+      "front": "을사늑약",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-01"
+      ]
+    },
+    {
+      "id": "c-33",
+      "front": "3·1운동 → ?",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-03",
+        "t-col-04",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "c-34",
+      "front": "의열단",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-05"
+      ]
+    },
+    {
+      "id": "c-35",
+      "front": "임시정부",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-04",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "c-36",
+      "front": "정부 수립(1948) → 6·25 → 4·19",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-mo-01",
+        "t-mo-02",
+        "t-mo-03",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "c-37",
+      "front": "5·18 → 6월 민주 항쟁(1987)",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-mo-04",
+        "t-mo-05",
+        "t-mo-07",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "c-38",
+      "front": "석굴암·불국사",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-01",
+        "t-cu-07"
+      ]
+    },
+    {
+      "id": "c-39",
+      "front": "팔만대장경",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-02"
+      ]
+    },
+    {
+      "id": "c-40",
+      "front": "수원 화성",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-04",
+        "t-cu-07"
+      ]
+    },
+    {
+      "id": "c-41",
+      "front": "최승로",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-03",
+        "t-go-04"
+      ]
+    },
+    {
+      "id": "c-42",
+      "front": "시무 28조를 올린 인물",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-03"
+      ]
+    },
+    {
+      "id": "c-43",
+      "front": "8조법",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-05",
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "c-44",
+      "front": "위만조선 집권",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-04"
+      ]
+    },
+    {
+      "id": "c-45",
+      "front": "신석기 → 청동기 → 고조선",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-02",
+        "t-pre-03",
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "c-46",
+      "front": "부여·옥저·동예·삼한",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-pre-06"
+      ]
+    },
+    {
+      "id": "c-47",
+      "front": "고구려 광개토대왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-48",
+      "front": "광개토왕릉비 · 정복 전쟁",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-49",
+      "front": "고구려 장수왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-50",
+      "front": "평양 천도 · 남진",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-51",
+      "front": "마한 통합·백제 전성기",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-02",
+        "t-tk-09"
+      ]
+    },
+    {
+      "id": "c-52",
+      "front": "한성 → 웅진 → 사비",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-02"
+      ]
+    },
+    {
+      "id": "c-53",
+      "front": "백제 성왕",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-02"
+      ]
+    },
+    {
+      "id": "c-54",
+      "front": "이차돈 순교",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "c-55",
+      "front": "신라 문무왕",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-01",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-56",
+      "front": "삼국 통일 완성",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-01",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-57",
+      "front": "신라 신문왕",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-02",
+        "t-ns-05"
+      ]
+    },
+    {
+      "id": "c-58",
+      "front": "녹읍 폐지 · 관료전",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-02",
+        "t-ns-05"
+      ]
+    },
+    {
+      "id": "c-59",
+      "front": "견훤 · 궁예 · 왕건",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-07",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-60",
+      "front": "왕건",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-07",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-61",
+      "front": "고려 건국 · 후삼국 통일",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-ns-07",
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "c-62",
+      "front": "고려 공민왕",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-09",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-63",
+      "front": "전민변정도감 · 반원 개혁",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-09",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-64",
+      "front": "전시과",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-05"
+      ]
+    },
+    {
+      "id": "c-65",
+      "front": "정중부 → 최충헌 → 강화천도",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-06",
+        "t-go-07",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "c-66",
+      "front": "정동행성 · 쌍성총관부",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-go-08"
+      ]
+    },
+    {
+      "id": "c-67",
+      "front": "위화도 회군 → 조선 건국",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "c-68",
+      "front": "조광조",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-07"
+      ]
+    },
+    {
+      "id": "c-69",
+      "front": "기묘사화로 숙청된 대표 사림",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-07"
+      ]
+    },
+    {
+      "id": "c-70",
+      "front": "기묘사화 → 을사사화 → 붕당",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "c-71",
+      "front": "6조 직계제",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-je-01",
+        "t-je-03",
+        "t-je-06"
+      ]
+    },
+    {
+      "id": "c-72",
+      "front": "조선 영조",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-04"
+      ]
+    },
+    {
+      "id": "c-73",
+      "front": "탕평책",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-04"
+      ]
+    },
+    {
+      "id": "c-74",
+      "front": "조선 정조",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-04",
+        "t-jl-07"
+      ]
+    },
+    {
+      "id": "c-75",
+      "front": "규장각 · 수원 화성",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-04",
+        "t-jl-07"
+      ]
+    },
+    {
+      "id": "c-76",
+      "front": "정약용",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-03",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "c-77",
+      "front": "홍경래의 난 → 임술민란",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-05",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "c-78",
+      "front": "영정법 · 대동법 · 균역법",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-02",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "c-79",
+      "front": "고종 (대한제국)",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-06",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "c-80",
+      "front": "대한제국 선포 · 광무개혁",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-06",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "c-81",
+      "front": "갑신정변(1884) → 동학농민 → 갑오개혁",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-02",
+        "t-op-03",
+        "t-op-04",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "c-82",
+      "front": "을미사변 → 아관파천 → 대한제국",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-op-06",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "c-83",
+      "front": "을사늑약 → 정미7조약 → 한일병합",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-01",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "c-84",
+      "front": "무단통치 → 문화통치 → 황민화·총동원",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-02"
+      ]
+    },
+    {
+      "id": "c-85",
+      "front": "한인애국단",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-05"
+      ]
+    },
+    {
+      "id": "c-86",
+      "front": "한국광복군",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-04",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "c-87",
+      "front": "산미증식계획",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-col-07"
+      ]
+    },
+    {
+      "id": "c-88",
+      "front": "5·10 총선거 → 정부 수립(1948)",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-mo-01",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "c-89",
+      "front": "4·19 → 5·16 → 유신 → 5·18 → 6월항쟁",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-mo-03",
+        "t-mo-04",
+        "t-mo-05",
+        "t-mo-07",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "c-90",
+      "front": "경제개발계획 → 중화학 → IMF",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-mo-06"
+      ]
+    },
+    {
+      "id": "c-91",
+      "front": "6·25전쟁 → 휴전협정(1953)",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-mo-02",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "c-92",
+      "front": "직지",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-02",
+        "t-cu-05"
+      ]
+    },
+    {
+      "id": "c-93",
+      "front": "고려청자",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-02"
+      ]
+    },
+    {
+      "id": "c-94",
+      "front": "동의보감",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-04"
+      ]
+    },
+    {
+      "id": "c-95",
+      "front": "석굴암 → 팔만대장경 → 훈민정음 → 수원화성",
+      "era": "culture",
+      "status": "needs-concept-mapping-and-review",
+      "candidateConceptIds": [
+        "t-cu-01",
+        "t-cu-02",
+        "t-cu-03",
+        "t-cu-04"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": "tl-01",
+      "title": "고조선 건국 전승",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "tl-02",
+      "title": "위만의 집권",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-pre-04"
+      ]
+    },
+    {
+      "id": "tl-03",
+      "title": "고조선 멸망",
+      "era": "prehistoric",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-pre-08"
+      ]
+    },
+    {
+      "id": "tl-04",
+      "title": "신라 건국 전승",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-05",
+      "title": "고구려 건국 전승",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-06",
+      "title": "백제 건국 전승",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-07",
+      "title": "고구려 불교 수용",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-08",
+      "title": "백제 불교 수용",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-09",
+      "title": "광개토대왕 즉위",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "tl-10",
+      "title": "장수왕 평양 천도",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "tl-11",
+      "title": "신라 불교 공인",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-12",
+      "title": "진흥왕 한강 유역 확보",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ]
+    },
+    {
+      "id": "tl-13",
+      "title": "백제 멸망",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-14",
+      "title": "고구려 멸망",
+      "era": "three-kingdoms",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-15",
+      "title": "나당 전쟁 승리",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-ns-01"
+      ]
+    },
+    {
+      "id": "tl-16",
+      "title": "신문왕 녹읍 폐지",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-ns-02",
+        "t-ns-05"
+      ]
+    },
+    {
+      "id": "tl-17",
+      "title": "발해 건국",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "tl-18",
+      "title": "후삼국 성립",
+      "era": "north-south",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-ns-08"
+      ]
+    },
+    {
+      "id": "tl-19",
+      "title": "고려 건국",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-20",
+      "title": "후삼국 통일",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-21",
+      "title": "광종 과거제 도입",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-go-02"
+      ]
+    },
+    {
+      "id": "tl-22",
+      "title": "성종 12목 설치",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-go-03"
+      ]
+    },
+    {
+      "id": "tl-23",
+      "title": "서희의 담판",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-24",
+      "title": "귀주 대첩",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-25",
+      "title": "묘청의 난",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-go-10"
+      ]
+    },
+    {
+      "id": "tl-26",
+      "title": "무신 정변",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "tl-27",
+      "title": "강화 천도",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "tl-28",
+      "title": "상정고금예문 인쇄",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-29",
+      "title": "삼별초 항쟁",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-go-07",
+        "t-go-12"
+      ]
+    },
+    {
+      "id": "tl-30",
+      "title": "직지 간행",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-31",
+      "title": "위화도 회군",
+      "era": "goryeo",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-32",
+      "title": "조선 건국",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-33",
+      "title": "훈민정음 반포",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-je-02"
+      ]
+    },
+    {
+      "id": "tl-34",
+      "title": "경국대전 완성",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-je-04"
+      ]
+    },
+    {
+      "id": "tl-35",
+      "title": "기묘사화",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-36",
+      "title": "임진왜란",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-37",
+      "title": "병자호란",
+      "era": "joseon-early",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-38",
+      "title": "대동법 경기도 시행",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-jl-01",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "tl-39",
+      "title": "균역법 시행",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-jl-02"
+      ]
+    },
+    {
+      "id": "tl-40",
+      "title": "수원 화성 완성",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-jl-07"
+      ]
+    },
+    {
+      "id": "tl-41",
+      "title": "홍경래의 난",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-jl-05"
+      ]
+    },
+    {
+      "id": "tl-42",
+      "title": "임술 농민 봉기",
+      "era": "joseon-late",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-jl-05",
+        "t-jl-08"
+      ]
+    },
+    {
+      "id": "tl-43",
+      "title": "강화도 조약",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-01",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "tl-44",
+      "title": "임오군란",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-02"
+      ]
+    },
+    {
+      "id": "tl-45",
+      "title": "갑신정변",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-02",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "tl-46",
+      "title": "동학 농민 운동",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-04"
+      ]
+    },
+    {
+      "id": "tl-47",
+      "title": "갑오개혁",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-03",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "tl-48",
+      "title": "대한제국 수립",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-06",
+        "t-op-08"
+      ]
+    },
+    {
+      "id": "tl-49",
+      "title": "을사늑약",
+      "era": "opening",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-op-07"
+      ]
+    },
+    {
+      "id": "tl-50",
+      "title": "국권 피탈",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-51",
+      "title": "3·1 운동",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-col-03",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "tl-52",
+      "title": "대한민국 임시정부 수립",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-col-04",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "tl-53",
+      "title": "봉오동·청산리 전투",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-col-05"
+      ]
+    },
+    {
+      "id": "tl-54",
+      "title": "신간회 창립",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-55",
+      "title": "산미 증식 계획 종료기",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-col-07"
+      ]
+    },
+    {
+      "id": "tl-56",
+      "title": "한국광복군 창설",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-col-04",
+        "t-col-10"
+      ]
+    },
+    {
+      "id": "tl-57",
+      "title": "조선어 학회 사건",
+      "era": "colonial",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-col-06"
+      ]
+    },
+    {
+      "id": "tl-58",
+      "title": "광복",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-59",
+      "title": "5·10 총선거",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-60",
+      "title": "제헌 헌법 공포",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-01"
+      ]
+    },
+    {
+      "id": "tl-61",
+      "title": "대한민국 정부 수립",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "tl-62",
+      "title": "6·25 전쟁",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-02",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "tl-63",
+      "title": "정전 협정",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-02"
+      ]
+    },
+    {
+      "id": "tl-64",
+      "title": "4·19 혁명",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-03",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "tl-65",
+      "title": "5·16 군사 정변",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-66",
+      "title": "유신 체제",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-07"
+      ]
+    },
+    {
+      "id": "tl-67",
+      "title": "5·18 민주화운동",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-04",
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "tl-68",
+      "title": "6월 민주 항쟁",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": [
+        "t-mo-08"
+      ]
+    },
+    {
+      "id": "tl-69",
+      "title": "외환 위기",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    },
+    {
+      "id": "tl-70",
+      "title": "남북 정상 회담",
+      "era": "modern",
+      "status": "needs-concept-mapping-and-source-review",
+      "candidateConceptIds": []
+    }
+  ],
+  "errors": []
+}
