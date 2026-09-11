@@ -159,7 +159,7 @@ export type CreateWrongCardResult =
   | { ok: false; reason: 'source-missing'; questionId: string }
 
 export type BackupRestoreResult =
-  | { ok: true; importedVersion: 1 | 2 | 3 }
+  | { ok: true; importedVersion: 1 | 2 | 3 | 4 }
   | { ok: false; code: 'import-invalid' | 'unsupported-backup'; message: string }
 
 export interface FinalizeMockResult {

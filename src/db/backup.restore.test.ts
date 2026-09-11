@@ -16,9 +16,9 @@ describe('backup restore', () => {
     await db.attempts.put(practiceAttempt('keep-1', true, '2026-09-01T00:00:00.000Z'))
 
     const exported = await exportAllData()
-    expect(exported.version).toBe(3)
+    expect(exported.version).toBe(4)
     const restored = await restoreBackup(exported)
-    expect(restored).toEqual({ ok: true, importedVersion: 3 })
+    expect(restored).toEqual({ ok: true, importedVersion: 4 })
     expect(await db.attempts.count()).toBe(1)
 
     const version1 = {
@@ -26,6 +26,7 @@ describe('backup restore', () => {
       version: 1 as const,
       lessonCompletions: undefined,
       activeMock: undefined,
+      libraryPractice: undefined,
     }
     const again = await restoreBackup(version1)
     expect(again).toEqual({ ok: true, importedVersion: 1 })

@@ -2,7 +2,7 @@
 
 P1-04, 2026-09-11. E/총괄이 구현한 계약이다. UI 담당은 별도 저장소·타입·답안 서비스로 대체하지 않는다.
 
-모듈 `src/lib/libraryPractice.ts`, 타입 `LibraryPracticeSession` (`src/types/index.ts`). 기존 열린 PR의 별도 DailyLearningService/StorageAdapter는 재사용하지 않으며, 현재 Dexie와 `recordAnswer`를 확장한다. 오늘 학습과 공통 답안 이력을 사용하지만 진행 상태는 별도 `libraryPractice` 테이블이다. DB v4는 이 테이블만 추가하며 기존 기록은 유지한다. 백업·복원/초기화 확장은 총괄 인수 범위다.
+모듈 `src/lib/libraryPractice.ts`, 타입 `LibraryPracticeSession` (`src/types/index.ts`). 기존 열린 PR의 별도 DailyLearningService/StorageAdapter는 재사용하지 않으며, 현재 Dexie와 `recordAnswer`를 확장한다. 오늘 학습과 공통 답안 이력을 사용하지만 진행 상태는 별도 `libraryPractice` 테이블이다. DB v4는 이 테이블만 추가하며 기존 기록은 유지한다. 백업 v4는 자료실 진행도 포함하고 v1/v2/v3을 계속 읽는다. 백업은 한 읽기 트랜잭션으로 원본·답안을 같은 시점에서 읽는다. 가져오기는 상태/스냅샷/시도 연결을 검증한 뒤 원자적으로 복원하며, 구형 백업에는 자료실 재개 정보가 없으므로 과거 답안만으로 재개 위치를 추정하지 않는다. 일반 시드 업데이트는 진행을 보존하고, 사용자가 명시적으로 선택한 전체 초기화에만 자료실 상태를 함께 비운다.
 
 | 함수 | 입력 | 결과/동작 |
 |---|---|---|

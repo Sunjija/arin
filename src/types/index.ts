@@ -454,7 +454,7 @@ export interface ActiveMock {
 }
 
 export interface ExportPayload {
-  version: 1 | 2 | 3
+  version: 1 | 2 | 3 | 4
   exportedAt: string
   settings: UserSettings
   mastery: MasteryScores
@@ -468,6 +468,7 @@ export interface ExportPayload {
   lessonCompletions?: LessonCompletion[]
   activeMock?: ActiveMock | null
   conceptProgress?: ConceptProgressRecord[]
+  libraryPractice?: LibraryPracticeSession[]
 }
 
 export const ERA_LABELS: Record<EraId, string> = {

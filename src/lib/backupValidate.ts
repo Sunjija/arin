@@ -2,6 +2,7 @@ import type { ExportPayload, MasteryScores } from '../types'
 import { ALL_ERAS, ALL_TYPES } from '../types'
 import { parseUserSettings } from './settingsValidation'
 import { isDateKey } from './dates'
+import { isLibraryPracticeSession } from './libraryPracticeValidation'
 import { isQuestionSnapshot as validSnapshot } from './questionSnapshot'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -69,7 +70,7 @@ export function parseMasteryScores(
 
 export function validateExportPayload(raw: unknown): { ok: true; payload: ExportPayload } | { ok: false; message: string } {
   if (!isRecord(raw)) return { ok: false, message: '백업 파일이 객체가 아닙니다.' }
-  if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3) {
+  if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3 && raw.version !== 4) {
     return { ok: false, message: '지원하지 않는 백업 버전입니다.' }
   }
   if (!isIsoLike(raw.exportedAt)) return { ok: false, message: '내보낸 시각이 없습니다.' }
@@ -177,9 +178,28 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
     }
   }
 
+  if (raw.version === 4 || raw.libraryPractice !== undefined) {
+    if (!Array.isArray(raw.libraryPractice)) return { ok: false, message: '자료실 진행 목록이 없습니다.' }
+    const lessons = new Set<string>()
+    const sessions = new Set<string>()
+    const attempts = raw.attempts as ExportPayload['attempts']
+    for (const session of raw.libraryPractice) {
+      if (!isLibraryPracticeSession(session) || lessons.has(session.lessonId) || sessions.has(session.id)) return { ok: false, message: '자료실 진행 기록이 손상되었습니다.' }
+      lessons.add(session.lessonId)
+      sessions.add(session.id)
+      for (const [index, answer] of session.answers.entries()) {
+        const matching = attempts.filter(attempt => attempt.id === answer.attemptId)
+        const attempt = matching[0]
+        const snapshot = session.questionSnapshots[index]!
+        if (matching.length !== 1 || !attempt || attempt.learningSource !== 'library' || attempt.questionId !== answer.questionId || attempt.selectedIndex !== answer.selectedIndex || attempt.correct !== answer.correct || attempt.snapshot?.lessonId !== session.lessonId || attempt.snapshot.answerIndex !== snapshot.answerIndex || JSON.stringify(attempt.snapshot.choices) !== JSON.stringify(snapshot.choices)) return { ok: false, message: '자료실 진행과 답안 기록이 일치하지 않습니다.' }
+      }
+    }
+  }
+
   const payload: ExportPayload = {
     ...(raw as unknown as ExportPayload),
-    version: raw.version === 3 ? 3 : raw.version === 2 ? 2 : 1,
+    version: raw.version,
+    libraryPractice: (raw.libraryPractice as ExportPayload['libraryPractice']) ?? [],
     settings: settings.value,
     mastery: mastery.value,
   }

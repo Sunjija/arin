@@ -16,10 +16,16 @@ const TABLES = [
   'activeMock',
   'lessonCompletions',
   'conceptProgress',
+  'libraryPractice',
   'meta',
 ] as const
 
 export async function exportAllData(): Promise<ExportPayload> {
+  // One read transaction keeps session feedback and its attempt log from different moments out of the same backup.
+  return db.transaction('r', TABLES.map(name => db.table(name)), exportTransaction)
+}
+
+async function exportTransaction(): Promise<ExportPayload> {
   const [
     settingsRow,
     masteryRow,
@@ -32,6 +38,7 @@ export async function exportAllData(): Promise<ExportPayload> {
     mocks,
     lessonCompletions,
     conceptProgress,
+    libraryPractice,
     meta,
   ] = await Promise.all([
     db.settings.get('settings'),
@@ -45,6 +52,7 @@ export async function exportAllData(): Promise<ExportPayload> {
     db.activeMock.toArray(),
     db.lessonCompletions.toArray(),
     db.conceptProgress.toArray(),
+    db.libraryPractice.toArray(),
     db.meta.get('meta'),
   ])
 
@@ -56,7 +64,7 @@ export async function exportAllData(): Promise<ExportPayload> {
   const { id: _m, ...mastery } = masteryRow
 
   return {
-    version: 3,
+    version: 4,
     exportedAt: new Date().toISOString(),
     settings,
     mastery,
@@ -70,6 +78,7 @@ export async function exportAllData(): Promise<ExportPayload> {
     lessonCompletions,
     activeMock: mocks.find((row) => row.status === 'in-progress') ?? mocks[0] ?? null,
     conceptProgress,
+    libraryPractice,
   }
 }
 
@@ -99,6 +108,7 @@ export async function restoreBackup(raw: unknown): Promise<BackupRestoreResult> 
       db.activeMock.clear(),
       db.lessonCompletions.clear(),
       db.conceptProgress.clear(),
+      db.libraryPractice.clear(),
     ])
 
     await db.settings.put({ id: 'settings', ...normalizeSettings(payload.settings) })
@@ -116,6 +126,7 @@ export async function restoreBackup(raw: unknown): Promise<BackupRestoreResult> 
     if (payload.conceptProgress?.length) {
       await db.conceptProgress.bulkPut(payload.conceptProgress)
     }
+    if (payload.libraryPractice?.length) await db.libraryPractice.bulkPut(payload.libraryPractice)
     await db.meta.put(payload.meta)
   })
 

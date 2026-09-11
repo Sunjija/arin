@@ -6,7 +6,9 @@
 |---|---|---|
 | P0-04 하위: 첫 단원 콘텐츠 | Cursor CLI / `cursor/p0-first-lesson-content` | 기준 `ae444905`, 제출 `7cdcfa26`. 콘텐츠 2파일과 검토 문서만 변경. 총괄 브랜치에 `0a60ad8`로 반입 후 추가 검수·수정 |
 | P0-03/P1-01 및 P1-02 기반 | Codex 총괄 / `codex/arin-design-v3` | 목표 날짜·요일·개념 분량·명시적 순서·부분 세션·원본 보존·검증을 직접 구현 |
-| 다음 Cursor 작업 | 미배정 | 자료실 세션 재개 등 후보만 존재. 새 지시 전 자동 실행하지 않음 |
+| P1-04 자료실 재개 UI | Cursor CLI / `cursor/p1-library-resume` | 기준 `0b56a6d`, LessonPractice·테스트·검토 문서에 한정해 실행 중 |
+| P1-04 저장/백업 | Codex 총괄 / `codex/arin-design-v3` | 트랜잭션 API·DB v4·구형 백업 호환·복원 검증 |
+| 이후 작업 | 미배정 | 복습 이유·노출 구분이 다음 후보 |
 
 [실제 전달 지시](2026-09-11-first-lesson-content.md), [Cursor 제출 보고서와 총괄 검토](../reviews/p0-first-lesson-content.md), [현재 API](../parallel-redesign/e-foundation-api.md), [검증](../p0-validation.md).
 

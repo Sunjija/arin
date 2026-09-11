@@ -35,12 +35,12 @@ it('upgrades an actual v2 database without erasing edited cards, attempts or ses
     await legacy.table('activeSession').put({ ...session, questionSnapshots: undefined, newQuestionIds: undefined, reviewQuestionIds: undefined, conceptIds: undefined, confirmedConceptIds: undefined, guideSnapshots: undefined })
   } finally { legacy.close() }
   await db.open()
-  expect(db.verno).toBe(3)
+  expect(db.verno).toBe(4)
   expect(await db.cards.get(card.id)).toEqual(card)
   expect(await db.attempts.get('legacy-attempt')).toEqual(saved.attempts[0])
   expect((await db.activeSession.get(session.id))?.questionIds).toEqual(session.questionIds)
   expect(await db.conceptProgress.count()).toBe(0)
-  const v2 = { ...await exportAllData(), version: 2, conceptProgress: undefined }
+  const v2 = { ...await exportAllData(), version: 2, conceptProgress: undefined, libraryPractice: undefined }
   expect(await restoreBackup(v2)).toEqual({ ok: true, importedVersion: 2 })
   expect(await db.cards.get(card.id)).toEqual(card)
 })

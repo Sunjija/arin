@@ -126,6 +126,7 @@ export async function ensureSeeded(): Promise<void> {
       db.activeMock,
       db.lessonCompletions,
       db.conceptProgress,
+      db.libraryPractice,
     ],
     async () => {
       if (!settingsValid) await db.settings.put({ id: 'settings', ...defaultSettings() })
@@ -174,6 +175,7 @@ export async function restoreSampleData(): Promise<void> {
       db.activeMock,
       db.lessonCompletions,
       db.conceptProgress,
+      db.libraryPractice,
     ],
     async () => {
       await Promise.all([
@@ -186,6 +188,7 @@ export async function restoreSampleData(): Promise<void> {
         db.activeMock.clear(),
         db.lessonCompletions.clear(),
         db.conceptProgress.clear(),
+        db.libraryPractice.clear(),
       ])
       await db.settings.put({ id: 'settings', ...defaultSettings() })
       await db.mastery.put({ id: 'mastery', ...defaultMastery() })
@@ -218,6 +221,7 @@ export async function clearAllLearningData(): Promise<void> {
       db.activeMock,
       db.lessonCompletions,
       db.conceptProgress,
+      db.libraryPractice,
     ],
     async () => {
       await Promise.all([
@@ -233,6 +237,7 @@ export async function clearAllLearningData(): Promise<void> {
         db.activeMock.clear(),
         db.lessonCompletions.clear(),
         db.conceptProgress.clear(),
+        db.libraryPractice.clear(),
       ])
     },
   )
