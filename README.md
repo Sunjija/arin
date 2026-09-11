@@ -4,20 +4,23 @@
 
 ## 에이전트·Cursor 작업 시작
 
-[AGENTS.md](AGENTS.md) → [최신 작업 지시](docs/parallel-redesign/README.md) → [정책·공통 계약](docs/parallel-redesign/contracts.md) → [소유권](docs/parallel-redesign/ownership.md) → 담당 brief 순으로 읽는다.
+[AGENTS.md](AGENTS.md) → [전체 개발 로드맵·우선순위](docs/development-roadmap.md) → [최신 작업 지시](docs/parallel-redesign/README.md) → [정책·공통 계약](docs/parallel-redesign/contracts.md) → [소유권](docs/parallel-redesign/ownership.md) → 담당 brief 순으로 읽는다.
 Cursor 자동 진입 규칙은 `.cursor/rules/hansacoach.mdc`. 이전 기반 고정 브랜치와 아카이브 지시를 새 작업에 사용하지 않는다.
 
 ## 현재 구현과 다음 작업
 
 2026-09-11, `codex/arin-design-v3`의 `34c0f10` 감사 기준. 최신 main/미병합 PR/배포 상태와 구분한다.
+
 - 단원 18 · 자체 문항 100 · 카드 95 · 연표 사건 70. 실전 대비 충분성을 검증한 규모는 아니다.
 - 자료실에 선사·고조선 설명과 해당 단원 확인 문제 6개가 있다. 확인 문제 결과는 아직 화면 상태에만 저장된다.
 - 현재 오늘 학습은 카드 → 개념 → 문제. 진도는 달력 기반이고 오늘 복습은 같은 시대로 제한된다. **이것은 차기 수정 대상**이다.
 - 학습 기록은 브라우저 IndexedDB에 저장된다. 별도 PR의 동기화 구현을 이 브랜치의 완료 기능으로 간주하지 않는다.
 - Pretendard와 기존 디자인을 유지한다. 서비스명은 한사코치이며 기존 arin 저장소/주소/ID를 임의 변경하지 않는다.
 
-다음 순서: 공통 학습 계약·기록 이전 → 목표·완료 기반 진도 → 개념 우선 흐름·누적 복습·자료실 기록 통합 → 콘텐츠 보강·실전 검증.
-기존 Cursor 작업 PR과 재사용 후보는 [작업 목록](docs/parallel-redesign/README.md)에 있다. 중복 구현 전 먼저 비교한다.
+다음 순서: 기존 PR 검수·콘텐츠 공백 조사 → 공통 학습 계약·기록 이전 → 선사·고조선 한 단원에서 목표·개념·문제·누적 복습·기록 통합 검증 → 전 범위 콘텐츠·실전 검증. 동기화·모바일·결제는 후순위로 재검수한다.
+[개발 로드맵](docs/development-roadmap.md)에 전체 작업 ID, 우선순위, 담당 역할, 선행 조건, 완료 기준과 기존 PR 처리 방향을 정리했다. 작업 목록은 배정 완료를 뜻하지 않는다.
+
+GitHub 품질 검사와 정기 점검은 설치되어 있다. 실행 방법과 한계는 [자동화 운영](docs/automation.md)을 참고한다.
 
 ## 실행·검증
 
