@@ -2,7 +2,7 @@
 
 ## 기준과 현재 상태
 
-P0-01 코드 검토 후 부분 통합을 진행했다. [PR 검토](../pr-integration-review.md), [콘텐츠 공백](../content-coverage.md), [현재 API/남은 게이트](e-foundation-api.md), [P0 검증](../p0-validation.md), [자료실 검증](../p1-library-validation.md), [복습 검증](../p1-review-validation.md)을 우선 확인한다. [Cursor 콘텐츠·자료실 재개·복습 UI 3건을 실제 배정·인수했다](../cursor-tasks/README.md). 추가 작업은 미배정이다. 아래 과거 감사 SHA는 이번 통합의 전체 동작 기준이 아니다.
+P0-01 코드 검토 후 부분 통합을 진행했다. [PR 검토](../pr-integration-review.md), [콘텐츠 공백](../content-coverage.md), [현재 API/남은 게이트](e-foundation-api.md), [P0 검증](../p0-validation.md), [자료실 검증](../p1-library-validation.md), [복습 검증](../p1-review-validation.md)을 우선 확인한다. [Cursor 콘텐츠·자료실 재개·복습 UI 3건을 인수하고 A 다중 창 재현·설계 / B 기록 화면 2건을 추가 실행했다](../cursor-tasks/README.md). 추가 작업은 인수 전이다. 아래 과거 감사 SHA는 이번 통합의 전체 동작 기준이 아니다.
 감사 기준: `codex/arin-design-v3`의 `34c0f104dfd41a2c422cc5c74d01df2e2b633819`.
 이 SHA는 현황 확인 지점이며 영구 분기점이 아니다. 새 작업은 총괄이 검증한 최신 통합 SHA에서 시작한다. 이전 `cursor/redesign-foundation-1da6` 고정 분기 지시는 폐기한다.
 
@@ -10,7 +10,7 @@ P0-01 코드 검토 후 부분 통합을 진행했다. [PR 검토](../pr-integra
 
 ## 읽기 순서와 작업 순서
 `../../AGENTS.md` → [전체 개발 로드맵](../development-roadmap.md) → [정책·계약](contracts.md) → [소유권](ownership.md) → 담당 brief.
-전체 우선순위·의존성·완료 기준은 로드맵이 원본이다. 다음 후보는 P0-03 오늘 학습 다중 창 정합성 → P1-05 기록 지표 → P1-06 첫 단원 통합 검증이며 아래 순서나 역할 표는 배정 완료를 뜻하지 않는다.
+전체 우선순위·의존성·완료 기준은 로드맵이 원본이다. A는 P0-03 재현·설계만, B는 기존 읽기 계약을 사용하는 P1-05 화면만 실제 배정했다. 저장 API 변경은 A 설계 검토 뒤, P1-06은 통합 뒤 진행한다. 아래 일반 역할 표 자체는 추가 배정이 아니다.
 
 1. 총괄이 기존 PR을 비교하고 재사용 코드·계약을 선택한다. G는 개념·콘텐츠 공백 목록을 작성한다.
 2. [E 공통 기반](briefs/E-learning-foundation.md): 데이터 구조·기록 통합·마이그레이션·서비스를 구현하고 API를 동결한다.

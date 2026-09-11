@@ -10,11 +10,22 @@
 | P1-04 저장/백업 | Codex 총괄 / `codex/arin-design-v3` | 트랜잭션 API·DB v4·구형 백업 호환·복원 검증 |
 | P1-03 복습 이유·풀이 이력 UI | Cursor CLI / `cursor/p1-review-context` | 기준 `afe6075`, 제출 `c4feb4e`, 인수 `db8823f`. 허용 5파일 준수, 총괄 보완 후 전체 239개 회귀 통과 |
 | P1-03 선정·기록·백업 | Codex 총괄 / `codex/arin-design-v3` | 실제 선정 이유·최근 7일 마지막 오답·세션 시작 이력 고정·구형 백업 호환 구현 |
-| 이후 작업 | 미배정 | 오늘 학습 다중 창 정합성과 첫 단원 통합 검증이 다음 후보 |
+| P0-03 다중 창 충돌 재현·설계 | Cursor A / `cursor/p0-session-conflict-audit` | 기준 `df300ba`. 실제 실행 시작. 재현 테스트·수정 설계만 제출하며 공통 저장 API 구현은 총괄 검토 후 후속 배정 |
+| P1-05 학습 기록 화면 | Cursor B / `cursor/p1-progress-records` | 기준 `df300ba`. 실제 구현 실행 시작. 목표 대비 진도와 저장된 완료 학습 1회의 풀이 구분, 읽기 전용 집계/화면 5파일 |
+| P0-03 저장 API 구현·P1-06 통합 검증 | 선행 대기 | A 설계 검토 → 총괄 저장 계약/호환성 → 관련 UI 구현 및 B 인수 → 첫 단원 통합 검증 |
 
 [콘텐츠 전달 지시](2026-09-11-first-lesson-content.md), [콘텐츠 제출 검토](../reviews/p0-first-lesson-content.md), [자료실 전달 지시](2026-09-11-library-resume.md), [자료실 제출 검토](../reviews/p1-library-resume-ui.md), [현재 API](../parallel-redesign/e-foundation-api.md), [자료실 통합 검증](../p1-library-validation.md).
 
 [복습 UI 전달 지시](2026-09-11-review-context.md), [복습 UI 제출 검토](../reviews/p1-review-context-ui.md), [복습 통합 검증](../p1-review-validation.md).
+
+이번 추가 배정: [A 다중 창 충돌 재현·수정 설계](2026-09-11-session-conflict-audit.md), [B 학습 기록 화면 구현](2026-09-11-progress-records.md). 로그인된 Cursor CLI의 별도 세션과 별도 worktree에서 병렬 실행했다. 시작 기준은 [검증 완료 소스 df300ba](https://github.com/Sunjija/arin/commit/df300ba5bd2cbfb0e2c137bff29536a67f3677bd), [해당 CI 성공](https://github.com/Sunjija/arin/actions/runs/34599768384)이다. 실행 시작은 결과 인수나 배포 완료가 아니다.
+
+### 이번 두 작업의 경계와 회수
+
+- A는 `studySessionConcurrency.repro.test.ts`와 전용 검토 보고서만 쓴다. 재현 테스트의 `it.fails` 성공은 알려진 결함의 재현이며 수정 완료가 아니다. 총괄이 제안된 revision/트랜잭션/백업 계약을 검토하기 전 앱 저장 코드를 수정하지 않는다.
+- B는 ProgressPage·progressSummary·각 테스트·전용 보고서만 쓴다. 저장 타입/DB/학습 API/공통 CSS를 바꾸지 않는다. 현재 저장된 완료 세션의 첫/반복 구분을 전체 7·30일 통계로 과장하지 않는다.
+- 두 작업 모두 로컬 커밋으로 제출한다. 총괄은 각 브랜치의 실제 HEAD·허용 경로·검증 보고서를 확인한 뒤 통합한다. push·PR·병합·배포·추가 에이전트 실행은 위임하지 않았다.
+- CLI 세션과 로컬 실행 상태/로그는 총괄 실행 환경에서 관리한다. 비밀·CLI 로그는 GitHub에 넣지 않는다. 완료 확인 전 중복으로 같은 일을 재실행하지 않는다.
 
 ## 인수 판단
 
