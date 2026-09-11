@@ -1,0 +1,56 @@
+name: Hansacoach quality
+on:
+  pull_request:
+  push:
+    branches: [main, 'codex/**', 'cursor/**', 'work/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Test audit rules
+        if: ${{ !cancelled() }}
+        run: node --test scripts/automation/audit.test.mjs
+      - name: Content and change impact report
+        if: ${{ !cancelled() }}
+        env:
+          AUDIT_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node scripts/automation/audit.mjs
+      - name: Type check
+        if: ${{ !cancelled() }}
+        run: npm run typecheck
+      - name: Lint
+        if: ${{ !cancelled() }}
+        run: npm run lint
+      - name: Regression tests
+        if: ${{ !cancelled() }}
+        run: npm test
+      - name: Production build
+        if: ${{ !cancelled() }}
+        run: npm run build
+      - name: Upload review reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: hansacoach-review-${{ github.run_id }}
+          path: |
+            automation-reports/
+            artifacts/question-inspection-report.*
+          if-no-files-found: warn
+          retention-days: 14
