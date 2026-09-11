@@ -1,6 +1,7 @@
 import type { ExportPayload } from '../types'
 import { db } from './database'
 import { validateExportPayload } from '../lib/backupValidate'
+import { normalizeSettings } from '../lib/settingsNormalize'
 import type { BackupRestoreResult } from '../types/contracts'
 
 const TABLES = [
@@ -14,6 +15,7 @@ const TABLES = [
   'activeSession',
   'activeMock',
   'lessonCompletions',
+  'conceptProgress',
   'meta',
 ] as const
 
@@ -29,6 +31,7 @@ export async function exportAllData(): Promise<ExportPayload> {
     sessions,
     mocks,
     lessonCompletions,
+    conceptProgress,
     meta,
   ] = await Promise.all([
     db.settings.get('settings'),
@@ -41,6 +44,7 @@ export async function exportAllData(): Promise<ExportPayload> {
     db.activeSession.toArray(),
     db.activeMock.toArray(),
     db.lessonCompletions.toArray(),
+    db.conceptProgress.toArray(),
     db.meta.get('meta'),
   ])
 
@@ -52,7 +56,7 @@ export async function exportAllData(): Promise<ExportPayload> {
   const { id: _m, ...mastery } = masteryRow
 
   return {
-    version: 2,
+    version: 3,
     exportedAt: new Date().toISOString(),
     settings,
     mastery,
@@ -65,6 +69,7 @@ export async function exportAllData(): Promise<ExportPayload> {
     meta,
     lessonCompletions,
     activeMock: mocks.find((row) => row.status === 'in-progress') ?? mocks[0] ?? null,
+    conceptProgress,
   }
 }
 
@@ -93,9 +98,10 @@ export async function restoreBackup(raw: unknown): Promise<BackupRestoreResult> 
       db.activeSession.clear(),
       db.activeMock.clear(),
       db.lessonCompletions.clear(),
+      db.conceptProgress.clear(),
     ])
 
-    await db.settings.put({ id: 'settings', ...payload.settings })
+    await db.settings.put({ id: 'settings', ...normalizeSettings(payload.settings) })
     await db.mastery.put({ id: 'mastery', ...payload.mastery })
     if (payload.cards.length) await db.cards.bulkPut(payload.cards)
     if (payload.wrongAnswers.length) await db.wrongAnswers.bulkPut(payload.wrongAnswers)
@@ -106,6 +112,9 @@ export async function restoreBackup(raw: unknown): Promise<BackupRestoreResult> 
     if (payload.activeMock) await db.activeMock.put(payload.activeMock)
     if (payload.lessonCompletions?.length) {
       await db.lessonCompletions.bulkPut(payload.lessonCompletions)
+    }
+    if (payload.conceptProgress?.length) {
+      await db.conceptProgress.bulkPut(payload.conceptProgress)
     }
     await db.meta.put(payload.meta)
   })

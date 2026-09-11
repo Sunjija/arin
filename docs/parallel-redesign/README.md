@@ -9,7 +9,7 @@
 ## 읽기 순서와 작업 순서
 `../../AGENTS.md` → [정책·계약](contracts.md) → [소유권](ownership.md) → 담당 brief.
 1. 총괄이 기존 PR을 비교하고 재사용 코드·계약을 선택한다.
-2. [E 공통 기반](briefs/E-learning-foundation.md): 데이터 구조·기록 통합·마이그레이션·서비스를 구현하고 API를 동결한다.
+2. [E 공통 기반](briefs/E-learning-foundation.md): 데이터 구조·기록 통합·마이그레이션·서비스를 구현하고 API를 동결한다. ([동결 API](e-foundation-api.md))
 3. B 목표·진도를 첫 Cursor 구현 묶음으로 검수한다.
 4. E 계약과 B 검수를 통과한 뒤 독립 범위의 C/F를 병렬 배정할 수 있다.
 5. G 콘텐츠 검수·기출 분석은 별도 산출물로 진행한다. D 실전은 검수된 데이터·계약 연결 후 진행한다.
@@ -30,7 +30,7 @@
 - [B 목표·오늘·진도·설정](briefs/B-home-progress-settings.md)
 - [C 학습·누적 복습](briefs/C-study-review.md)
 - [D 실전 평가](briefs/D-mock-exam.md)
-- [E 공통 학습 기반](briefs/E-learning-foundation.md)
+- [E 공통 학습 기반](briefs/E-learning-foundation.md) · [동결 API](e-foundation-api.md)
 - [F 자료실·개념 학습](briefs/F-library-timeline.md)
 - [G 콘텐츠·문항·이미지](briefs/G-content-quality.md)
 

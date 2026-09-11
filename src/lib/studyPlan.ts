@@ -1,9 +1,12 @@
 import { MAX_DAILY_CARDS, MIN_DAILY_CARDS, normalizeDailyCardCount } from './studyLimits'
+import { LEARNING_POLICY } from './learningPolicy'
 import type { EraId, Lesson } from '../types'
 import type { QuantityPlan } from '../types/contracts'
 
-export const MINUTES_PER_CARD = 1.2
-export const MINUTES_PER_QUESTION = 2.2
+/** @deprecated 휴리스틱 추정 전용. 분량 약속으로 쓰지 않는다. */
+export const MINUTES_PER_CARD = LEARNING_POLICY.heuristicMinutesPerCard
+/** @deprecated 휴리스틱 추정 전용. 분량 약속으로 쓰지 않는다. */
+export const MINUTES_PER_QUESTION = LEARNING_POLICY.heuristicMinutesPerQuestion
 export const MIN_SELECTED_QUESTIONS = 1
 
 export function estimateStudyMinutes(input: {
@@ -17,8 +20,8 @@ export function estimateStudyMinutes(input: {
 }
 
 /**
- * dailyQuestionCount/dailyCardCount는 상한이다.
- * 개념 읽기 시간을 0으로 줄여 분량을 맞추지 않는다.
+ * 하루 분량은 개념·문제·복습 개수 상한이다.
+ * 고정 시간으로 문항·카드 수를 줄이지 않는다. estimatedMinutes는 참고 휴리스틱이다.
  */
 export function planDailyQuantity(input: {
   dailyMinutes: number
@@ -30,33 +33,13 @@ export function planDailyQuantity(input: {
   const dailyCardCap = normalizeDailyCardCount(input.dailyCardCap)
   const dailyQuestionCap = Math.max(MIN_SELECTED_QUESTIONS, Math.round(input.dailyQuestionCap))
   const conceptMinutes = Math.max(1, input.lesson.estimatedMinutes)
-
-  let selectedCardCount = Math.min(dailyCardCap, Math.max(0, input.dueCardCount))
-  let selectedQuestionCount = dailyQuestionCap
-
-  const fits = (cards: number, questions: number) =>
-    estimateStudyMinutes({
-      cardCount: cards,
-      questionCount: questions,
-      conceptMinutes,
-    }) <= input.dailyMinutes
-
-  while (selectedQuestionCount > MIN_SELECTED_QUESTIONS && !fits(selectedCardCount, selectedQuestionCount)) {
-    selectedQuestionCount -= 1
-  }
-
-  const minCards = selectedCardCount === 0 ? 0 : Math.min(MIN_DAILY_CARDS, selectedCardCount)
-  while (selectedCardCount > minCards && !fits(selectedCardCount, selectedQuestionCount)) {
-    selectedCardCount -= 1
-  }
-
+  const selectedCardCount = Math.min(dailyCardCap, Math.max(0, input.dueCardCount))
+  const selectedQuestionCount = dailyQuestionCap
   const estimatedMinutes = estimateStudyMinutes({
     cardCount: selectedCardCount,
     questionCount: selectedQuestionCount,
     conceptMinutes,
   })
-  const overflowMinutes = Math.max(0, estimatedMinutes - input.dailyMinutes)
-  const fitsDailyMinutes = overflowMinutes === 0
 
   return {
     dailyMinutes: input.dailyMinutes,
@@ -65,30 +48,35 @@ export function planDailyQuantity(input: {
     selectedCardCount,
     selectedQuestionCount,
     estimatedMinutes,
-    fitsDailyMinutes,
-    overflowMinutes,
-    guidance: fitsDailyMinutes
-      ? null
-      : `최소 학습이 하루 ${input.dailyMinutes}분을 약 ${overflowMinutes}분 넘습니다. 설정에서 하루 시간을 늘리거나 문항·카드 상한을 줄이세요. 개념 읽기 시간은 줄이지 않습니다.`,
+    fitsDailyMinutes: true,
+    overflowMinutes: 0,
+    estimateKind: 'heuristic',
+    guidance: `오늘 분량은 개념 1개 · 문제 ${selectedQuestionCount}개 · 복습 ${selectedCardCount}장입니다. 약 ${estimatedMinutes}분은 참고 추정이며 학습 속도를 약속하지 않습니다.`,
   }
 }
 
 export function quantitySettingsCopy(): string {
-  return `하루 시간은 오늘 고르는 카드·개념·문항 수의 실제 상한입니다. 카드 수와 문항 수는 원하는 최대치이고, 시간 안에 들어가면 그 수만큼 제공합니다. 시간이 부족하면 문항을 먼저 줄이고, 그래도 부족하면 카드를 줄입니다. 개념 읽기 시간을 0으로 맞추지는 않습니다. 카드 상한은 ${MIN_DAILY_CARDS}~${MAX_DAILY_CARDS}장입니다.`
+  return `하루 분량은 개념·문제·복습 개수로 정합니다. 카드 상한은 ${MIN_DAILY_CARDS}~${MAX_DAILY_CARDS}장입니다. 입력된 학습 시간은 참고용이며, 그 시간에 맞추려고 개념이나 문항 수를 줄이지 않습니다.`
 }
 
-/** 오늘 due 카드 중 오늘 단원 시대를 앞에 두고, 같은 날짜면 id 순. */
+/**
+ * 복습 카드는 배운 범위에서만 고른다. 미학습 시대 카드는 자동 복습에 넣지 않는다.
+ * 현재 단원 시대를 섞되, 배운 다른 시대를 제외하지 않는다.
+ */
 export function pickDueCardsForToday<T extends { id: string; era: EraId; nextReviewAt: string }>(
   dueCards: T[],
   lessonEra: EraId,
   limit: number,
+  learnedEras?: Iterable<EraId>,
 ): T[] {
-  return [...dueCards]
+  const allowed = learnedEras ? new Set(learnedEras) : null
+  const pool = allowed ? dueCards.filter((card) => allowed.has(card.era)) : dueCards
+  return [...pool]
     .sort((a, b) => {
-      const byLesson = Number(b.era === lessonEra) - Number(a.era === lessonEra)
-      if (byLesson !== 0) return byLesson
       const byDate = a.nextReviewAt.localeCompare(b.nextReviewAt)
       if (byDate !== 0) return byDate
+      const byLesson = Number(b.era === lessonEra) - Number(a.era === lessonEra)
+      if (byLesson !== 0) return byLesson
       return a.id.localeCompare(b.id)
     })
     .slice(0, Math.max(0, limit))
