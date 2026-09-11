@@ -1,42 +1,72 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useId, useState, type ReactNode } from 'react'
 import { db } from '../db/database'
-import { downloadJson, exportAllData, importAllData } from '../db/backup'
-import { clearAllLearningData, restoreSampleData } from '../db/seed'
-import { MAX_DAILY_CARDS, MIN_DAILY_CARDS, normalizeDailyCardCount } from '../lib/studyLimits'
-import {
-  ALL_TYPES,
-  TYPE_LABELS,
-  type ExportPayload,
-  type QuestionType,
-  type UserSettings,
-} from '../types'
+import { downloadJson, exportAllData, restoreBackup } from '../db/backup'
+import { clearAllLearningData } from '../db/seed'
+import { quantitySettingsCopy } from '../lib/studyPlan'
 import { toDateKey } from '../lib/dates'
-
-function settingsForForm(settings: UserSettings): UserSettings {
-  return { ...settings, dailyCardCount: normalizeDailyCardCount(settings.dailyCardCount) }
-}
+import { Button, Dialog, InlineStatus, PageHeader } from '../components/ui'
+import {
+  DAILY_MINUTES_MAX,
+  DAILY_MINUTES_MIN,
+  DAILY_QUESTION_MAX,
+  DAILY_QUESTION_MIN,
+  GOAL_SCORE_MAX,
+  GOAL_SCORE_MIN,
+  PLAN_WEEKS_MAX,
+  PLAN_WEEKS_MIN,
+  parseBackupFileText,
+  validateSettingsForm,
+} from '../components/dashboard/settingsValidation'
+import { MAX_DAILY_CARDS, MIN_DAILY_CARDS } from '../lib/studyLimits'
+import { ALL_TYPES, TYPE_LABELS, type QuestionType, type UserSettings } from '../types'
 
 export function SettingsPage() {
   const [settings, setSettings] = useState<UserSettings | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
+  const [goalStatus, setGoalStatus] = useState<{ tone: 'success' | 'error'; text: string } | null>(
+    null,
+  )
+  const [backupStatus, setBackupStatus] = useState<{
+    tone: 'success' | 'error'
+    text: string
+  } | null>(null)
+  const [resetStatus, setResetStatus] = useState<{ tone: 'success' | 'error'; text: string } | null>(
+    null,
+  )
   const [busy, setBusy] = useState(false)
+  const [resetOpen, setResetOpen] = useState(false)
+  const fileInputId = useId()
 
   useEffect(() => {
     void db.settings.get('settings').then((row) => {
       if (!row) return
       const { id: _id, ...rest } = row
-      setSettings(settingsForForm(rest))
+      setSettings(rest)
     })
   }, [])
 
+  const reloadSettings = async () => {
+    const row = await db.settings.get('settings')
+    if (!row) return
+    const { id: _id, ...rest } = row
+    setSettings(rest)
+  }
+
   const save = async () => {
     if (!settings) return
+    const errors = validateSettingsForm(settings)
+    if (errors.length > 0) {
+      setGoalStatus({ tone: 'error', text: errors[0]! })
+      return
+    }
     setBusy(true)
     try {
-      const normalized = settingsForForm(settings)
-      await db.settings.put({ id: 'settings', ...normalized })
-      setSettings(normalized)
-      setMessage('설정을 저장했습니다.')
+      await db.settings.put({ id: 'settings', ...settings })
+      setGoalStatus({ tone: 'success', text: '설정을 저장했습니다.' })
+    } catch (e) {
+      setGoalStatus({
+        tone: 'error',
+        text: e instanceof Error ? e.message : '설정을 저장하지 못했습니다.',
+      })
     } finally {
       setBusy(false)
     }
@@ -55,12 +85,16 @@ export function SettingsPage() {
 
   const onExport = async () => {
     setBusy(true)
+    setBackupStatus(null)
     try {
       const payload = await exportAllData()
       downloadJson(`hanguksa-coach-${toDateKey()}.json`, payload)
-      setMessage('학습 데이터를 내보냈습니다.')
+      setBackupStatus({ tone: 'success', text: '기록을 백업 파일로 저장했습니다.' })
     } catch (e) {
-      setMessage(e instanceof Error ? e.message : '내보내기 실패')
+      setBackupStatus({
+        tone: 'error',
+        text: e instanceof Error ? e.message : '기록을 백업하지 못했습니다.',
+      })
     } finally {
       setBusy(false)
     }
@@ -68,57 +102,85 @@ export function SettingsPage() {
 
   const onImportFile = async (file: File) => {
     setBusy(true)
+    setBackupStatus(null)
     try {
-      const text = await file.text()
-      const payload = JSON.parse(text) as ExportPayload
-      await importAllData(payload)
-      const row = await db.settings.get('settings')
-      if (row) {
-        const { id: _id, ...rest } = row
-        setSettings(settingsForForm(rest))
+      const parsed = parseBackupFileText(await file.text())
+      if (!parsed.ok) {
+        setBackupStatus({ tone: 'error', text: parsed.message })
+        return
       }
-      setMessage('가져오기가 완료되었습니다.')
+      const restored = await restoreBackup(parsed.value)
+      if (!restored.ok) {
+        setBackupStatus({ tone: 'error', text: restored.message })
+        return
+      }
+      await reloadSettings()
+      setBackupStatus({ tone: 'success', text: '기록을 가져왔습니다.' })
     } catch (e) {
-      setMessage(e instanceof Error ? e.message : '가져오기 실패')
+      setBackupStatus({
+        tone: 'error',
+        text: e instanceof Error ? e.message : '기록을 가져오지 못했습니다.',
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const onReset = async () => {
+    setBusy(true)
+    setResetStatus(null)
+    try {
+      await clearAllLearningData()
+      await reloadSettings()
+      setResetOpen(false)
+      setResetStatus({ tone: 'success', text: '학습 기록을 초기화했습니다.' })
+    } catch (e) {
+      setResetStatus({
+        tone: 'error',
+        text: e instanceof Error ? e.message : '초기화에 실패했습니다.',
+      })
     } finally {
       setBusy(false)
     }
   }
 
   if (!settings) {
-    return <div className="surface p-5 text-[var(--ink-muted)]">설정 로딩 중…</div>
+    return <div className="surface p-5 text-[var(--ink-muted)]">설정을 불러오는 중…</div>
   }
 
   return (
-    <div className="space-y-5">
-      <header className="page-header">
-        <p className="eyebrow">환경 설정</p>
-        <h1 className="page-title">학습 설정</h1>
-      </header>
+    <div className="max-w-[720px] space-y-5">
+      <PageHeader title="설정" />
 
       <section className="surface p-5">
-        <h2 className="section-title">학습 목표</h2>
+        <h2 className="section-title">학습 목표/분량</h2>
+        <p className="meta-text mt-2 leading-relaxed">{quantitySettingsCopy()}</p>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <Field label="목표 점수">
             <input
               className="field-control"
               type="number"
-              min={60}
-              max={100}
-              value={settings.goalScore}
-              onChange={(e) => setSettings({ ...settings, goalScore: Number(e.target.value) })}
+              min={GOAL_SCORE_MIN}
+              max={GOAL_SCORE_MAX}
+              value={Number.isFinite(settings.goalScore) ? settings.goalScore : ''}
+              onChange={(e) =>
+                setSettings({ ...settings, goalScore: e.target.value === '' ? Number.NaN : Number(e.target.value) })
+              }
             />
           </Field>
           <Field label="하루 문제 수">
             <input
               className="field-control"
               type="number"
-              min={5}
-              max={40}
-              value={settings.dailyQuestionCount}
+              min={DAILY_QUESTION_MIN}
+              max={DAILY_QUESTION_MAX}
+              value={Number.isFinite(settings.dailyQuestionCount) ? settings.dailyQuestionCount : ''}
               onChange={(e) =>
-                setSettings({ ...settings, dailyQuestionCount: Number(e.target.value) })
+                setSettings({
+                  ...settings,
+                  dailyQuestionCount: e.target.value === '' ? Number.NaN : Number(e.target.value),
+                })
               }
             />
           </Field>
@@ -128,11 +190,11 @@ export function SettingsPage() {
               type="number"
               min={MIN_DAILY_CARDS}
               max={MAX_DAILY_CARDS}
-              value={settings.dailyCardCount}
+              value={Number.isFinite(settings.dailyCardCount) ? settings.dailyCardCount : ''}
               onChange={(e) =>
                 setSettings({
                   ...settings,
-                  dailyCardCount: normalizeDailyCardCount(Number(e.target.value)),
+                  dailyCardCount: e.target.value === '' ? Number.NaN : Number(e.target.value),
                 })
               }
             />
@@ -141,20 +203,30 @@ export function SettingsPage() {
             <input
               className="field-control"
               type="number"
-              min={30}
-              max={300}
-              value={settings.dailyMinutes}
-              onChange={(e) => setSettings({ ...settings, dailyMinutes: Number(e.target.value) })}
+              min={DAILY_MINUTES_MIN}
+              max={DAILY_MINUTES_MAX}
+              value={Number.isFinite(settings.dailyMinutes) ? settings.dailyMinutes : ''}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  dailyMinutes: e.target.value === '' ? Number.NaN : Number(e.target.value),
+                })
+              }
             />
           </Field>
           <Field label="계획 주수">
             <input
               className="field-control"
               type="number"
-              min={4}
-              max={16}
-              value={settings.planWeeks}
-              onChange={(e) => setSettings({ ...settings, planWeeks: Number(e.target.value) })}
+              min={PLAN_WEEKS_MIN}
+              max={PLAN_WEEKS_MAX}
+              value={Number.isFinite(settings.planWeeks) ? settings.planWeeks : ''}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  planWeeks: e.target.value === '' ? Number.NaN : Number(e.target.value),
+                })
+              }
             />
           </Field>
         </div>
@@ -178,91 +250,76 @@ export function SettingsPage() {
           </div>
         </fieldset>
 
-        <button type="button" className="btn btn-primary mt-4" disabled={busy} onClick={() => void save()}>
+        <Button className="mt-4" disabled={busy} onClick={() => void save()}>
           설정 저장
-        </button>
+        </Button>
+        {goalStatus ? (
+          <div className="mt-3">
+            <InlineStatus tone={goalStatus.tone}>{goalStatus.text}</InlineStatus>
+          </div>
+        ) : null}
       </section>
 
       <section className="surface p-5">
-        <h2 className="section-title">학습 데이터</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void onExport()}>
-            JSON 내보내기
-          </button>
-          <label className="btn btn-secondary cursor-pointer">
-            JSON 가져오기
-            <input
-              type="file"
-              accept="application/json,.json"
-              className="sr-only"
-              onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) void onImportFile(file)
-                e.target.value = ''
-              }}
-            />
-          </label>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            disabled={busy}
-            onClick={async () => {
-              if (!confirm('샘플 콘텐츠로 초기화하고 학습 기록을 지울까요?')) return
-              setBusy(true)
-              try {
-                await restoreSampleData()
-                const row = await db.settings.get('settings')
-                if (row) {
-                  const { id: _id, ...rest } = row
-                  setSettings(settingsForForm(rest))
-                }
-                setMessage('샘플 데이터로 복원했습니다.')
-              } finally {
-                setBusy(false)
-              }
-            }}
-          >
-            샘플 복원
-          </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            disabled={busy}
-            onClick={async () => {
-              if (!confirm('모든 학습 데이터를 지우고 처음부터 시작할까요?')) return
-              setBusy(true)
-              try {
-                await clearAllLearningData()
-                const row = await db.settings.get('settings')
-                if (row) {
-                  const { id: _id, ...rest } = row
-                  setSettings(settingsForForm(rest))
-                }
-                setMessage('학습 데이터를 초기화했습니다.')
-              } finally {
-                setBusy(false)
-              }
-            }}
-          >
-            전체 초기화
-          </button>
-        </div>
-      </section>
-
-      <section className="surface p-5">
-        <h2 className="section-title">콘텐츠 안내</h2>
-        <ul className="mt-2 list-disc space-y-1 pl-5 text-[var(--ink-muted)]">
-          <li>문항·카드는 자체 제작 학습 콘텐츠입니다.</li>
-          <li>공식 한국사능력검정시험 기출 문장·이미지를 복사하지 않습니다.</li>
-          <li>데이터는 이 브라우저의 IndexedDB에만 저장됩니다.</li>
-        </ul>
-      </section>
-
-      {message ? (
-        <p className="surface p-4 text-[var(--ink-muted)]" role="status">
-          {message}
+        <h2 className="section-title">기록 백업하기 / 기록 가져오기</h2>
+        <p className="meta-text mt-2 leading-relaxed">
+          JSON 파일은 이 브라우저에 있는 학습 기록을 옮길 때 쓰는 보조 형식입니다. 가져오기에
+          실패하면 지금 화면에서 이유를 보여 드리고, 기존 기록은 그대로 둡니다.
         </p>
-      ) : null}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button disabled={busy} onClick={() => void onExport()}>
+            기록 백업하기
+          </Button>
+          <label className="btn btn-secondary cursor-pointer" htmlFor={fileInputId}>
+            기록 가져오기
+          </label>
+          <input
+            id={fileInputId}
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) void onImportFile(file)
+              e.target.value = ''
+            }}
+          />
+        </div>
+        {backupStatus ? (
+          <div className="mt-3">
+            <InlineStatus tone={backupStatus.tone}>{backupStatus.text}</InlineStatus>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="p-1">
+        <h2 className="text-sm font-semibold text-[var(--ink-muted)]">초기화</h2>
+        <p className="meta-text mt-1 leading-relaxed">
+          학습 기록만 지우고 처음 상태로 되돌립니다. 백업과 다른 동작입니다.
+        </p>
+        <Button variant="text" className="mt-2" disabled={busy} onClick={() => setResetOpen(true)}>
+          학습 기록 초기화
+        </Button>
+        {resetStatus ? (
+          <div className="mt-2">
+            <InlineStatus tone={resetStatus.tone}>{resetStatus.text}</InlineStatus>
+          </div>
+        ) : null}
+      </section>
+
+      <Dialog open={resetOpen} title="학습 기록을 초기화할까요?" onClose={() => setResetOpen(false)}>
+        <p className="text-[var(--ink-muted)]">
+          진도·연습·실전 기록이 모두 사라집니다. 이 동작은 백업 가져오기와 다릅니다.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button variant="text" disabled={busy} onClick={() => setResetOpen(false)}>
+            취소
+          </Button>
+          <Button variant="destructive" disabled={busy} onClick={() => void onReset()}>
+            초기화
+          </Button>
+        </div>
+      </Dialog>
     </div>
   )
 }

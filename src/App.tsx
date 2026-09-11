@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { FocusLayoutProvider } from './components/layout/FocusLayout'
 import { ensureSeeded } from './db/seed'
 import { HomePage } from './pages/HomePage'
 import { StudySessionPage } from './pages/StudySessionPage'
@@ -9,7 +10,7 @@ import { CardsPage } from './pages/CardsPage'
 import { ProgressPage } from './pages/ProgressPage'
 import { MockExamPage } from './pages/MockExamPage'
 import { SettingsPage } from './pages/SettingsPage'
-import { TimelinePage } from './pages/TimelinePage'
+import { LibraryPage } from './pages/LibraryPage'
 
 function Bootstrap({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
@@ -55,21 +56,24 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <AppShell>
-          <Bootstrap>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/study" element={<StudySessionPage />} />
-              <Route path="/cards" element={<CardsPage />} />
-              <Route path="/timeline" element={<TimelinePage />} />
-              <Route path="/wrong" element={<Navigate to="/cards" replace />} />
-              <Route path="/progress" element={<ProgressPage />} />
-              <Route path="/mock" element={<MockExamPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Bootstrap>
-        </AppShell>
+        <FocusLayoutProvider>
+          <AppShell>
+            <Bootstrap>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/study" element={<StudySessionPage />} />
+                <Route path="/cards" element={<CardsPage />} />
+                <Route path="/timeline" element={<LibraryPage />} />
+                <Route path="/library" element={<LibraryPage />} />
+                <Route path="/wrong" element={<Navigate to="/cards" replace />} />
+                <Route path="/progress" element={<ProgressPage />} />
+                <Route path="/mock" element={<MockExamPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Bootstrap>
+          </AppShell>
+        </FocusLayoutProvider>
       </BrowserRouter>
     </ErrorBoundary>
   )
