@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button, ChoiceOption, InlineStatus } from '../ui'
 import { getQuestionById } from '../../data/questions'
 import { questionFromSnapshot } from '../../lib/examScoring'
+import { questionContextCopy } from '../../lib/questionStudyContext'
 import { finishSession, recordQuizAnswer, updateAttemptCause } from '../../lib/studyService'
 import { createWrongCardFromQuestion, snapshotFromQuestion } from '../../lib/wrongCard'
 import {
@@ -16,6 +17,32 @@ import { choiceState } from './choiceState'
 const CAUSE_OPTIONS = (Object.keys(WRONG_CAUSE_LABELS) as WrongCause[]).filter(
   (cause) => cause !== 'unknown',
 )
+
+function QuestionStudyContextNote({
+  questionId,
+  questionContexts,
+}: {
+  questionId: string
+  questionContexts: ActiveSession['questionContexts']
+}) {
+  const { reasonLabel, reasonDetail, historyLabel, historyDetail } = questionContextCopy(
+    questionContexts?.find((item) => item.questionId === questionId),
+  )
+  return (
+    <aside className="mb-4" aria-label="문제 선정 이유와 풀이 이력">
+      <p className="meta-text">
+        <span>{reasonLabel}</span>
+        <span aria-hidden="true"> · </span>
+        <span>{historyLabel}</span>
+      </p>
+      <p className="meta-text mt-1">{reasonDetail}</p>
+      <details className="mt-2">
+        <summary className="meta-text touch-target">풀이 이력 기준</summary>
+        <p className="meta-text mt-1">{historyDetail}</p>
+      </details>
+    </aside>
+  )
+}
 
 export function QuizStep({
   session,
@@ -212,6 +239,7 @@ export function QuizStep({
     <div className="quiz-content">
       {!revealed ? <>
         <span className="pill blue">핵심 문제 · {question.difficulty}점</span>
+        <QuestionStudyContextNote questionId={question.id} questionContexts={session.questionContexts} />
         <h1>{question.stem}</h1>
         {question.passage && <blockquote className="passage-text mb-5 whitespace-pre-line">{question.passage}</blockquote>}
         <div className="space-y-2" role="group" aria-label="선택지">
@@ -224,6 +252,7 @@ export function QuizStep({
         <div className="cta-dock"><Button className="w-full" disabled={session.selectedIndex == null || busy} onClick={() => void submit()}>{busy ? '제출 중…' : '선택한 답 확인'}</Button></div>
       </> : <section className="quiz-feedback">
         <span className={`pill ${correct ? 'green' : 'coral'}`}>{correct ? '정답입니다' : '다시 연결해 볼까요?'}</span>
+        <QuestionStudyContextNote questionId={question.id} questionContexts={session.questionContexts} />
         <h1>{correct ? '핵심을 잘 짚었어요.' : '어떤 단서가 있었는지 다시 살펴보세요.'}</h1>
         <p className="meta-text mb-5">{ERA_LABELS[question.era]} · {question.stem}</p>
         {!correct && <><p className="meta-text text-[var(--wrong)]">내 답</p><p className="answer-review wrong">✕ {selectedIndex != null ? `${selectedIndex + 1}. ${question.choices[selectedIndex]}` : '선택 없음'}</p></>}

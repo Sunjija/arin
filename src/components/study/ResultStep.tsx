@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom'
+import { sessionExposureStats } from '../../lib/questionStudyContext'
 import { sessionAnswerStats } from '../../lib/studyService'
 import type { ActiveSession } from '../../types'
 
+function exposureCount(group: { total: number; correct: number }) {
+  if (group.total === 0) return '기록 없음'
+  return `${group.correct}/${group.total}`
+}
+
 export function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTitle: string }) {
   const stats = sessionAnswerStats(session.answered)
+  const exposure = sessionExposureStats(session)
   const review = session.entryMode === 'review'
 
   return (
@@ -30,6 +37,27 @@ export function ResultStep({ session, lessonTitle }: { session: ActiveSession; l
           </div>
         )}
       </div>
+      <section aria-label="풀이 이력 구분">
+        <h2 className="section-title">풀이 이력 구분</h2>
+        <p className="meta-text mb-3">
+          학습 시작 전 저장된 동일 문항 답안 기준입니다. 처음 본 자료·미노출 실전 평가·숙련도를 뜻하지 않습니다.
+        </p>
+        <ul className="space-y-3">
+          <li>
+            <p className="metric-label">첫 풀이 기록</p>
+            <p className="metric-value text-xl">{exposureCount(exposure.first)}</p>
+            <p className="mt-1 text-xs text-[var(--ink-muted)]">학습 시작 전 동일 문항 답안 없음</p>
+          </li>
+          <li>
+            <p className="metric-label">다시 풀이</p>
+            <p className="metric-value text-xl">{exposureCount(exposure.repeated)}</p>
+          </li>
+          <li>
+            <p className="metric-label">구분 정보 없음</p>
+            <p className="metric-value text-xl">{exposureCount(exposure.unknown)}</p>
+          </li>
+        </ul>
+      </section>
       <div className="flex flex-col gap-2 sm:flex-row">
         {review ? (
           <>
