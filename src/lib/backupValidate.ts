@@ -4,6 +4,7 @@ import { parseUserSettings } from './settingsValidation'
 import { isDateKey } from './dates'
 import { isLibraryPracticeSession } from './libraryPracticeValidation'
 import { isQuestionSnapshot as validSnapshot } from './questionSnapshot'
+import { validQuestionContexts } from './questionStudyContextValidation'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -138,6 +139,7 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
   }
   if (isRecord(raw.activeSession)) {
     const session = raw.activeSession
+    if (session.questionContexts !== undefined && !validQuestionContexts(session.questionContexts, session.questionIds, session.newQuestionIds, session.reviewQuestionIds)) return { ok: false, message: '문제 선정 이유 또는 풀이 이력이 손상되었습니다.' }
     if (session.conceptIds !== undefined || session.guideSnapshots !== undefined || session.confirmedConceptIds !== undefined) {
       if (!idList(session.conceptIds) || new Set(session.conceptIds).size !== session.conceptIds.length || !idList(session.confirmedConceptIds) || !session.confirmedConceptIds.every(id => (session.conceptIds as string[]).includes(id)) || !Array.isArray(session.guideSnapshots) || !session.guideSnapshots.every(validGuide)) return { ok: false, message: '진행 중인 개념 원본이 손상되었습니다.' }
       const snapshotIds = session.guideSnapshots.flatMap(guide => guide.sections.map(section => section.conceptId))
@@ -153,6 +155,7 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
       if (!idList(plan[key])) return { ok: false, message: '저장된 학습 계획 목록이 손상되었습니다.' }
     }
     if (plan.conceptSchedule !== undefined && !validConceptSchedule(plan.conceptSchedule)) return { ok: false, message: '개념 분량 계획이 손상되었습니다.' }
+    if (plan.questionContexts !== undefined && !validQuestionContexts(plan.questionContexts, [...plan.newQuestionIds as string[], ...plan.reviewQuestionIds as string[]], plan.newQuestionIds, plan.reviewQuestionIds)) return { ok: false, message: '계획의 문제 선정 이유 또는 풀이 이력이 손상되었습니다.' }
     for (const key of ['newConceptCount', 'newQuestionCount', 'reviewQuestionCount', 'reviewCardCount', 'remainingNewLessons', 'missedStudyDays']) {
       if (!Number.isInteger(plan[key]) || Number(plan[key]) < 0) return { ok: false, message: '저장된 학습 계획 분량이 손상되었습니다.' }
     }

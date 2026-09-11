@@ -37,6 +37,15 @@ describe('review selection evidence and submitted-answer history', () => {
     expect(new Set(result.all.map(q => q.id)).size).toBe(5)
   })
 
+  it('uses the learner local day for ISO timestamps around midnight', () => {
+    const justAfterMidnight = new Date(2026, 0, 6, 0, 15).toISOString()
+    const row = attempt('midnight', prehistoric, false, justAfterMidnight)
+    expect(recentWrongAttempts([row], '2026-01-05').size).toBe(0)
+    expect(recentWrongAttempts([row], '2026-01-06').has(prehistoric.id)).toBe(true)
+    const right = { ...row, id: 'right-same-time', correct: true }
+    expect(recentWrongAttempts([right, row], '2026-01-06').size).toBe(0)
+  })
+
   it('counts unique submitted answers and explicitly mapped similar questions without inventing unknown families', () => {
     const q = { ...prehistoric, familyId: 'family-a' }
     const same = attempt('same', q, true, '2026-01-01')

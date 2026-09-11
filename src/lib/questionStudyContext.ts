@@ -1,19 +1,25 @@
 import type { ActiveSession, AttemptRecord, Question, QuestionSelectionReason, QuestionStudyContext } from '../types'
-import { addDays, isDateKey } from './dates'
+import { addDays, isDateKey, toDateKey } from './dates'
 import { LEARNING_POLICY } from './learningPolicy'
+
+export function answerDateKey(value: string): string | null {
+  if (isDateKey(value)) return value
+  if (typeof value !== 'string' || !isDateKey(value.slice(0, 10)) || !Number.isFinite(Date.parse(value))) return null
+  return toDateKey(new Date(value))
+}
 
 /** An old wrong answer followed by a correct answer is not a recent unresolved error. */
 export function recentWrongAttempts(attempts: AttemptRecord[], today: string): Map<string, AttemptRecord> {
   const latest = new Map<string, AttemptRecord>()
   for (const attempt of attempts) {
-    const date = attempt.createdAt?.slice(0, 10)
-    if (!isDateKey(date) || date > today || !Number.isFinite(Date.parse(attempt.createdAt))) continue
+    const date = answerDateKey(attempt.createdAt)
+    if (!date || date > today) continue
     const previous = latest.get(attempt.questionId)
     if (!previous || Date.parse(attempt.createdAt) > Date.parse(previous.createdAt) ||
-      (attempt.createdAt === previous.createdAt && attempt.correct)) latest.set(attempt.questionId, attempt)
+      (Date.parse(attempt.createdAt) === Date.parse(previous.createdAt) && attempt.correct)) latest.set(attempt.questionId, attempt)
   }
   const cutoff = addDays(today, 1 - LEARNING_POLICY.recentWrongDays)
-  return new Map([...latest].filter(([, attempt]) => !attempt.correct && attempt.createdAt.slice(0, 10) >= cutoff))
+  return new Map([...latest].filter(([, attempt]) => !attempt.correct && answerDateKey(attempt.createdAt)! >= cutoff))
 }
 
 export function makeQuestionStudyContext(input: {
@@ -50,7 +56,7 @@ export function questionContextCopy(context?: QuestionStudyContext) {
     'new-concept': ['오늘 개념 확인', '오늘 배정된 개념을 이해했는지 확인하는 문제입니다.'],
     'lesson-practice': ['단원 확인', '직접 선택한 단원의 내용을 확인하는 문제입니다.'],
     'due-review': ['복습 예정일 도래', `${context.dueOn ?? '저장된 예정일'}에 복습하도록 정한 카드와 연결된 문제입니다.`],
-    'recent-wrong': ['최근 오답 다시 확인', `${context.lastWrongAt?.slice(0, 10) ?? '최근'}의 마지막 답안이 오답이어서 다시 확인합니다.`],
+    'recent-wrong': ['최근 오답 다시 확인', `선정 당시 마지막 답안(${context.lastWrongAt ? answerDateKey(context.lastWrongAt) : '최근'})이 오답이어서 다시 확인합니다.`],
     'review-practice': ['배운 범위 확인', '이미 배운 개념이나 풀어 본 문항에서 골라 다시 확인합니다.'],
   }
   const [reasonLabel, reasonDetail] = reasons[context.reason]
