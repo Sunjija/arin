@@ -25,7 +25,8 @@ const authoredQuestions: Question[] = [
       '삼국 시대',
     ],
     answerIndex: 1,
-    explanation: '기하 무늬 토기(빗살무늬)·움집·초기 농경은 신석기 표지입니다. 청동기는 민무늬·비파형동검·고인돌입니다.',
+    explanation:
+      '정답은 「신석기 시대」입니다. 기하 무늬 토기(빗살무늬)·움집·초기 농경·어로는 신석기 표지입니다. 「구석기 시대」는 뗀석기·사냥·채집·이동 생활이 핵심이라 빗살무늬·움집과 맞지 않습니다. 「청동기 시대」는 민무늬 토기·비파형 동검·고인돌·군장 사회가 표지입니다. 「철기 시대」는 철제 농기구·무기·공구 보급이 핵심입니다. 「삼국 시대」는 고구려·백제·신라의 국가 체제 시기로, 선사 토기 표지와 맞지 않습니다.',
     era: 'prehistoric',
     tags: ['source', 'chronology'],
     difficulty: 1,
@@ -34,14 +35,14 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-01'],
     familyId: 'pre-neolithic-evidence',
-    contentVersion: 2,
+    contentVersion: 3,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010',
   },
   {
     id: 'q-02',
     stem: '다음 설명에 해당하는 국가로 옳은 것은?',
     passage:
-      '한의 요동군과 대립·교류하였고, 뒤에는 중국에서 이주해 온 위만이 왕위를 차지하였다. 사회 질서를 보여 주는 8조법의 일부가 전해진다.',
+      '중국에서 이주해 온 위만이 준왕을 몰아내고 왕위를 차지하였다. 뒤이어 철기 문화를 바탕으로 한과 한반도 남부 사이의 중계 무역으로 세력을 키웠고, 한과 대립하였다. 사회 질서를 보여 주는 8조법의 일부도 이 국가의 법으로 전해진다.',
     choices: [
       '부여',
       '고조선',
@@ -51,7 +52,7 @@ const authoredQuestions: Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      '요동군과의 관계, 위만의 집권, 8조법은 고조선의 특징입니다. 고조선 멸망 뒤 한은 그 영역 일부에 군현을 설치하였습니다.',
+      '정답은 「고조선」입니다. 위만의 집권(기원전 194)·중계 무역·한과의 대립·8조법은 고조선의 특징이며, 멸망(기원전 108) 뒤에야 한 군현이 설치되었습니다. 「부여」는 고대 만주 일대의 다른 초기 국가로 위만·8조법과 연결되지 않습니다. 「옥저」·「동예」는 동해안 일대 초기 국가·집단으로 고조선의 위만 집권과 구분합니다. 「삼한 소국 연맹」은 한반도 남부 마한·진한·변한 소국들의 연맹 양상으로, 위만 조선·8조법과 맞지 않습니다.',
     era: 'prehistoric',
     tags: ['king-figure', 'political-system', 'source'],
     difficulty: 2,
@@ -60,7 +61,7 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-04', 't-pre-05'],
     familyId: 'pre-gojoseon-state',
-    contentVersion: 2,
+    contentVersion: 3,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020',
   },
   {
@@ -74,7 +75,8 @@ const authoredQuestions: Question[] = [
       '농경이 발달하고 정착 생활이 더욱 확대되었다.',
     ],
     answerIndex: 3,
-    explanation: '빗살무늬토기는 신석기 표지입니다. 청동기는 민무늬 토기·비파형동검·고인돌이 핵심입니다.',
+    explanation:
+      '옳지 않은 것은 「빗살무늬토기가 대표적인 토기로 널리 사용되었다」입니다. 빗살무늬토기는 신석기 표지이고, 청동기의 대표 토기는 민무늬 토기입니다. 「비파형 동검이 제작·사용되었다」와 「고인돌이 지배층의 무덤으로 축조되었다」는 청동기 유물·무덤 표지로 옳습니다. 「군장 사회가 나타나고 빈부 격차가 커졌다」는 청동기 사회 변화로 옳습니다. 「농경이 발달하고 정착 생활이 더욱 확대되었다」도 청동기 생산·생활 변화로 옳습니다.',
     era: 'prehistoric',
     tags: ['chronology', 'cultural-heritage'],
     difficulty: 2,
@@ -83,7 +85,7 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-01', 't-pre-02'],
     familyId: 'pre-bronze-evidence',
-    contentVersion: 2,
+    contentVersion: 3,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0010',
   },
   // ─── 삼국 ───
@@ -1031,7 +1033,8 @@ const authoredQuestions: Question[] = [
       '한의 침략을 받아 멸망하였다.',
     ],
     answerIndex: 3,
-    explanation: '이 문제는 옳지 않은 설명을 찾습니다. 골품제는 신라의 신분 제도로 고조선의 제도가 아닙니다. 단군 전승, 위만의 집권, 8조법은 고조선의 단서입니다. 고조선은 한의 침략으로 멸망했고, 한 군현은 멸망 이후 설치되었습니다.',
+    explanation:
+      '옳지 않은 것은 「골품제에 따라 관등이 엄격히 제한되었다」입니다. 골품제는 신라의 신분·관등 제한 제도이며 고조선의 제도가 아닙니다. 「단군 건국 전승이 전한다」·「위만이 왕위를 차지한 시기가 있다」·「8조법으로 알려진 법령이 전해진다」는 고조선 관련 설명으로 옳습니다. 「한의 침략을 받아 멸망하였다」도 왕검성 함락(기원전 108)과 맞는 설명이며, 한 군현 설치는 멸망 이후입니다.',
     era: 'prehistoric',
     tags: ['political-system', 'chronology'],
     difficulty: 2,
@@ -1040,7 +1043,7 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-03', 't-pre-04', 't-pre-05'],
     familyId: 'pre-gojoseon-state',
-    contentVersion: 2,
+    contentVersion: 3,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0030',
   },
   // ─── 고려 ───
@@ -1612,7 +1615,8 @@ const authoredQuestions: Question[] = [
       '혁거세',
     ],
     answerIndex: 1,
-    explanation: '핵심 단서는 고조선으로 들어와 왕위를 차지했다는 설명입니다. 위만은 준왕을 몰아내고 집권했습니다. 단군은 고조선 건국 전승, 고주몽은 고구려, 온조는 백제, 혁거세는 신라의 건국과 연결됩니다.',
+    explanation:
+      '정답은 「위만」입니다. 연 지역에서 들어와 준왕을 몰아내고 고조선 왕위를 차지한 인물이며, 왕검성을 중심으로 세력을 키웠습니다. 「단군」은 고조선 건국 전승의 인물로, 「들어와 왕위를 차지」한 후기 정치 변동과 구분합니다. 「고주몽」은 고구려 건국, 「온조」는 백제 건국, 「혁거세」는 신라 건국과 연결되어 고조선 왕위 교체 설명과 맞지 않습니다.',
     era: 'prehistoric',
     tags: ['king-figure', 'source'],
     difficulty: 2,
@@ -1621,7 +1625,7 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-04'],
     familyId: 'pre-wiman',
-    contentVersion: 2,
+    contentVersion: 3,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0020',
   },
   // ─── 개항기 ───
@@ -1722,7 +1726,8 @@ const authoredQuestions: Question[] = [
       '조선',
     ],
     answerIndex: 1,
-    explanation: '고인돌과 비파형동검을 함께 제시한 것이 결정적 단서입니다. 청동기 시대에는 지배층과 군장이 나타났습니다. 신석기는 빗살무늬토기·초기 농경과 연결하고, 통일신라·고려·조선은 훨씬 뒤의 시대이므로 구분하세요.',
+    explanation:
+      '정답은 「청동기」입니다. 고인돌과 비파형 동검을 함께 제시한 것이 결정적 단서이며, 지배층·군장 사회와 연결됩니다. 「신석기」는 빗살무늬토기·움집·초기 농경이 표지입니다. 「통일신라」·「고려」·「조선」은 국가 성립 이후의 훨씬 늦은 시대라 고인돌·비파형 동검 표지와 맞지 않습니다.',
     era: 'prehistoric',
     tags: ['cultural-heritage', 'source'],
     difficulty: 1,
@@ -1731,7 +1736,7 @@ const authoredQuestions: Question[] = [
     ...META,
     conceptIds: ['t-pre-02'],
     familyId: 'pre-bronze-evidence',
-    contentVersion: 2,
+    contentVersion: 3,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0030',
   },
   // ─── 고려 ───
@@ -2053,6 +2058,59 @@ const authoredQuestions: Question[] = [
     lessonId: 'lesson-10',
     formatId: 'policy-content',
     ...META,
+  },
+  // ─── 선사·고조선 (t-pre-07·t-pre-08 기초 확인) ───
+  {
+    id: 'q-101',
+    stem: '다음 출토 목록에서 읽을 수 있는 철기의 용도로 가장 적절한 것은?',
+    passage:
+      '유적 출토 목록(요약)\n· 철제 괭이, 철제 낫\n· 철제 칼, 철제 화살촉\n· 철제 끌, 철제 자귀\n같은 층위에서 돌·나무 공구도 함께 확인되었다.',
+    choices: [
+      '농기구·무기·공구로 활용되었다.',
+      '모든 생활 도구를 철기로만 교체하였다.',
+      '청동기 시대에만 의례용 장식으로 쓰였다.',
+      '신석기 빗살무늬토기의 제작에만 쓰였다.',
+      '고인돌 덮개돌을 대신하는 재료로만 쓰였다.',
+    ],
+    answerIndex: 0,
+    explanation:
+      '정답은 「농기구·무기·공구로 활용되었다」입니다. 목록의 괭이·낫(농기구), 칼·화살촉(무기), 끌·자귀(공구)를 직접 읽으면 됩니다. 「모든 생활 도구를 철기로만 교체하였다」는 돌·나무 공구가 함께 확인되었다는 단서와 모순됩니다. 「청동기 시대에만 의례용 장식으로 쓰였다」는 철기의 실용 용도와 시대를 잘못 묶습니다. 「신석기 빗살무늬토기의 제작에만 쓰였다」·「고인돌 덮개돌을 대신하는 재료로만 쓰였다」는 신석기·청동기 표지를 철기 용도로 잘못 연결한 설명입니다. 기초 확인용 자체 자료이며 실전 기출과 동등한 난이도라고 보지 않습니다.',
+    era: 'prehistoric',
+    tags: ['source', 'chronology'],
+    difficulty: 1,
+    lessonId: 'lesson-01',
+    formatId: 'source-what',
+    ...META,
+    conceptIds: ['t-pre-07'],
+    familyId: 'pre-iron-use',
+    contentVersion: 1,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0020_0010',
+  },
+  {
+    id: 'q-102',
+    stem: '(가)~(다)를 일어난 순서대로 배열한 것은?',
+    passage:
+      '(가) 위만이 고조선의 왕위를 차지하였다.\n(나) 빗살무늬토기·움집을 사용하며 정착 생활이 발달하였다.\n(다) 고인돌이 축조되고 비파형 동검이 권력의 상징으로 쓰였다.',
+    choices: [
+      '(가) → (나) → (다)',
+      '(나) → (다) → (가)',
+      '(다) → (나) → (가)',
+      '(나) → (가) → (다)',
+      '(다) → (가) → (나)',
+    ],
+    answerIndex: 1,
+    explanation:
+      '정답은 「(나) → (다) → (가)」입니다. (나) 빗살무늬토기·움집은 신석기, (다) 고인돌·비파형 동검은 청동기, (가) 위만의 집권은 고조선 후기이므로 신석기 → 청동기 → 고조선 순입니다. 「(가) → (나) → (다)」와 「(가)가 앞에 오는 배열」은 위만을 선사 유물보다 앞에 둔 오류입니다. 「(다) → (나) → (가)」는 청동기를 신석기보다 앞에 둔 오류입니다. 「(나) → (가) → (다)」는 위만 집권을 청동기 표지보다 앞에 둔 오류입니다.',
+    era: 'prehistoric',
+    tags: ['chronology', 'source'],
+    difficulty: 2,
+    lessonId: 'lesson-01',
+    formatId: 'chronology-labeled',
+    ...META,
+    conceptIds: ['t-pre-08'],
+    familyId: 'pre-era-sequence',
+    contentVersion: 1,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010',
   },
 
 ]
