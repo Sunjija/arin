@@ -28,7 +28,9 @@ function correctCount(session: LibraryPracticeSession) {
 }
 
 function messageOf(error: unknown, fallback: string) {
-  if (error instanceof Error && error.message.includes('다른 창')) return error.message
+  if (error instanceof Error && error.message.includes('다른 창')) {
+    return '다른 창에서 진행이 바뀌었습니다. 저장된 진행을 다시 불러와 주세요.'
+  }
   // DataError 문구는 사용자용. 디스크/인덱스 등 원문 예외는 노출하지 않는다.
   if (isDataError(error) && error.message) return error.message
   return fallback
@@ -84,13 +86,12 @@ export function LessonPractice({ lessonId }: { lessonId: string }) {
     }
   }, [lessonId])
 
-  if (!bankCount) return null
-
   const stillCurrent = (gen: number) => gen === generation.current
 
   const finishBusy = (gen: number) => {
+    if (!stillCurrent(gen)) return
     lock.current = false
-    if (stillCurrent(gen)) setBusy(false)
+    setBusy(false)
   }
 
   const runMutation = async (
@@ -176,6 +177,7 @@ export function LessonPractice({ lessonId }: { lessonId: string }) {
   }
 
   if (view === 'intro' || !session) {
+    if (!bankCount) return null
     return (
       <section>
         <h3>읽은 내용을 확인해 보세요</h3>

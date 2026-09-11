@@ -213,9 +213,29 @@ it('offers reload when another window changed the saved progress', async () => {
   })
   await user.click(screen.getByRole('button', { name: `1. ${question.choices[0]}` }))
   expect(await screen.findByText(/다른 창/)).toBeVisible()
+  expect(screen.queryByText(/DataError:/)).toBeNull()
   expect(screen.getByRole('button', { name: '저장된 진행 다시 불러오기' })).toBeVisible()
   expect(screen.queryByText(question.explanation)).toBeNull()
   await user.click(screen.getByRole('button', { name: '저장된 진행 다시 불러오기' }))
   expect(await screen.findByText('저장된 진행을 다시 불러왔습니다.')).toBeVisible()
   expect(screen.getByRole('button', { name: `2. ${question.choices[1]}` })).toHaveAttribute('aria-pressed', 'true')
+})
+
+it('resumes frozen questions even when the current lesson bank no longer contains them', async () => {
+  const user = userEvent.setup()
+  const row = await startLibraryPractice('lesson-01')
+  const frozenLessonId = 'lesson-retired'
+  await db.libraryPractice.put({
+    ...row,
+    id: `${row.id}-retired`,
+    lessonId: frozenLessonId,
+    questionSnapshots: row.questionSnapshots.map((snapshot) => ({ ...snapshot, lessonId: frozenLessonId })),
+  })
+  render(<LessonPractice lessonId={frozenLessonId} />)
+  expect(await screen.findByRole('heading', { name: lessonBank[0]!.stem })).toBeVisible()
+  await chooseAnswer(user, lessonBank[0]!)
+  await user.click(screen.getByRole('button', { name: '답 확인' }))
+  expect(await screen.findByText(lessonBank[0]!.explanation)).toBeVisible()
+  expect(await db.attempts.count()).toBe(1)
+  expect((await getLibraryPractice(frozenLessonId))?.step).toBe('feedback')
 })

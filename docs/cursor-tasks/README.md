@@ -6,17 +6,19 @@
 |---|---|---|
 | P0-04 하위: 첫 단원 콘텐츠 | Cursor CLI / `cursor/p0-first-lesson-content` | 기준 `ae444905`, 제출 `7cdcfa26`. 콘텐츠 2파일과 검토 문서만 변경. 총괄 브랜치에 `0a60ad8`로 반입 후 추가 검수·수정 |
 | P0-03/P1-01 및 P1-02 기반 | Codex 총괄 / `codex/arin-design-v3` | 목표 날짜·요일·개념 분량·명시적 순서·부분 세션·원본 보존·검증을 직접 구현 |
-| P1-04 자료실 재개 UI | Cursor CLI / `cursor/p1-library-resume` | 기준 `0b56a6d`, LessonPractice·테스트·검토 문서에 한정해 실행 중 |
+| P1-04 자료실 재개 UI | Cursor CLI / `cursor/p1-library-resume` | 기준 `0b56a6d`, 제출 `00a900a`, 인수 `3722f76`. 허용 3파일 준수 후 총괄 보완·216개 회귀 통과 |
 | P1-04 저장/백업 | Codex 총괄 / `codex/arin-design-v3` | 트랜잭션 API·DB v4·구형 백업 호환·복원 검증 |
 | 이후 작업 | 미배정 | 복습 이유·노출 구분이 다음 후보 |
 
-[실제 전달 지시](2026-09-11-first-lesson-content.md), [Cursor 제출 보고서와 총괄 검토](../reviews/p0-first-lesson-content.md), [현재 API](../parallel-redesign/e-foundation-api.md), [검증](../p0-validation.md).
+[콘텐츠 전달 지시](2026-09-11-first-lesson-content.md), [콘텐츠 제출 검토](../reviews/p0-first-lesson-content.md), [자료실 전달 지시](2026-09-11-library-resume.md), [자료실 제출 검토](../reviews/p1-library-resume-ui.md), [현재 API](../parallel-redesign/e-foundation-api.md), [자료실 통합 검증](../p1-library-validation.md).
 
 ## 인수 판단
 
 범위를 좁힌 콘텐츠 초안 작업에는 활용 가능했다. 허용 파일 경계를 지키고, 범위 밖 테스트 수정과 의존성 실패도 보고했다. 다만 q-102의 마지막 선지 해설 누락, 청동기·고조선 시기 구분, 가상 자료 표시, 실제 선행 개념 매핑은 총괄이 보완했다. 역사 전문가 승인과 실전 난이도 검증은 남아 있다. **무검수 자동 병합이 가능한 품질이라고 판단하지 않는다.**
 
 Cursor worktree에서 정답 위치 고정 테스트와 `fake-indexeddb` 모듈 해석이 실패했다. 총괄 worktree에서 테스트를 수량에 독립적인 균등 분포 검사로 바꾸고, 전체 타입·회귀·빌드를 실행했다. 세부 결과는 검증 기록에 적는다.
+
+두 번째 자료실 UI 작업도 허용 경계를 지키고 실제 DB를 쓰는 재개/실패 테스트 9개를 제출했다. 총괄 검수에서 현재 문항 목록이 비었을 때 저장된 원본까지 숨기는 처리, 이전 단원의 늦은 응답이 현재 요청 잠금을 풀 수 있는 처리, 실제 브라우저에서 내부 예외 이름이 붙는 충돌 문구를 보완했다. 저장 API·마이그레이션을 먼저 고정한 좁은 UI 작업에는 유용했으며, 독립 검수 후 통합하는 방식은 계속 유지한다.
 
 ## 다음에도 같은 방식으로 넘긴다
 

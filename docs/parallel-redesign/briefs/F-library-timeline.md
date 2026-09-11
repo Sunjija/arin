@@ -6,6 +6,8 @@
 현재 ConceptExplorer/LessonPractice를 기반으로 E 기록 계약과 G 콘텐츠를 연결한다.
 공유 타입·DB·API·CSS는 총괄 계약을 따른다. 문서의 목표 기능을 구현 완료로 가정하지 않는다. 소유 경로 밖의 변경은 의존성으로 보고한다.
 
+자료실 문제 재개는 [구현된 소비 API](../library-practice-api.md)를 사용한다. LessonPractice의 별도 저장소를 만들거나 recordAnswer를 추가 호출하지 않는다. 현재 DB/백업 v4와 [인수 검증](../../p1-library-validation.md)을 확인한다. 개념 읽기 스크롤 위치는 아직 저장하지 않는다.
+
 ## 요구 사항
 - 단원 목록·읽기 영역·Pretendard·검색 query·키보드·긴 글 가독성 유지.
 - 배경 → 설명 → 비교 → 확인 문제. JSX에 별도 사실/정답 원문을 복제하지 않는다.
