@@ -2,7 +2,7 @@ import type { ActiveSession, AttemptRecord, Question, QuestionSelectionReason, Q
 import { addDays, isDateKey, toDateKey } from './dates'
 import { LEARNING_POLICY } from './learningPolicy'
 
-export function answerDateKey(value: string): string | null {
+export function answerDateKey(value: unknown): string | null {
   if (isDateKey(value)) return value
   if (typeof value !== 'string' || !isDateKey(value.slice(0, 10)) || !Number.isFinite(Date.parse(value))) return null
   return toDateKey(new Date(value))

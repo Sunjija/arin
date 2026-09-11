@@ -108,9 +108,9 @@ export function CardsPage() {
     if (starting) return
     setStarting(true)
     try {
-      const session = await startOrResumeSession({ entryMode: 'review' })
-      if (session.entryMode === 'review' && (session.step === 'result' || session.cardIds.length === 0)) {
-        notify('오늘 복습할 카드가 없습니다. 아래 목록만 확인할 수 있습니다.', 'neutral')
+      const session = await startOrResumeSession({ entryMode: 'review', startNewReview: true })
+      if (session.entryMode === 'review' && session.step === 'result') {
+        notify('오늘 배정된 복습 카드와 문제가 없습니다.', 'neutral')
         return
       }
       navigate('/study', { state: { entryMode: session.entryMode ?? 'review' } })
@@ -160,9 +160,11 @@ export function CardsPage() {
     }
   }
 
-  const ongoing = activeSession?.date === today && activeSession.step !== 'result' ? activeSession : null
+  const ongoing = activeSession && activeSession.step !== 'result' ? activeSession : null
   const sessionCards = ongoing ? ongoing.cardIds.slice(ongoing.cardIndex).flatMap(id => { const c = cards.find(item => item.id === id); return c ? [c] : [] }) : plan?.dueCards ?? []
   const selectedCount = ongoing ? Math.max(0, ongoing.cardIds.length - ongoing.cardIndex) : sessionCards.length
+  const selectedQuestionCount = ongoing ? Math.max(0, ongoing.questionIds.length - ongoing.questionIndex) : plan?.reviewQuestionCount ?? 0
+  const reviewQuantity = [selectedCount > 0 ? `카드 ${selectedCount}장` : '', selectedQuestionCount > 0 ? `문제 ${selectedQuestionCount}개` : ''].filter(Boolean).join(' · ')
   const bundleEras = ALL_ERAS.filter(id => sessionCards.some(c => c.era === id))
 
   return (
@@ -201,16 +203,16 @@ export function CardsPage() {
       {tab === 'due' ? (
         <section className="review-overview">
           <div className="review-summary">
-            <div><p className="meta-text">오늘 복습할 카드</p><p className="review-count">{plan ? selectedCount : '—'}<small>장</small></p></div>
+            <div><p className="meta-text">오늘 복습할 카드</p><p className="review-count">{plan ? selectedCount : '—'}<small>장</small></p><p className="meta-text">{ongoing ? '남은 문제' : '복습 문제'} {plan ? selectedQuestionCount : '—'}개</p></div>
             <div className="week-ring" aria-label={`최근 7일 중 ${weekDays}일 학습`}>
               <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--line)" strokeWidth="5"/><circle cx="40" cy="40" r="35" fill="none" stroke="var(--correct)" strokeWidth="5" strokeDasharray={`${220 * weekDays / 7} 220`} transform="rotate(-90 40 40)" strokeLinecap="round" /></svg>
               <strong>{weekDays}/7</strong><span>주간 학습일</span>
             </div>
           </div>
           <p className="meta-text">{ongoing ? `진행 중인 학습 · 남은 카드 ${selectedCount}장` : `복습 대기 ${dueCards.length}장 중 오늘의 분량 ${selectedCount}장`}</p>
-          {ongoing || selectedCount > 0 ? <Button className="hero-cta" disabled={starting || !plan} onClick={() => void startReview()}>
-            {starting ? '시작하는 중…' : ongoing ? '진행 중인 학습 이어가기' : `${selectedCount}장 복습 시작`}
-          </Button> : <EmptyState title={plan ? '오늘 복습을 모두 마쳤어요' : '복습 계획을 불러오는 중…'}>{plan ? '다음 복습일이 되면 필요한 카드가 여기에 모입니다.' : ''}</EmptyState>}
+          {ongoing || selectedCount > 0 || selectedQuestionCount > 0 ? <Button className="hero-cta" disabled={starting || !plan} onClick={() => void startReview()}>
+            {starting ? '시작하는 중…' : ongoing ? '진행 중인 학습 이어가기' : `${reviewQuantity} 복습 시작`}
+          </Button> : <EmptyState title={plan ? '오늘 배정된 복습이 없어요' : '복습 계획을 불러오는 중…'}>{plan ? '학습한 내용에서 복습할 카드와 문제를 골라 드립니다.' : ''}</EmptyState>}
           {bundleEras.length > 0 && <div className="mt-8">
             <div className="section-heading"><h2>오늘의 복습 묶음</h2><span>시대별 카드</span></div>
             {bundleEras.map((id, index) => <div className="review-bundle" key={id}>

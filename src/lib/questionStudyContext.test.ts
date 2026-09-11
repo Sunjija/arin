@@ -97,4 +97,17 @@ describe('review selection evidence and submitted-answer history', () => {
     expect((await startLesson({ today: '2026-01-06' })).questionContexts).toEqual(session.questionContexts)
     expect((await computeStudyPlan('2026-01-06')).questionContexts).toEqual(session.questionContexts)
   })
+
+  it('resumes a completed review result until another review is explicitly requested', async () => {
+    await seedCore()
+    await db.attempts.put(attempt('learned', goryeo[0]!, false, '2026-01-05'))
+    const session = await startLesson({ today: '2026-01-05', entryMode: 'review' })
+    const done = { ...session, step: 'result' as const, questionIndex: session.questionIds.length }
+    await db.activeSession.put(done)
+    expect(await startLesson({ today: '2026-01-05', entryMode: 'review' })).toEqual(done)
+    expect(await startLesson({ today: '2026-01-06', entryMode: 'review' })).toEqual(done)
+    const restarted = await startLesson({ today: '2026-01-05', entryMode: 'review', startNewReview: true })
+    expect(restarted.id).not.toBe(session.id)
+    expect(await db.attempts.count()).toBe(1)
+  })
 })

@@ -5,7 +5,7 @@ import type { ActiveSession } from '../../types'
 
 function exposureCount(group: { total: number; correct: number }) {
   if (group.total === 0) return '기록 없음'
-  return `${group.correct}/${group.total}`
+  return `정답 ${group.correct} / ${group.total}문제`
 }
 
 export function ResultStep({ session, lessonTitle }: { session: ActiveSession; lessonTitle: string }) {

@@ -216,7 +216,7 @@ export async function startOrResumeSession(
     return normalized
   }
 
-  return startLesson({ today, entryMode })
+  return startLesson({ today, entryMode, startNewReview: input.startNewReview })
 }
 
 export async function saveSession(session: ActiveSession): Promise<void> {
@@ -435,11 +435,12 @@ function buildAdvice(
 }
 
 export function sessionAnswerStats(answered: SessionAnswer[]) {
-  const correct = answered.filter((a) => a.correct).length
+  const unique = [...new Map(answered.map(answer => [answer.questionId, answer])).values()]
+  const correct = unique.filter((a) => a.correct).length
   return {
-    total: answered.length,
+    total: unique.length,
     correct,
-    accuracy: answered.length ? Math.round((correct / answered.length) * 100) : 0,
+    accuracy: unique.length ? Math.round((correct / unique.length) * 100) : 0,
   }
 }
 

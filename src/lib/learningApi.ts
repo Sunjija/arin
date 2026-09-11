@@ -382,6 +382,8 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
     return existing
   }
 
+  if (entryMode === 'review' && existing?.entryMode === 'review' && existing.step === 'result' && !input.startNewReview) return existing
+
   if (entryMode === 'daily' && input.lessonId === undefined && existing?.date === today && existing.step === 'result' && (await db.studyDays.get(today))?.completed) return existing
 
   const plan = await computeStudyPlan(today)

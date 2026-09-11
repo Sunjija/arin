@@ -197,6 +197,7 @@ export type StartMockResult =
     }
 
 export interface StartStudyInput {
+  startNewReview?: boolean
   today?: string
   entryMode?: StudyEntryMode
 }

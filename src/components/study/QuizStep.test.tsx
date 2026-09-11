@@ -26,7 +26,7 @@ function contextFor(
     selectedOn: '2026-01-05',
     dueOn: reason === 'due-review' ? '2026-01-05' : null,
     lastWrongAt: reason === 'recent-wrong' ? '2026-01-03T12:00:00.000Z' : null,
-    priorAttemptCount: 0,
+    priorAttemptCount: reason === 'recent-wrong' ? 1 : 0,
     similarQuestionAttemptCount: null,
     ...overrides,
   }

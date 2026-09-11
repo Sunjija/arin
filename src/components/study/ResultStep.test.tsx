@@ -85,13 +85,13 @@ describe('ResultStep exposure groups', () => {
     expect(within(section).getByText('첫 풀이 기록')).toBeVisible()
     expect(within(section).getByText('다시 풀이')).toBeVisible()
     expect(within(section).getByText('구분 정보 없음')).toBeVisible()
-    expect(within(section).getAllByText('1/1')).toHaveLength(2)
-    expect(within(section).getByText('0/1')).toBeVisible()
+    expect(within(section).getAllByText('정답 1 / 1문제')).toHaveLength(2)
+    expect(within(section).getByText('정답 0 / 1문제')).toBeVisible()
     expect(within(section).getByText('학습 시작 전 동일 문항 답안 없음')).toBeVisible()
     expect(within(section).queryByText(/%/)).toBeNull()
     expect(screen.getByText('2장')).toBeVisible()
-    expect(screen.getByText('75%')).toBeVisible()
-    expect(screen.getByText('3/4')).toBeVisible()
+    expect(screen.getByText('67%')).toBeVisible()
+    expect(screen.getByText('2/3')).toBeVisible()
   })
 
   it('shows 기록 없음 for empty groups instead of inventing 0%', () => {
@@ -104,7 +104,7 @@ describe('ResultStep exposure groups', () => {
       }),
     )
     const section = screen.getByLabelText('풀이 이력 구분')
-    expect(within(section).getByText('1/1')).toBeVisible()
+    expect(within(section).getByText('정답 1 / 1문제')).toBeVisible()
     expect(within(section).getAllByText('기록 없음')).toHaveLength(2)
     expect(within(section).queryByText('0%')).toBeNull()
     expect(within(section).queryByText('0/0')).toBeNull()

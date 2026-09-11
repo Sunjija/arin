@@ -1,6 +1,6 @@
 # E · 현재 구현된 공통 API와 남은 게이트
 
-2026-09-11, `learning-foundation-v2`, DB/백업 v4 (자료실 재개 테이블 추가). PR #14를 수정 통합한 현재 소스 기준. **기록 API는 소비 가능하며 계획 엔진 전체 동결을 선언하지 않는다.** 미완성 항목은 아래에 명시한다. 소유자는 E/총괄이다.
+2026-09-11, `learning-foundation-v3`, DB/백업 v4 (자료실 재개 테이블 및 선택적 문제 선정·풀이 이력 필드). PR #14를 수정 통합한 현재 소스 기준. **기록 API는 소비 가능하며 계획 엔진 전체 동결을 선언하지 않는다.** 미완성 항목은 아래에 명시한다. 소유자는 E/총괄이다.
 
 ## 호출 계약
 
@@ -11,10 +11,10 @@
 | `getSettings`, `getGoal` | 없음 → 정규화된 설정/목표 Promise | 설정이 없으면 DataError `not-found` |
 | `saveGoal` | `SaveGoalInput` → `LearningResult<LearningGoal>` | 성공 `ok/value`, 실패 `validation-failed` 또는 `save-failed`. 설정/계획 무효화 한 트랜잭션 |
 | `computeStudyPlan` | `today?: YYYY-MM-DD` → `FrozenStudyPlan` | 잘못된 날짜 `validation-failed`, DB 실패 reject. 기존 미완료 세션의 목록 우선, 없는 경우 당일 계획 저장 |
-| `startLesson` | `{today?, entryMode?: daily/review, lessonId?}` → `ActiveSession` | 날짜가 달라도 미완료 세션 우선. 새 세션은 UUID·문항 스냅샷 보관. 잘못된 단원 `not-found`; DB 실패 reject |
+| `startLesson` | `{today?, entryMode?: daily/review, lessonId?, startNewReview?}` → `ActiveSession` | 날짜가 달라도 미완료 세션 우선. 완료 review는 기본 호출에서 결과 유지, 명시적 목록 시작만 startNewReview=true. 새 세션은 UUID·문항 스냅샷 보관. 잘못된 단원 `not-found`; DB 실패 reject |
 | `recordAnswer` | 문항/선택/출처/선택적 시간/attemptId/resultId/snapshot → `AttemptRecord` | 답안·오답·숙련도·개념 기록을 원자적으로 저장. 동일 attemptId 또는 resultId+문항 재시도는 원본 반환. 다른 문항에 같은 ID 재사용은 거절 |
 | `recordConceptView` | `{conceptId, at?: YYYY-MM-DD}` → `ConceptProgressRecord` | 열람 시각만 기록. 완료/숙련도 상승 아님. 알 수 없는 ID/날짜 거절 |
-| `selectReview` | 날짜 → `ReviewSelection` | 계획의 도래 카드/복습 문항. recentWrongItems는 실제 오답 이력과 교집합 |
+| `selectReview` | 날짜 → `ReviewSelection` | 계획의 도래 카드/복습 문항. questionItems는 문항별 선정 근거이며 recentWrongItems는 실제 최근 오답 선정만 포함. 도래일 없는 오답에 오늘 날짜를 만들지 않음 |
 | `completeSession` | `ActiveSession` → `{session, created}` | 완료 ID 멱등성. 일일 합산·단원/개념 완료·메타·세션 원자 저장. 새 세션은 선택 개념의 회상 확인+배정된 확인 문항 제출로 해당 개념 완료. 구형 단원 모드는 기존 완료 조건 유지 |
 
 `recordAnswer.correct`는 기존 호출 호환용이며 채점에 신뢰하지 않는다. 정오와 오답 원본은 스냅샷으로 계산한다. `responseMs: null`은 미측정이며 가짜 시간을 채우지 않는다. 일반 학습은 긴 응답 시간으로 감점하지 않는다. 벽시계상 세션 경과 시간은 중단 시간을 포함하므로 실제 학습 시간으로 기록하지 않는다.
@@ -71,10 +71,10 @@ DB v3는 `conceptProgress` 테이블을 추가한다. 기존 ID·카드·시도�
 ## 아직 남은 P0-03 / P1 경계
 
 1. 자료실의 문제/선택/해설/결과 재개 계약은 [자료실 진행 API](library-practice-api.md)에 분리했다. 읽기 스크롤 위치·검색 단원 복원 범위 확장과 모바일 전 과정 QA는 별도다. 단순 열람을 완료로 바꾸지 않는다.
-2. 문항별 도래/오답/보충 이유, 오답 원인·반복 노출별 복습 우선순위, 실측 숙련도 계약 확장. 지금은 정확한 노출 범위와 기존 복습 정책을 연결한 단계다.
+2. 문항별 도래/최근 오답/배운 범위 확인 이유와 동일 문항의 이전 답안 수를 [복습 표시 API](review-context-api.md)로 제공한다. 마지막 답안이 정답이면 최근 오답 우선 대상에서 제외한다. 개인별 실측 가중치·회상 유형 배분·문항 계열 전수 매핑은 남아 있다.
 3. 오늘 학습의 다중 탭 session revision 충돌 정책과 실제 사용자 데이터의 전 과정 QA. 자료실은 세션 ID+revision으로 오래된 선택을 거절하며 재조회를 제공한다.
 4. 81개 미준비 설명과 여러 나라·가야 등 내부 목록 밖 공식 범위 검증. 전 범위 설명·이미지·전문가 승인·미노출 실전 출제는 P2다.
 5. 목표 온보딩의 첫 방문 흐름과 공식 시험 회차/일정 선택기의 최신성 관리. 현재 설정 화면에서 시험 날짜를 직접 입력한다.
 6. 공개 배포 접근 복구와 파일럿 사용자 검증. 코드·테스트 통과를 공개 반영으로 보고하지 않는다.
 
-실제 배정은 [Cursor 기록](../cursor-tasks/README.md)을 따른다. 콘텐츠 초안에 이어 자료실 소비 UI를 Cursor에 맡겼다. 목표·분량·공통 API·DB/백업 통합은 총괄이 수행한다. 나머지 역할표는 추가 실행 지시가 아니다.
+실제 배정은 [Cursor 기록](../cursor-tasks/README.md)을 따른다. 콘텐츠·자료실 재개·복습 이유 UI 3건을 인수했다. 목표·분량·공통 API·DB/백업 통합과 전체 검증은 총괄이 수행한다. [복습 통합 검증](../p1-review-validation.md) 이후 추가 배정은 아직 없다.

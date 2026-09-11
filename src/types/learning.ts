@@ -42,6 +42,8 @@ export interface SaveGoalInput {
 }
 
 export interface StartLessonInput {
+  /** Explicit review-list action only; page reloads must not silently start another run. */
+  startNewReview?: boolean
   today?: string
   entryMode?: 'daily' | 'review'
   lessonId?: string

@@ -28,3 +28,13 @@ const { first, repeated, unknown } = sessionExposureStats(session)
 QuizStep은 문제·피드백 양쪽에 reasonLabel/historyLabel과 짧은 reasonDetail을 노출하고, 긴 historyDetail은 펼쳐 읽을 수 있게 한다. 선택·저장·원인·다음 흐름을 바꾸지 않는다. ResultStep은 첫 풀이/다시 풀이/구분 정보 없음의 정답 개수와 제출 개수를 보여준다. 복습 세션에서도 같은 결과를 표시한다.
 
 `selectReview`의 questionItems는 계획의 복습 문항 context 전체다. recentWrongItems는 실제 recent-wrong 선정만 포함하며 dueOn은 null이다. 구형 계획에 이유가 없으면 상세 목록도 비워 두고 questionIds는 보존한다.
+
+## 재개·백업·시간 기준
+
+- `startLesson` / `startOrResumeSession`의 `startNewReview?: boolean`은 복습 목록의 명시적 시작 버튼만 true로 전달한다. 기본 호출은 완료된 review 결과도 보존한다. 새로고침·자정 경과로 자동 새 회차를 만들지 않는다. 미완료 세션은 이 옵션보다 우선하여 재개한다.
+- 카드가 0장이어도 복습 문항이 있으면 시작할 수 있다. 문항만 있는 회차는 quiz부터 시작한다. 둘 다 없는 경우에만 빈 상태다.
+- ISO 답안 시각은 학습자의 로컬 달력일로 비교한다. 날짜 키는 그대로 사용한다. 최근 7일은 선정일과 앞선 6일이다. 같은 시각의 정오 충돌은 정답을 우선하여 오답을 과대 배정하지 않는다.
+- 선택적 context가 있는 백업은 문항 목록·새/복습 범위·중복 ID·이유·날짜·이전 답안 수를 복원 전에 검증한다. 일부 손상도 전체 복원을 거절하며 기존 DB를 바꾸지 않는다. v1~v4에서 이 필드가 없으면 미확인으로 보존한다.
+- 이유는 고정된 계획이 선정한 당시의 근거이고, 풀이 횟수는 세션 시작 시점 기준이다. 당일 계획을 매 답안 제출마다 다시 뽑지는 않는다. 새 계획 선정 때는 마지막 정답으로 해소된 오답을 우선 대상에서 제외한다. 진행 중 화면의 이유나 첫 풀이 분류를 사후 변경하지 않는다.
+
+구현·통합 증거는 [복습 검증](../p1-review-validation.md)을 따른다. 개인별 가중치나 전체 문항 계열 매핑까지 완료한 계약은 아니다.

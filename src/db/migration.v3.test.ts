@@ -32,7 +32,7 @@ it('upgrades an actual v2 database without erasing edited cards, attempts or ses
     await legacy.table('meta').put(saved.meta)
     await legacy.table('cards').put(card)
     await legacy.table('attempts').bulkPut(saved.attempts)
-    await legacy.table('activeSession').put({ ...session, questionSnapshots: undefined, newQuestionIds: undefined, reviewQuestionIds: undefined, conceptIds: undefined, confirmedConceptIds: undefined, guideSnapshots: undefined })
+    await legacy.table('activeSession').put({ ...session, questionContexts: undefined, questionSnapshots: undefined, newQuestionIds: undefined, reviewQuestionIds: undefined, conceptIds: undefined, confirmedConceptIds: undefined, guideSnapshots: undefined })
   } finally { legacy.close() }
   await db.open()
   expect(db.verno).toBe(4)
