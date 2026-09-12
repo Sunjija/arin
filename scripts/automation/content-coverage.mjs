@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { createHash } from 'node:crypto'
-import { readBank } from './audit.mjs'
+import { readBank, sourceHash, normalizeNewlines } from './audit.mjs'
 
 const inputs = {
   lessons: ['lessons', 'lessons'], questions: ['questions', 'authoredQuestions'],
@@ -9,7 +8,7 @@ const inputs = {
   concepts: ['topicCatalog', 'TOPIC_CATALOG'], guides: ['lessonGuides', 'lessonGuides'],
 }
 const banks = Object.fromEntries(Object.entries(inputs).map(([kind, [file, variable]]) => [kind, readBank(`src/data/${file}.ts`, variable)]))
-const inputHashes = Object.fromEntries(Object.values(inputs).map(([file]) => [`src/data/${file}.ts`, createHash('sha256').update(fs.readFileSync(`src/data/${file}.ts`)).digest('hex')]))
+const inputHashes = Object.fromEntries(Object.values(inputs).map(([file]) => [`src/data/${file}.ts`, sourceHash(fs.readFileSync(`src/data/${file}.ts`, 'utf8'))]))
 const normalize = (value) => String(value ?? '').replace(/[\s·ㆍ~:：()[\]（）]/g, '')
 const textOf = (row) => normalize([row.title, row.front, row.back, row.stem, row.passage, row.explanation, row.description].filter(Boolean).join(' '))
 const candidatesFor = (row) => banks.concepts.filter(concept => concept.era === row.era && concept.keywords.some(keyword => normalize(keyword).length >= 2 && textOf(row).includes(normalize(keyword)))).map(concept => concept.id)
@@ -56,7 +55,7 @@ const md = ['# 콘텐츠 원본 집계', '', '자동 생성: `node scripts/autom
 const outputs = { 'research/content-coverage/inventory.json': JSON.stringify(inventory, null, 2)+'\n', 'research/content-coverage/report.md': md }
 for (const [file, content] of Object.entries(outputs)) {
   if (process.argv.includes('--check')) {
-    if (!fs.existsSync(file) || fs.readFileSync(file, 'utf8') !== content) errors.push(`${file}: regenerate coverage report`)
+    if (!fs.existsSync(file) || normalizeNewlines(fs.readFileSync(file, 'utf8')) !== content) errors.push(`${file}: regenerate coverage report`)
   } else {
     fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, content)
   }

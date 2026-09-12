@@ -78,3 +78,23 @@ DB v3는 `conceptProgress` 테이블을 추가한다. 기존 ID·카드·시도�
 6. 공개 배포 접근 복구와 파일럿 사용자 검증. 코드·테스트 통과를 공개 반영으로 보고하지 않는다.
 
 실제 배정은 [Cursor 기록](../cursor-tasks/README.md)을 따른다. 콘텐츠·자료실 재개·복습 이유 UI 3건을 인수했다. 이후 A 다중 창 충돌 재현·수정 설계와 B 학습 기록 화면을 추가 배정했다. A의 제안은 아직 구현 API가 아니며 B는 위의 기존 읽기 계약만 소비한다. 목표·분량·공통 API·DB/백업 통합과 전체 검증은 총괄이 수행한다.
+# 2026-09-13 통합 계약 보완
+
+기존 API 설명보다 아래 저장 계약을 우선 적용한다. 상세 증거는 [출시 품질 통합 기록](../reviews/release-quality-2026-09-13.md)에 있다.
+
+- `ActiveSession.revision?`: 구형 필드 없음은 0. 현재 세션 ID와 revision이 모두 일치해야 저장/완료 가능. 다른 창에서 바뀌면 `StudySessionConflictError`를 반환한다.
+- `saveSession(session)` / `finishSession(session)`은 `Promise<ActiveSession>`을 반환한다. UI는 요청 객체를 완료 상태로 간주하지 말고 반환된 객체로 갱신한다. 충돌 시 임의로 revision만 바꿔 덮어쓰지 않는다.
+- `getSavedSession()`은 읽기 전용 복구. `submitSessionAnswer(session, responseMs)`, `saveSessionAnswerCause(session, cause)`, `advanceSessionCard(session, rating, requeue)`는 관련 답안/원인/카드 평가와 세션 진행을 같은 트랜잭션에서 커밋하고 저장된 세션을 반환한다.
+- `finalizeMock({ id, revision, answers, itemElapsedMs })`: 마감 전 답안 덮어쓰기에는 현재 revision 필수. 마감 이후에는 저장된 마감 전 답안만 채점한다. 완료된 동일 ID 재제출은 기존 결과를 반환한다.
+- `saveMockProgress`는 `stale-revision`, `deadline-expired`를 구분한다. 저장 실패한 초안은 화면에 남겨 재시도하되 마감 후 초안으로 점수를 변경하지 않는다.
+- `MockExamResult.questionSnapshots?`는 당시 문제/선지/정답/해설과 순서를 보존한다. 옛 기록에 스냅샷이 없으면 현재 은행으로 과거 내용을 재구성하지 않는다. `QuestionSnapshot.priorAttemptCount?`는 시작 전 동일 문항 응답 횟수이며 계열/자료 전체 노출이나 학습 효과가 아니다.
+- DB 스키마 재생성 없이 선택 필드를 추가했다. 백업 v1–v4 호환, 새 값이 있으면 검증. 기존 완료 기록·메모·사용자 카드를 지우지 않는다.
+
+```ts
+try {
+  const saved = await saveSession(nextSession)
+  setSession(saved) // 반환된 revision을 다음 저장에 사용
+} catch (error) {
+  // 현재 초안과 오류 안내를 유지하고, 재시도 또는 getSavedSession() 복구를 제공
+}
+```

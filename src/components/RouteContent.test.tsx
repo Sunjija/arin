@@ -9,6 +9,7 @@ import { RouteContent } from './RouteContent'
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
+  vi.unstubAllGlobals()
 })
 
 type LazyModule = { default: ComponentType }

@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { validate, impact, readBank } from './audit.mjs'
+import { validate, impact, readBank, sourceHash, normalizeNewlines } from './audit.mjs'
 test('blocks duplicate IDs, invalid answers and era mismatch', () => {
   const q = { id: 'q', stem: 'x', explanation: 'x', choices: ['a','b','c','d','e'], answerIndex: 9, lessonId: 'l', era: 'goryeo' }
   const result = validate([{ id: 'l', era: 'prehistoric' }], [q, q], [])
@@ -16,3 +16,9 @@ test('flags source and documentation gaps without calling them fact errors', () 
   assert.ok(impact(['src/data/questions.ts']).some(n => n.includes('Documentation')))
 })
 test('reads actual literal bank', () => assert.ok(readBank('src/data/questions.ts', 'authoredQuestions').length > 0))
+
+test('inventory comparisons ignore checkout line endings but still detect content changes', () => {
+  assert.equal(sourceHash('first\r\nsecond\r\n'), sourceHash('first\nsecond\n'))
+  assert.equal(normalizeNewlines('report\r\n'), 'report\n')
+  assert.notEqual(sourceHash('first\nsecond\n'), sourceHash('first\nchanged\n'))
+})

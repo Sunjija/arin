@@ -16,7 +16,6 @@ export function HomePage() {
 
   useEffect(() => {
     let alive = true
-    setError(null)
     ;(async () => {
       try {
         await ensureSeeded()
@@ -40,7 +39,7 @@ export function HomePage() {
     return (
       <div className="surface p-5">
         <p role="alert">{error}</p>
-        <button type="button" className="btn btn-primary mt-4" onClick={() => setLoadAttempt(attempt => attempt + 1)}>
+        <button type="button" className="btn btn-primary mt-4" onClick={() => { setError(null); setLoadAttempt(attempt => attempt + 1) }}>
           다시 불러오기
         </button>
       </div>

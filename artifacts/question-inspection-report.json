@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-08T01:07:09.196Z",
-  "total": 100,
+  "generatedAt": "2026-09-12T17:57:52.976Z",
+  "total": 104,
   "findings": [],
   "formatCounts": {
     "source-underline": 6,
-    "source-what": 5,
+    "source-what": 8,
     "wrong-statement": 7,
     "map-region": 4,
-    "chronology-labeled": 7,
+    "chronology-labeled": 8,
     "king-policy-match": 5,
     "policy-content": 14,
     "source-who": 11,
@@ -19,10 +19,10 @@
     "policy-name": 5
   },
   "answerPositionCounts": [
-    20,
-    20,
-    20,
-    20,
+    21,
+    21,
+    21,
+    21,
     20
   ],
   "summary": {
@@ -34,7 +34,7 @@
   "recommendations": [
     "신규 문항은 examFormats.ts의 formatId를 먼저 고른 뒤 작성할 것",
     "오답은 인접 시대·유사 제도·혼동 인물로만 구성할 것",
-    "포맷 부족: source-what (현재 5, 목표 약 10)",
+    "포맷 부족: source-what (현재 8, 목표 약 10)",
     "포맷 부족: chronology-events (현재 7, 목표 약 11)",
     "포맷 부족: king-policy-match (현재 5, 목표 약 11)"
   ]

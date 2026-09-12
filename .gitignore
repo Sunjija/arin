@@ -25,3 +25,7 @@ dist-ssr
 
 # Generated automation reports
 automation-reports/
+
+# Local browser QA captures (the verification scope is recorded in docs/reviews)
+.playwright-cli/
+output/playwright/

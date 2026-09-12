@@ -1,9 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
-import { readBank } from './audit.mjs'
+import { readBank, sourceHash } from './audit.mjs'
 
 const text = value => typeof value === 'string' && Boolean(value.trim())
 const source = value => {
@@ -66,7 +65,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const inputs = ['src/data/topicCatalog.ts', 'src/data/lessonGuides.ts', 'src/data/questions.ts']
   const report = assessContentReadiness({ concepts: readBank(inputs[0], 'TOPIC_CATALOG'), guides: readBank(inputs[1], 'lessonGuides'), questions: readBank(inputs[2], 'authoredQuestions') })
   report.commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
-  report.inputHashes = Object.fromEntries(inputs.map(file => [file, createHash('sha256').update(fs.readFileSync(file)).digest('hex')]))
+  report.inputHashes = Object.fromEntries(inputs.map(file => [file, sourceHash(fs.readFileSync(file, 'utf8'))]))
   fs.mkdirSync('automation-reports', { recursive: true })
   fs.writeFileSync('automation-reports/content-readiness.json', JSON.stringify(report, null, 2) + '\n')
   const safe = value => String(value).replace(/[|<>\r\n]/g, ' ')

@@ -2,6 +2,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { execFileSync } from 'node:child_process'
 import ts from 'typescript'
+import { createHash } from 'node:crypto'
+
+// Git checkouts may use CRLF on Windows and LF in CI. Hash the same textual content.
+export const normalizeNewlines = value => value.replace(/\r\n/g, '\n')
+export const sourceHash = value => createHash('sha256').update(normalizeNewlines(value)).digest('hex')
 
 // Parse literals without executing code from a pull request.
 export function readBank(file, variable) {

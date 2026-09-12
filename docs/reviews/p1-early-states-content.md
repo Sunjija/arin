@@ -13,7 +13,7 @@
 - 완료: lesson-01의 **t-pre-06 한 개념** 설명 + 확인 문항 2개(q-103, q-104).
 - 비범위: 이전 7개념 본문 재작성, q-01/q-27 등 기존 표본 재작성, 88 카탈로그 ID 확장·순서 변경, ID 분할, API/DB/UI/공유 타입, push·배포.
 
-가이드 `contentVersion` 3→4. 기존 세션 스냅샷은 동결본을 쓰므로 런타임 가이드 갱신과 분리된다.
+가이드 `contentVersion` 3→5 (Cursor 초안 4, Codex 통합 편집 5). 기존 세션 스냅샷은 동결본을 쓰므로 런타임 가이드 갱신과 분리된다.
 
 ## 2. 출처 대조 로그 (URL 존재 ≠ 확인)
 
@@ -49,11 +49,15 @@
 | ID | familyId | 목적 | sourceUrl |
 |---|---|---|---|
 | q-103 | pre-early-polity-match | 왕·사출도·영고 → 부여 변별(접근성 있는 연합·제도 연결) | ta_h61…0030 |
-| q-104 | pre-early-states-compare | 「학습용 재구성」비교표에서 삼한 칸(천군·소도) 해석 | hm_007_0020 |
+| q-104 | pre-early-states-compare | 재구성 관찰 메모의 천군·소도 단서 → 삼한 식별 → 마한·진한·변한 연결 | hm_007_0020 |
 
-- 5지선다, `lessonId=lesson-01`, `conceptIds=['t-pre-06']`, `contentVersion=1`.
+- 5지선다, `lessonId=lesson-01`, `conceptIds=['t-pre-06']`. q-103 `contentVersion=1`, q-104 `contentVersion=2`.
 - 선지별 해설·복습 연결 포함. `difficulty`는 배점 자리이며 실측 난이도·변별력·정답률은 기록하지 않음.
 - q-104 지문에 **학습용 재구성 (원문 인용 아님)** 명시.
+
+Codex 통합 편집에서는 q-104의 정답 대상 직접 제시와 오답 제거 단서를 줄였다. 관찰 메모에서 사회를 식별하고 다른 사실을 연결하도록 바꾸었으며 정답 선지만 가장 길었던 차이도 줄였다. 설명은 네 문단으로 나누고, 현대 학습자에게 혼동을 주는 영고의 ‘12월(정월)’ 병기를 ‘12월’로 정리했다.
+
+Codex도 2026-09-13에 [여러 나라의 성장](https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h61_0030_0020_0030), [옥저와 동예](https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h71_0030_0020_0020_0030), [삼한의 소도와 천군](https://contents.history.go.kr/id/hm_007_0020)을 직접 열어 대조했다. 마지막 자료의 국읍 천신 제사와 별읍 소도 구분을 확인하여 천군이 반드시 소도 안에서 모든 제사를 주관했다고 단정하지 않았다. 자료의 해설은 집필자의 해석이며 기관의 공식 견해와 다를 수 있다. 이 과정도 AI 편집 검토이고 사람 승인으로 승격하지 않았다.
 
 ## 4. 테스트·집계 기대값 갱신
 
@@ -77,4 +81,4 @@
 
 ## 6. 검증 명령
 
-작업 종료 시 실행·결과 기록: vitest / tsc -b / oxlint src / vite build / content-coverage.mjs / content-readiness.mjs.
+Cursor 원본 커밋 `86f4a4091c0d655f38e8c29454ed51795a3beb4a`: Vitest 281개, 타입 검사, 빌드 통과. 당시 이전 UI 린트 경고가 있었으며 통합 브랜치에서 해결했다. 최종 편집 후 검증은 [통합 기록](release-quality-2026-09-13.md)에 남긴다.

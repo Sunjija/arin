@@ -330,6 +330,8 @@ export function formatReportText(report: InspectionReport): string {
   lines.push(
     `요약: error ${report.summary.errors} / warn ${report.summary.warns} / info ${report.summary.infos} / AI-smell ${report.summary.aiSmellScore}`,
   )
+  lines.push('자동 구조·문구 규칙 검사입니다. AI-smell은 규칙 경고의 가중 합이며 AI 제작 확률, 역사 정확성, 기출 대비 품질, 사람 검수 통과 또는 실측 정답률을 뜻하지 않습니다.')
+  lines.push('포맷 목표는 임시 내부 편집값입니다. 공식 출제 비율 분석 완료를 뜻하지 않습니다.')
   lines.push('')
   lines.push('## 포맷 분포')
   for (const [id, count] of Object.entries(report.formatCounts).sort()) {

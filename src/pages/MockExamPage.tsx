@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { questions } from '../data/questions'
 import { useFocusLayout } from '../components/layout/useFocusLayout'
 import { MockPrepScreen } from '../components/mock/MockPrepScreen'
@@ -71,12 +71,14 @@ export function MockExamPage() {
   const submitLockRef = useRef(createSubmitOnce())
   const submitRef = useRef<(auto: boolean) => Promise<void>>(async () => {})
 
-  answersRef.current = answers
-  itemElapsedRef.current = itemElapsedMs
-  currentIndexRef.current = currentIndex
-  deadlineAtRef.current = deadlineAt
-  mockIdRef.current = mockId
-  snapshotsRef.current = snapshots
+  useLayoutEffect(() => {
+    answersRef.current = answers
+    itemElapsedRef.current = itemElapsedMs
+    currentIndexRef.current = currentIndex
+    deadlineAtRef.current = deadlineAt
+    mockIdRef.current = mockId
+    snapshotsRef.current = snapshots
+  }, [answers, itemElapsedMs, currentIndex, deadlineAt, mockId, snapshots])
 
   const focused = view === 'running' || view === 'confirm'
   useFocusLayout(focused)
@@ -93,18 +95,6 @@ export function MockExamPage() {
     setActiveMock(mock?.status === 'in-progress' ? mock : undefined)
     setSummary(score)
   }, [])
-
-  useEffect(() => {
-    void (async () => {
-      const mock = await getActiveMock()
-      const action = resolveActiveMockAction(mock, Date.now())
-      if (action.type === 'finalize-expired') {
-        await finalizeExpiredMock(action.mock)
-        return
-      }
-      await refreshPrep()
-    })().catch(() => setNotice('시험 기록을 불러오지 못했습니다. 새로고침해 다시 시도해 주세요.'))
-  }, [refreshPrep])
 
   function attachSaver(revision: number) {
     const saver = createProgressSaver(async (input) => {
@@ -201,6 +191,21 @@ export function MockExamPage() {
     setView('result')
   }
 
+  useEffect(() => {
+    let alive = true
+    void (async () => {
+      const mock = await getActiveMock()
+      if (!alive) return
+      const action = resolveActiveMockAction(mock, Date.now())
+      if (action.type === 'finalize-expired') {
+        await finalizeExpiredMock(action.mock)
+        return
+      }
+      await refreshPrep()
+    })().catch(() => { if (alive) setNotice('시험 기록을 불러오지 못했습니다. 새로고침해 다시 시도해 주세요.') })
+    return () => { alive = false }
+  }, [refreshPrep])
+
   async function startExam(replaceExisting = false) {
     setBusy(true)
     setNotice(null)
@@ -281,7 +286,7 @@ export function MockExamPage() {
     }
   }
 
-  submitRef.current = submitExam
+  useLayoutEffect(() => { submitRef.current = submitExam })
 
   useEffect(() => {
     if (view !== 'running' && view !== 'confirm') return
