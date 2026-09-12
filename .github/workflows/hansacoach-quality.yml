@@ -26,7 +26,7 @@ jobs:
         run: npm ci
       - name: Test audit rules
         if: ${{ !cancelled() }}
-        run: node --test scripts/automation/audit.test.mjs
+        run: node --test scripts/automation/audit.test.mjs scripts/automation/content-readiness.test.mjs
       - name: Content and change impact report
         if: ${{ !cancelled() }}
         env:
@@ -35,6 +35,9 @@ jobs:
       - name: Verify content inventory
         if: ${{ !cancelled() }}
         run: node scripts/automation/content-coverage.mjs --check
+      - name: Report explanation and assessment gaps
+        if: ${{ !cancelled() }}
+        run: node scripts/automation/content-readiness.mjs
       - name: Type check
         if: ${{ !cancelled() }}
         run: npm run typecheck

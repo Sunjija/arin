@@ -12,9 +12,11 @@ export function HomePage() {
   const [plan, setPlan] = useState<TodayPlan | null>(null)
   const [session, setSession] = useState<ActiveSession | undefined>()
   const [error, setError] = useState<string | null>(null)
+  const [loadAttempt, setLoadAttempt] = useState(0)
 
   useEffect(() => {
     let alive = true
+    setError(null)
     ;(async () => {
       try {
         await ensureSeeded()
@@ -32,12 +34,15 @@ export function HomePage() {
     return () => {
       alive = false
     }
-  }, [])
+  }, [loadAttempt])
 
   if (error) {
     return (
       <div className="surface p-5">
         <p role="alert">{error}</p>
+        <button type="button" className="btn btn-primary mt-4" onClick={() => setLoadAttempt(attempt => attempt + 1)}>
+          다시 불러오기
+        </button>
       </div>
     )
   }
