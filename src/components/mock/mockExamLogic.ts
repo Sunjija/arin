@@ -231,6 +231,7 @@ export function createProgressSaver(
   let pending: ProgressDraft | null = null
   let retries = 0
   let lastError: string | null = null
+  let conflicted = false
   let chain: Promise<void> = Promise.resolve()
 
   function setRevision(next: number) {
@@ -238,6 +239,7 @@ export function createProgressSaver(
   }
 
   function enqueue(draft: ProgressDraft) {
+    if (conflicted) return chain
     pending = draft
     retries = 0
     chain = chain.then(
@@ -261,11 +263,15 @@ export function createProgressSaver(
             retries = 0
             lastError = null
           } else if (result.code === 'stale-revision' && result.mock) {
-            revision = result.mock.revision
-            pending = pending ?? draft
-            retries = 0
+            // A stale tab must never replay its entire answer array over newer work.
+            lastError = '다른 창에서 답안이 변경되었습니다. 이 화면의 답안은 저장되지 않았습니다. 새로고침해 최신 답안을 불러와 주세요.'
+            conflicted = true
+            pending = null
           } else if (result.code === 'already-finalized') {
             lastError = null
+          } else if (result.code === 'deadline-expired') {
+            lastError = '제한 시간이 끝났습니다. 마감 전에 저장된 답안으로 제출합니다.'
+            pending = null
           } else {
             retries += 1
             lastError = result.code
@@ -291,6 +297,7 @@ export function createProgressSaver(
   async function flush(): Promise<void> {
     await chain
     if (pending) await enqueue(pending)
+    if (lastError) throw new Error(lastError)
   }
 
   return {

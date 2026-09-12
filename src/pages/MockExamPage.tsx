@@ -11,7 +11,6 @@ import {
   createProgressSaver,
   createSubmitOnce,
   existingProgressCopy,
-  mockAttemptId,
   nextAction,
   resolveActiveMockAction,
   resumeState,
@@ -22,18 +21,18 @@ import {
   FULL_QUESTION_COUNT,
   SAMPLE_QUESTION_COUNT,
   buildMockSnapshots,
-  questionFromSnapshot,
 } from '../lib/examScoring'
 import {
   FULL_DURATION_MS,
   SAMPLE_DURATION_MS,
   finalizeMock,
   getActiveMock,
+  getMockResult,
   saveMockProgress,
   startMock,
 } from '../lib/mockSession'
 import { createWrongCardFromQuestion } from '../lib/wrongCard'
-import { getScoreSummary, recordQuizAnswer, updateAttemptCause } from '../lib/studyService'
+import { getScoreSummary, updateAttemptCause } from '../lib/studyService'
 import { Button, Dialog } from '../components/ui'
 import type { ActiveMock, MockExamResult, QuestionSnapshot, WrongCause } from '../types'
 import type { ScoreSummary } from '../types/contracts'
@@ -82,11 +81,10 @@ export function MockExamPage() {
   const focused = view === 'running' || view === 'confirm'
   useFocusLayout(focused)
 
-  const uniqueQuestionCount = useMemo(
-    () => new Set(questions.map((item) => item.id)).size,
+  const poolBlocked = useMemo(
+    () => !canStartFull(buildMockSnapshots(questions, FULL_QUESTION_COUNT)).ok,
     [],
   )
-  const poolBlocked = uniqueQuestionCount < FULL_QUESTION_COUNT
 
   const remaining = deadlineAt ? Math.max(0, Date.parse(deadlineAt) - nowMs) : 0
 
@@ -105,7 +103,7 @@ export function MockExamPage() {
         return
       }
       await refreshPrep()
-    })()
+    })().catch(() => setNotice('시험 기록을 불러오지 못했습니다. 새로고침해 다시 시도해 주세요.'))
   }, [refreshPrep])
 
   function attachSaver(revision: number) {
@@ -115,7 +113,7 @@ export function MockExamPage() {
         if (saved.ok) {
           setSaveError(null)
         } else if (saved.code === 'stale-revision') {
-          setSaveError(null)
+          setSaveError('다른 창에서 답안이 변경되었습니다. 새로고침해 최신 답안을 불러와 주세요.')
         } else if (saved.code !== 'already-finalized') {
           setSaveError(saved.code)
         }
@@ -191,14 +189,13 @@ export function MockExamPage() {
         answers: mock.answers,
         itemElapsedMs: mock.itemElapsedMs,
       })
-      if (finalized.created) {
-        await recordAttempts(finalized.result, mock.questionSnapshots)
-      }
-      const score = await getScoreSummary()
+      const score = await getScoreSummary().catch(() => null)
       return { finalized, score }
     })
     if (outcome.status === 'skipped') return
     setResult(outcome.value.finalized.result)
+    setSnapshots(outcome.value.finalized.result.questionSnapshots ?? mock.questionSnapshots)
+    setAnswers(outcome.value.finalized.result.answers.map(answer => answer.selectedIndex))
     setSummary(outcome.value.score)
     setActiveMock(undefined)
     setView('result')
@@ -211,7 +208,7 @@ export function MockExamPage() {
       const count = selectedMode === 'full' ? FULL_QUESTION_COUNT : SAMPLE_QUESTION_COUNT
       const nextSnapshots = buildMockSnapshots(questions, count)
       if (selectedMode === 'full' && !canStartFull(nextSnapshots).ok) {
-        setNotice('고유 문항이 50개보다 적어 실전 연습을 시작할 수 없습니다. 10문항 연습을 이용해 주세요.')
+        setNotice('고유 50문항·총 100점 구성을 만들 수 없습니다. 10문항 연습을 이용해 주세요.')
         setSelectedMode('sample')
         return
       }
@@ -228,7 +225,7 @@ export function MockExamPage() {
           return
         }
         if (started.code === 'insufficient-pool') {
-          setNotice('고유 문항이 50개보다 적어 실전 연습을 시작할 수 없습니다. 10문항 연습을 이용해 주세요.')
+          setNotice('고유 50문항·총 100점 구성을 만들 수 없습니다. 10문항 연습을 이용해 주세요.')
           setSelectedMode('sample')
         }
         return
@@ -236,30 +233,10 @@ export function MockExamPage() {
       setReplaceOpen(false)
       setActiveMock(undefined)
       enterFromMock(started.mock)
+    } catch {
+      setNotice('시험을 저장하지 못했습니다. 다시 시작해 주세요.')
     } finally {
       setBusy(false)
-    }
-  }
-
-  async function recordAttempts(next: MockExamResult, sourceSnapshots: QuestionSnapshot[]) {
-    for (const [index, snapshot] of sourceSnapshots.entries()) {
-      const selectedIndex = answersRef.current[index]
-      if (selectedIndex == null) continue
-      const question = questionFromSnapshot(snapshot)
-      const correct = selectedIndex === snapshot.answerIndex
-      await recordQuizAnswer({
-        question,
-        selectedIndex,
-        correct,
-        responseMs: itemElapsedRef.current[index] ?? null,
-        cause: correct ? undefined : 'unknown',
-        source: 'mock',
-        resultId: next.id,
-        attemptId: mockAttemptId(next.id, snapshot.questionId),
-      })
-      if (!correct) {
-        setCauses((current) => ({ ...current, [snapshot.questionId]: current[snapshot.questionId] ?? 'unknown' }))
-      }
     }
   }
 
@@ -277,27 +254,31 @@ export function MockExamPage() {
       return
     }
     setUnansweredOpen(false)
-    await saverRef.current?.flush()
-    const outcome = await submitLockRef.current.run(async () => {
-      const payload = snapshotForAutoSubmit({
-        id,
-        revision: saverRef.current?.getRevision() ?? 1,
-        getAnswers: () => answersRef.current,
-        getItemElapsedMs: () => itemElapsedRef.current,
+    try {
+      const outcome = await submitLockRef.current.run(async () => {
+        const expired = deadlineAtRef.current !== null && Date.now() >= Date.parse(deadlineAtRef.current)
+        try { await saverRef.current?.flush() } catch (error) { if (!expired) throw error }
+        const payload = snapshotForAutoSubmit({
+          id,
+          revision: saverRef.current?.getRevision() ?? 1,
+          getAnswers: () => answersRef.current,
+          getItemElapsedMs: () => itemElapsedRef.current,
+        })
+        const finalized = await finalizeMock(expired ? { id } : payload)
+        const score = await getScoreSummary().catch(() => null)
+        return { finalized, score }
       })
-      const finalized = await finalizeMock(payload)
-      if (finalized.created) {
-        await recordAttempts(finalized.result, snapshotsRef.current)
-      }
-      const score = await getScoreSummary()
-      return { finalized, score }
-    })
-    if (outcome.status === 'skipped') return
-    setResult(outcome.value.finalized.result)
-    setSummary(outcome.value.score)
-    setActiveMock(undefined)
-    setView('result')
-    itemStartedAtRef.current = null
+      if (outcome.status === 'skipped') return
+      setResult(outcome.value.finalized.result)
+      setSnapshots(outcome.value.finalized.result.questionSnapshots ?? snapshotsRef.current)
+      setAnswers(outcome.value.finalized.result.answers.map(answer => answer.selectedIndex))
+      setSummary(outcome.value.score)
+      setActiveMock(undefined)
+      setView('result')
+      itemStartedAtRef.current = null
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : '제출하지 못했습니다. 다시 시도해 주세요.')
+    }
   }
 
   submitRef.current = submitExam
@@ -316,6 +297,7 @@ export function MockExamPage() {
   }, [view])
 
   function selectChoice(choice: number) {
+    if (submitLockRef.current.locked || (deadlineAtRef.current && Date.now() >= Date.parse(deadlineAtRef.current))) return
     const next = applyChoice(answersRef.current, currentIndexRef.current, choice)
     answersRef.current = next
     setAnswers(next)
@@ -347,18 +329,23 @@ export function MockExamPage() {
   }
 
   async function closeRunning() {
-    persistProgress()
-    await saverRef.current?.flush()
-    itemStartedAtRef.current = null
-    setView('prep')
-    await refreshPrep()
+    try {
+      persistProgress()
+      await saverRef.current?.flush()
+      itemStartedAtRef.current = null
+      setView('prep')
+      await refreshPrep()
+    } catch {
+      setSaveError('답안을 저장하지 못했습니다. 다시 저장한 뒤 나가 주세요.')
+    }
   }
 
   async function handleCause(questionId: string, cause: WrongCause) {
     setCauses((current) => ({ ...current, [questionId]: cause }))
     if (!result) return
     try {
-      await updateAttemptCause(mockAttemptId(result.id, questionId), cause)
+      const index = result.answers.findIndex(answer => answer.questionId === questionId)
+      await updateAttemptCause(`att-${result.id}-${index}-${questionId}`, cause)
     } catch {
       setCardMessages((current) => ({
         ...current,
@@ -393,6 +380,21 @@ export function MockExamPage() {
     setMockId(null)
     setNotice(null)
     await refreshPrep()
+  }
+
+  async function openResult(id: string) {
+    try {
+      const saved = await getMockResult(id)
+      if (!saved) throw new Error('missing')
+      setResult(saved)
+      setSnapshots(saved.questionSnapshots ?? [])
+      setAnswers(saved.answers.map(answer => answer.selectedIndex))
+      setCauses({})
+      setCardMessages({})
+      setView('result')
+    } catch {
+      setNotice('저장된 결과를 불러오지 못했습니다. 다시 시도해 주세요.')
+    }
   }
 
   if (view === 'result' && result) {
@@ -472,6 +474,7 @@ export function MockExamPage() {
         notice={notice}
         busy={busy}
         poolBlocked={poolBlocked}
+        onOpenResult={id => void openResult(id)}
       />
       <Dialog open={replaceOpen} title="진행 중인 시험" onClose={() => setReplaceOpen(false)}>
         <p>{activeMock ? existingProgressCopy(activeMock) : '진행 중인 시험을 덮어쓸까요?'}</p>

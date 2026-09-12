@@ -89,7 +89,15 @@ export function pickMockQuestions(
     byDiff[d] = shuffle(byDiff[d], random)
   }
 
-  const quota = localPointQuota(total)
+  let quota = localPointQuota(total)
+  if (total === FULL_QUESTION_COUNT && unique.length >= total) {
+    // 50 questions total 100 points only when one- and three-point counts match.
+    const balanced = Array.from({ length: 26 }, (_, i) => i)
+      .filter(n => byDiff[1].length >= n && byDiff[3].length >= n && byDiff[2].length >= total - 2 * n)
+      .sort((a, b) => Math.abs(a - quota[1]) - Math.abs(b - quota[1]))[0]
+    if (balanced === undefined) return []
+    quota = { 1: balanced, 2: total - 2 * balanced, 3: balanced }
+  }
   const picked: Question[] = []
   const take = (list: Question[], n: number) => {
     const slice = list.slice(0, n)
@@ -135,7 +143,15 @@ export function freezeQuestionSnapshot(
   random: RandomFn = Math.random,
 ): QuestionSnapshot {
   const order = question.choices.map((_, index) => index)
-  const shuffled = shuffle(order, random)
+  // Positional labels, ordered combinations and option-number references depend on
+  // their original order. Preserve them until an explicit content contract exists.
+  const fixed = question.formatId?.startsWith('chronology-') ||
+    question.choices.some(choice => /[→⇒]|[ㄱㄴㄷㄹㅁ]|[①②③④⑤]|\([가나다라마]\)/u.test(choice)) ||
+    /[①②③④⑤]|[1-5]번\s*(선지|선택지)|위의\s*(모두|모든)/u.test(question.explanation + question.choices.join(' '))
+  let shuffled = fixed ? order : shuffle(order, random)
+  if (!fixed && order.length > 1 && shuffled.every((value, i) => value === order[i])) {
+    shuffled = [...shuffled.slice(1), shuffled[0]!]
+  }
   const choices = shuffled.map((index) => question.choices[index]!)
   const answerIndex = shuffled.indexOf(question.answerIndex)
   return {

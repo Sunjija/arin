@@ -27,20 +27,31 @@ function mockResult(overrides: Partial<MockExamResult> & Pick<MockExamResult, 'i
 }
 
 function fullFifty(id: string, score: number): MockExamResult {
-  return mockResult({
-    id,
-    mode: 'full',
-    score,
-    total: 50,
-    answers: Array.from({ length: 50 }, (_, i) => ({
-      questionId: `orig-${i}`,
-      selectedIndex: 0,
-      correct: true,
-    })),
+  let remaining = score
+  const questionSnapshots = Array.from({ length: 50 }, (_, i) => ({
+    questionId: `orig-${i}`, stem: 'original', choices: ['a', 'b', 'c', 'd', 'e'],
+    answerIndex: 0, explanation: '', era: 'goryeo' as const, tags: [],
+    difficulty: (i < 10 ? 3 : i < 40 ? 2 : 1) as 1 | 2 | 3,
+  }))
+  const answers = questionSnapshots.map(snapshot => {
+    const correct = remaining >= snapshot.difficulty
+    if (correct) remaining -= snapshot.difficulty
+    return { questionId: snapshot.questionId, selectedIndex: correct ? 0 : 1, correct }
   })
+  return mockResult({ id, mode: 'full', score, total: 50, questionSnapshots, answers,
+    correct: answers.filter(answer => answer.correct).length })
 }
 
 describe('full mock eligibility', () => {
+  it('fails closed for legacy, oversized, tampered and non-100-point results', () => {
+    const original = fullFifty('valid', 80)
+    expect(evaluateFullMockEligibility({ ...original, questionSnapshots: undefined }).eligible).toBe(false)
+    expect(evaluateFullMockEligibility({ ...original, score: 90 }).eligible).toBe(false)
+    expect(evaluateFullMockEligibility({ ...original, total: 51, answers: [...original.answers, { questionId: 'extra', selectedIndex: 0, correct: true }] }).eligible).toBe(false)
+    const points = structuredClone(original)
+    points.questionSnapshots![0]!.difficulty = 2
+    expect(evaluateFullMockEligibility(points).eligible).toBe(false)
+  })
   it('rejects sample, padded, and short unique sets', () => {
     expect(evaluateFullMockEligibility(mockResult({ id: 's', mode: 'sample', score: 100, total: 10 })).eligible).toBe(
       false,

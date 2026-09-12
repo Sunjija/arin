@@ -72,17 +72,19 @@ function mockResult(overrides: Partial<MockExamResult> & Pick<MockExamResult, 'i
 }
 
 function fullFifty(id: string, score: number): MockExamResult {
-  return mockResult({
-    id,
-    mode: 'full',
-    score,
-    total: 50,
-    answers: Array.from({ length: 50 }, (_, i) => ({
-      questionId: `orig-${i}`,
-      selectedIndex: 0,
-      correct: true,
-    })),
+  let remaining = score
+  const questionSnapshots = Array.from({ length: 50 }, (_, i) => ({
+    questionId: `orig-${i}`, stem: 'original', choices: ['a', 'b', 'c', 'd', 'e'],
+    answerIndex: 0, explanation: '', era: 'goryeo' as const, tags: [],
+    difficulty: (i < 10 ? 3 : i < 40 ? 2 : 1) as 1 | 2 | 3,
+  }))
+  const answers = questionSnapshots.map(snapshot => {
+    const correct = remaining >= snapshot.difficulty
+    if (correct) remaining -= snapshot.difficulty
+    return { questionId: snapshot.questionId, selectedIndex: correct ? 0 : 1, correct }
   })
+  return mockResult({ id, mode: 'full', score, total: 50, questionSnapshots, answers,
+    correct: answers.filter(answer => answer.correct).length })
 }
 
 afterEach(() => {
@@ -253,6 +255,26 @@ describe('snapshot review', () => {
 })
 
 describe('save retry', () => {
+  it('keeps an exhausted save failure visible to flush and allows explicit retry', async () => {
+    const save = vi.fn().mockRejectedValueOnce(new Error('quota')).mockResolvedValue({ ok: true, mock: activeMock({ revision: 4 }) })
+    const saver = createProgressSaver(save, { maxRetries: 0 })
+    const draft = { id: 'mock-1', answers: [1, null, null], currentIndex: 0, itemElapsedMs: [null, null, null] }
+    await saver.enqueue(draft)
+    await expect(saver.flush()).rejects.toThrow('quota')
+    await saver.enqueue(draft)
+    await expect(saver.flush()).resolves.toBeUndefined()
+    expect(save.mock.calls[1]![0].answers).toEqual(draft.answers)
+  })
+
+  it('does not rebase a stale whole answer array over another tab', async () => {
+    const save = vi.fn().mockResolvedValue({ ok: false, code: 'stale-revision', mock: activeMock({ revision: 5 }) })
+    const saver = createProgressSaver(save)
+    const draft = { id: 'mock-1', answers: [1, null, null], currentIndex: 0, itemElapsedMs: [null, null, null] }
+    await saver.enqueue(draft)
+    await expect(saver.flush()).rejects.toThrow('다른 창')
+    await saver.enqueue(draft)
+    expect(save).toHaveBeenCalledTimes(1)
+  })
   it('retries a failed save and then succeeds', async () => {
     vi.useFakeTimers()
     let calls = 0

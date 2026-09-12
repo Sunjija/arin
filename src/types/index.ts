@@ -342,6 +342,8 @@ export interface MockExamResult {
   correct: number
   score: number
   durationSec: number
+  /** Frozen exam content; absent in legacy results and never reconstructed from today's bank. */
+  questionSnapshots?: QuestionSnapshot[]
   answers: Array<{
     questionId: string
     selectedIndex: number | null
@@ -450,6 +452,8 @@ export interface QuestionSnapshot {
   conceptIds?: string[]
   familyId?: string
   contentVersion?: number
+  /** Number of saved answers to this exact question before this exam started. */
+  priorAttemptCount?: number
 }
 
 export type MockSessionStatus = 'in-progress' | 'submitted'

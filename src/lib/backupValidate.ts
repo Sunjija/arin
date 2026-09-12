@@ -123,6 +123,18 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
     if (!isFiniteNumber(result.score) || result.score < 0 || result.score > 100 || !Array.isArray(result.answers)) {
       return { ok: false, message: '모의고사 점수 또는 답안이 손상되었습니다.' }
     }
+    if (result.questionSnapshots !== undefined) {
+      const snapshots = result.questionSnapshots
+      const answers = result.answers
+      if (!Array.isArray(snapshots) || snapshots.length !== result.total || snapshots.length !== result.answers.length ||
+        !snapshots.every(validSnapshot) || snapshots.some((snapshot, index) => {
+          const answer = answers[index]
+          return !isRecord(answer) || answer.questionId !== snapshot.questionId ||
+            (answer.selectedIndex !== null && (!Number.isInteger(answer.selectedIndex) || Number(answer.selectedIndex) < 0 || Number(answer.selectedIndex) >= snapshot.choices.length)) ||
+            answer.correct !== (answer.selectedIndex !== null && answer.selectedIndex === snapshot.answerIndex) ||
+            (snapshot.priorAttemptCount !== undefined && (!Number.isInteger(snapshot.priorAttemptCount) || snapshot.priorAttemptCount < 0))
+        })) return { ok: false, message: '모의고사 문항 원본 또는 답안이 손상되었습니다.' }
+    }
   }
   if (raw.activeSession != null && (!isRecord(raw.activeSession) || !isId(raw.activeSession.id))) {
     return { ok: false, message: '학습 진행 기록이 손상되었습니다.' }

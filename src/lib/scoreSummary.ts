@@ -1,4 +1,6 @@
 import type { AttemptRecord, MockExamResult } from '../types'
+import { inspectFullMockPool } from './mockEligibility'
+import { gradeSnapshotAnswers, scoreFromAnswers } from './examScoring'
 import type {
   FullMockIneligibilityReason,
   RecentMockSummary,
@@ -28,6 +30,9 @@ export function evaluateFullMockEligibility(
   if (!Array.isArray(result.answers) || result.answers.length !== result.total) {
     return { eligible: false, reason: 'invalid-answers' }
   }
+  if (result.answers.some(answer => !answer || typeof answer.questionId !== 'string' || !answer.questionId)) {
+    return { eligible: false, reason: 'invalid-answers' }
+  }
 
   const ids = result.answers.map((a) => a.questionId)
   if (ids.some((id) => isPaddedQuestionId(id))) {
@@ -35,8 +40,20 @@ export function evaluateFullMockEligibility(
   }
 
   const unique = new Set(ids.map(originalQuestionId))
-  if (unique.size < FULL_UNIQUE_REQUIRED) {
+  if (unique.size !== FULL_UNIQUE_REQUIRED || result.total !== FULL_UNIQUE_REQUIRED) {
     return { eligible: false, reason: 'insufficient-unique-questions' }
+  }
+
+  const snapshots = result.questionSnapshots
+  if (!snapshots || !inspectFullMockPool(snapshots).ok || snapshots.some((snapshot, index) => snapshot.questionId !== ids[index])) {
+    return { eligible: false, reason: 'invalid-snapshots' }
+  }
+  if (result.answers.some((answer, index) => answer.selectedIndex !== null && (!Number.isInteger(answer.selectedIndex) || answer.selectedIndex < 0 || answer.selectedIndex >= snapshots[index]!.choices.length))) {
+    return { eligible: false, reason: 'invalid-answers' }
+  }
+  const graded = gradeSnapshotAnswers(snapshots, result.answers.map(answer => answer.selectedIndex))
+  if (graded.some((answer, index) => answer.correct !== result.answers[index]!.correct) || result.correct !== graded.filter(answer => answer.correct).length || result.score !== scoreFromAnswers(graded)) {
+    return { eligible: false, reason: 'invalid-score' }
   }
 
   return { eligible: true }

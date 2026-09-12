@@ -43,6 +43,29 @@ function seededRandom(seed: number): () => number {
 }
 
 describe('examScoring', () => {
+  it('moves a plain answer even when random produces the identity permutation', () => {
+    const question = q('plain', 2)
+    const snapshot = freezeQuestionSnapshot(question, () => 0.999)
+    expect(snapshot.choices).not.toEqual(question.choices)
+    expect(snapshot.choices[snapshot.answerIndex]).toBe(question.choices[question.answerIndex])
+  })
+
+  it('preserves chronology combinations and explanation option references', () => {
+    for (const question of [
+      { ...q('order', 2), formatId: 'chronology-labeled' },
+      { ...q('combination', 2), choices: ['ㄱ, ㄴ', 'ㄱ, ㄷ', 'ㄴ, ㄷ', 'ㄴ, ㄹ', 'ㄷ, ㄹ'] },
+      { ...q('reference', 2), explanation: '정답은 ③이다.' },
+    ]) {
+      expect(freezeQuestionSnapshot(question, () => 0).choices).toEqual(question.choices)
+      expect(freezeQuestionSnapshot(question, () => 0).answerIndex).toBe(question.answerIndex)
+    }
+  })
+
+  it('refuses a full composition whose unique questions cannot total 100 points', () => {
+    const pool = Array.from({ length: 60 }, (_, i) => q(`q-${i}`, 3))
+    expect(buildMockSnapshots(pool, 50)).toEqual([])
+    expect(inspectFullMockPool(pool.slice(0, 50).map(question => freezeQuestionSnapshot(question))).ok).toBe(false)
+  })
   it('scales weighted score to 100', () => {
     const score = scoreFromAnswers([
       { correct: true, difficulty: 1 },

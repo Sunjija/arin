@@ -44,6 +44,9 @@ export function MockResultScreen({
           {result.correct}/{result.total} 정답 · {resultModeLabel(result)}
         </p>
         <p className="meta-text mt-3">
+          자체 제작 문항의 연습 점수입니다. 합격 가능성이나 미노출 실전 실력을 뜻하지 않습니다.
+        </p>
+        <p className="meta-text mt-3">
           최근 실전 연습 평균 {average == null ? '아직 기록 없음' : `${average}점`}
         </p>
         {recent.length > 0 ? (
@@ -59,12 +62,14 @@ export function MockResultScreen({
 
       <section className="space-y-3">
         <h2 className="section-title">문항 다시 보기</h2>
+        {snapshots.length === 0 ? <p>이전 기록에는 문항 원본이 없어 당시 문항과 선지를 복원할 수 없습니다. 이 점수는 실전 평균에서 제외됩니다.</p> : null}
         {snapshots.map((snapshot, index) => {
           const review = reviewFromSnapshot(snapshot, answers[index] ?? null)
           return (
             <article key={`${snapshot.questionId}-${index}`} className="surface space-y-3 p-5">
               <p className="meta-text">
                 {index + 1}번 · 배점 {review.difficulty}점 · {review.correct ? '정답' : review.selectedIndex == null ? '미응답' : '오답'}
+                {snapshot.priorAttemptCount === undefined ? ' · 이전 풀이 기록 미확인' : snapshot.priorAttemptCount === 0 ? ' · 저장 기록상 첫 풀이' : ` · 이전 ${snapshot.priorAttemptCount}회 풀이`}
               </p>
               {review.passage ? <blockquote className="passage-text">{review.passage}</blockquote> : null}
               <h3 className="font-semibold">{review.stem}</h3>
@@ -93,7 +98,7 @@ export function MockResultScreen({
 
       <section className="space-y-3">
         <h2 className="section-title">다음 복습</h2>
-        {missed.length === 0 ? (
+        {snapshots.length === 0 ? <p>문항 원본이 없어 복습 목록을 확인할 수 없습니다.</p> : missed.length === 0 ? (
           <EmptyState title="틀린 문항 없음">이번 시험에서 틀린 문항이 없습니다.</EmptyState>
         ) : (
           missed.map((index) => {

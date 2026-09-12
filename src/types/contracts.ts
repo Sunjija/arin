@@ -39,6 +39,7 @@ export type FullMockIneligibilityReason =
   | 'insufficient-unique-questions'
   | 'invalid-score'
   | 'invalid-answers'
+  | 'invalid-snapshots'
   | 'duplicate-id'
 
 export interface RecentMockSummary {
@@ -177,7 +178,7 @@ export interface SaveMockProgressInput {
 
 export type SaveMockProgressResult =
   | { ok: true; mock: ActiveMock }
-  | { ok: false; code: 'stale-revision' | 'not-found' | 'already-finalized'; mock?: ActiveMock }
+  | { ok: false; code: 'stale-revision' | 'not-found' | 'already-finalized' | 'deadline-expired'; mock?: ActiveMock }
 
 export interface StartMockInput {
   mode: 'full' | 'sample'

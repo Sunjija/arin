@@ -19,6 +19,7 @@ export function MockPrepScreen({
   notice,
   busy,
   poolBlocked,
+  onOpenResult,
 }: {
   selectedMode: 'sample' | 'full'
   onSelectMode: (mode: 'sample' | 'full') => void
@@ -29,6 +30,7 @@ export function MockPrepScreen({
   notice: string | null
   busy: boolean
   poolBlocked: boolean
+  onOpenResult?: (id: string) => void
 }) {
   const recent = summary ? recentMocksForDisplay(summary) : []
   const average = summary ? fullMockAverageFromSummary(summary) : null
@@ -61,10 +63,10 @@ export function MockPrepScreen({
             <span className="mode-radio" aria-hidden="true" /><span><strong>{mode === 'sample' ? '10문항 연습' : '50문항 실전'}</strong><small>{mode === 'sample' ? '16분 · 가볍게 실력 확인' : '80분 · 실제 시험처럼 집중'}</small></span>
           </button>)}
         </div>
-        <p className="meta-text mt-4">10문항 연습 결과는 실전 평균에서 제외됩니다.</p>
+        <p className="meta-text mt-4">자체 제작 연습 문항이며 공식 기출 수준의 검수·난이도 검증은 완료되지 않았습니다. 10문항 연습 결과는 실전 평균에서 제외됩니다.</p>
         {poolBlocked && selectedMode === 'full' ? (
           <InlineStatus tone="error">
-            고유 문항이 50개보다 적어 실전 연습을 시작할 수 없습니다. 10문항 연습을 이용해 주세요.
+            고유 50문항·총 100점 구성을 만들 수 없습니다. 10문항 연습을 이용해 주세요.
           </InlineStatus>
         ) : null}
         {notice ? <InlineStatus tone={poolBlocked ? 'error' : 'neutral'}>{notice}</InlineStatus> : null}
@@ -85,7 +87,7 @@ export function MockPrepScreen({
         ) : (
           <ul className="mt-3 space-y-2">
             {recent.map((item) => (
-              <li key={item.id} className="exam-record"><div><span>{formatKoreanDate(item.createdAt.slice(0, 10))}</span><p>{modeTitle(item.mode)} · {item.total}문항</p></div><strong>{item.score}<small>점</small></strong></li>
+              <li key={item.id} className="exam-record"><div><span>{formatKoreanDate(item.createdAt.slice(0, 10))}</span><p>{modeTitle(item.mode)} · {item.total}문항</p>{onOpenResult ? <Button variant="text" onClick={() => onOpenResult(item.id)}>결과 다시 보기</Button> : null}</div><strong>{item.score}<small>점</small></strong></li>
             ))}
           </ul>
         )}
