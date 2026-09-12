@@ -1,28 +1,28 @@
 {
   "method": "literal-source-inventory-v1",
   "inputHashes": {
-    "src/data/lessons.ts": "36c6247817ed88ad11a84b5ee3c25a72f01eb169a7eb2994c4cefae90ad3746c",
-    "src/data/questions.ts": "b4f879b452bce276737e5dc40a5419cb6994bcd6ef27a23a5a0bdaba5b2b79ed",
-    "src/data/cards.ts": "734cf1df9cd8d9f9bdce7f0c6041255aefdc9ba3528fde30a481daa5a05f3cdb",
-    "src/data/timeline.ts": "692792c6de4c37297cfa40621b90df6278ec5b23440b2d81fa4c873826efdc32",
-    "src/data/topicCatalog.ts": "eedf578379555fc3362b37f3746fae59c4c7ac94be8ea026477c4224a5ba3bbe",
-    "src/data/lessonGuides.ts": "1abe9a9e7c7a2aa4025c5ed47e74ee468f6b6ef53c1148bfd14f9c7c84158bb2"
+    "src/data/lessons.ts": "bf44f4d164e10a397337f4662017abdf93368954889b04819b31ecb3f026f151",
+    "src/data/questions.ts": "445a5684c5e56af956301a092a684285d54fb7386517aad27dcc0a704db64563",
+    "src/data/cards.ts": "3b4b5afb4775da6b1d8dde07d974e474db7be410690d60aab61014405d813034",
+    "src/data/timeline.ts": "5278feb5cf27741022477ea358b2c6d7f48a76a11c650fa43b02a741523cb18c",
+    "src/data/topicCatalog.ts": "3fcb85928e5141beb5cb230f923884545a395817f03184a62b2d15f26d5e0339",
+    "src/data/lessonGuides.ts": "73c31f118358e8c11764aa71f79567236a4cd1b9cad4b66050775d8ddab3429b"
   },
   "caveat": "Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.",
   "counts": {
     "lessons": 18,
-    "questions": 102,
+    "questions": 104,
     "cards": 95,
     "timeline": 70,
     "concepts": 88,
     "guides": 1
   },
   "summary": {
-    "conceptsWithGuide": 7,
-    "conceptsWithoutGuide": 81,
-    "questionsExplicitlyMapped": 8,
-    "questionsWithSourceUrl": 8,
-    "questionsWithPassage": 46,
+    "conceptsWithGuide": 8,
+    "conceptsWithoutGuide": 80,
+    "questionsExplicitlyMapped": 10,
+    "questionsWithSourceUrl": 10,
+    "questionsWithPassage": 48,
     "actualImageQuestions": 0,
     "calibratedQuestions": 0
   },
@@ -54,7 +54,9 @@
         "q-79",
         "q-84",
         "q-101",
-        "q-102"
+        "q-102",
+        "q-103",
+        "q-104"
       ]
     },
     {
@@ -519,7 +521,9 @@
         "q-03",
         "q-84",
         "q-101",
-        "q-102"
+        "q-102",
+        "q-103",
+        "q-104"
       ],
       "candidateCardIds": [
         "c-15",
@@ -578,7 +582,8 @@
         "q-02",
         "q-51",
         "q-79",
-        "q-102"
+        "q-102",
+        "q-103"
       ],
       "candidateCardIds": [
         "c-16",
@@ -608,7 +613,9 @@
       ],
       "candidateQuestionIds": [
         "q-02",
-        "q-51"
+        "q-51",
+        "q-103",
+        "q-104"
       ],
       "candidateCardIds": [
         "c-43"
@@ -625,24 +632,26 @@
       "title": "부여·옥저·동예·삼한",
       "era": "prehistoric",
       "lessonId": "lesson-01",
-      "status": "needs-guide",
-      "sourceUrl": null,
-      "descriptionBlocks": 0,
-      "recallPrompts": 0,
-      "explicitQuestionIds": [],
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h61_0030_0020_0030",
+      "descriptionBlocks": 2,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-103",
+        "q-104"
+      ],
       "candidateQuestionIds": [
-        "q-02"
+        "q-02",
+        "q-103",
+        "q-104"
       ],
       "candidateCardIds": [
         "c-46"
       ],
       "candidateTimelineIds": [],
       "requiredNext": [
-        "learner-explanation",
-        "comparison",
-        "recall",
-        "explicit-question-mapping",
-        "fact-source",
+        "independent-confirmation-question",
+        "comparison-or-source-application",
         "expert-review"
       ]
     },
@@ -691,7 +700,9 @@
         "q-79",
         "q-84",
         "q-101",
-        "q-102"
+        "q-102",
+        "q-103",
+        "q-104"
       ],
       "candidateCardIds": [
         "c-14",
@@ -4721,6 +4732,47 @@
       "familyId": "pre-era-sequence",
       "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010",
       "formatId": "chronology-labeled",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-103",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-06"
+      ],
+      "candidateConceptIds": [
+        "t-pre-02",
+        "t-pre-04",
+        "t-pre-05",
+        "t-pre-06",
+        "t-pre-08"
+      ],
+      "familyId": "pre-early-polity-match",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h61_0030_0020_0030",
+      "formatId": "source-what",
+      "actualStimulus": "text",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-104",
+      "lessonId": "lesson-01",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-pre-06"
+      ],
+      "candidateConceptIds": [
+        "t-pre-02",
+        "t-pre-05",
+        "t-pre-06",
+        "t-pre-08"
+      ],
+      "familyId": "pre-early-states-compare",
+      "sourceUrl": "https://contents.history.go.kr/id/hm_007_0020",
+      "formatId": "source-what",
       "actualStimulus": "text",
       "points": 2,
       "calibratedDifficulty": null

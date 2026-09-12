@@ -1,0 +1,80 @@
+# P1 · 부여·옥저·동예·삼한 (t-pre-06) 콘텐츠 배치
+
+기준 SHA(작업 시작): `5059eb579212ff56167f0a66496b261e693ca809`  
+작업 브랜치: `cursor/release-early-states`  
+확인일: 2026-09-13  
+검수 상태: **출처 대조(source-checked, AI)** — 전문가 시험 승인(approved) 아님  
+실제 대조 수행: Composer(AI coding agent). 사람·전문가 승인 표시 없음.
+
+허용 변경: `src/data/lessonGuides.ts`, `src/data/questions.ts`, 관련 데이터 기대값 테스트, `research/content-coverage/*`, 본 보고서.
+
+## 1. 범위
+
+- 완료: lesson-01의 **t-pre-06 한 개념** 설명 + 확인 문항 2개(q-103, q-104).
+- 비범위: 이전 7개념 본문 재작성, q-01/q-27 등 기존 표본 재작성, 88 카탈로그 ID 확장·순서 변경, ID 분할, API/DB/UI/공유 타입, push·배포.
+
+가이드 `contentVersion` 3→4. 기존 세션 스냅샷은 동결본을 쓰므로 런타임 가이드 갱신과 분리된다.
+
+## 2. 출처 대조 로그 (URL 존재 ≠ 확인)
+
+| URL | 실제 열람·대조한 주장 | 결과 |
+|---|---|---|
+| https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h61_0030_0020_0030 | 부여: 왕 아래 마가·우가·저가·구가 등, 제가가 사출도 분치·중앙과 합쳐 5부; 12월 영고(제천·가무·죄수 석방). 옥저·동예: 읍군·삼로, 큰 통합 정치세력 미형성; 옥저 민며느리제; 동예 10월 무천·족외혼·책화(노비·소·말 배상). 삼한: 천군·소도, 군장 세력이 미치지 못하는 신성 구역·제정 분리 서술 | 확인 |
+| https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h71_0030_0020_0020_0030 | 옥저·동예 읍군·삼로·미통합; 민며느리제 정의(어린 신부를 신랑 집에서 양육 후 혼인); 무천·족외혼·책화 | 확인 |
+| https://contents.history.go.kr/front/hm/view.do?levelId=hm_003_0020 | 부여 제가가 사출도를 별도로 다스림; 중앙은 국왕, 사방은 제가 | 확인 |
+| https://contents.history.go.kr/id/hm_003_0070 | 동예 책화: 읍락 침범 시 생구·우마 배상; 대군장 없음·읍군·삼로 서술; 무천·동성불혼(족외혼) 언급 | 확인 |
+| https://contents.history.go.kr/id/hm_006_0020 | 옥저 민며느리제(위략 인용 해설): 약혼 후 신랑 집에서 성장→친정 귀환→예물 후 재입 | 확인 |
+| https://contents.history.go.kr/id/hm_007_0020 | 삼한 천군(천신 제사)·소도(별읍·큰 나무·방울·북·도피자 불송환). 해설에서 정치 지도자와 제사 영역의 구분·제정 분리 맥락 | 확인 |
+| https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h41_0030_0010_0030 | 교차: 부여 사출도·영고(정월=12월 해당), 옥저 통합 정치세력 미성립·민며느리, 동예 무천·족외혼, 삼한 천군 약화·소도 | 교차 확인(주 근거는 위 페이지) |
+
+### 가이드에 넣은 주장과 근거 매핑
+
+| 학습 문장 요지 | 근거 페이지 |
+|---|---|
+| 부여 왕·제가·사출도·5부 읽기 | ta_h61…0030, hm_003_0020 |
+| 영고(12월/정월)·제천·가무·죄수 석방 | ta_h61…0030, ta_h41…0030 |
+| 옥저·동예 읍군·삼로, 큰 통합 왕권 약함 | ta_h61…0030, ta_h71…0030, hm_003_0070(대군장 없음) |
+| 민며느리제 | ta_h71…0030, hm_006_0020 |
+| 무천·족외혼·책화 | ta_h61…0030, ta_h71…0030, hm_003_0070 |
+| 천군·소도·군장 세력 밖 신성 구역 | ta_h61…0030, hm_007_0020 |
+
+### 의도적으로 넣지 않거나 완화한 것
+
+- 「옥저에 왕이 전혀 없었다」는 절대 문장 대신, 읍락 군장은 있으나 **큰 통합 왕권으로 묶이지 못했다**고 씀(출처 표현에 맞춤).
+- 부여 4조법·순장·특산물 수량, 삼한 소국 호수·목지국 영도 세력 등은 이번 배치에 넣지 않음.
+- 기출 원문·시험 PDF·이미지 미사용·미배포.
+
+## 3. 신규 문항
+
+| ID | familyId | 목적 | sourceUrl |
+|---|---|---|---|
+| q-103 | pre-early-polity-match | 왕·사출도·영고 → 부여 변별(접근성 있는 연합·제도 연결) | ta_h61…0030 |
+| q-104 | pre-early-states-compare | 「학습용 재구성」비교표에서 삼한 칸(천군·소도) 해석 | hm_007_0020 |
+
+- 5지선다, `lessonId=lesson-01`, `conceptIds=['t-pre-06']`, `contentVersion=1`.
+- 선지별 해설·복습 연결 포함. `difficulty`는 배점 자리이며 실측 난이도·변별력·정답률은 기록하지 않음.
+- q-104 지문에 **학습용 재구성 (원문 인용 아님)** 명시.
+
+## 4. 테스트·집계 기대값 갱신
+
+준비 개념 7→8, 미준비 81→80에 맞춘 **데이터 기대값만** 수정:
+
+- `src/lib/conceptSchedule.test.ts` — `unavailableConcepts` 80
+- `src/lib/learningApi.pacing.test.ts` — readyIds에 t-pre-06, 차단 개념 `t-tk-01`
+- `src/lib/progressSummary.test.ts` — readyRemaining 7 / unavailable 80
+- `src/pages/ProgressPage.test.tsx` — 「준비됨 8개 · 준비 중 80개」
+- 신규 `src/data/earlyStates.test.ts` — 가이드·문항·스케줄 차단 지점
+
+행동 검증(미준비 건너뛰기 금지, 회상 확인, 스냅샷 동결)은 약화하지 않음.
+
+## 5. 사람 검수 한계 (남아 있음)
+
+- 역사 전문가 승인·시험 출제 의도 대조 미실시.
+- 실측 난이도·변별력·학습 효과 없음.
+- AI 출처 대조이며 국사편찬위원회 자료의 모든 뉘앙스·이설을 소진하지 않음.
+- t-pre-06 ID 분할(부여/옥저/동예/삼한 개별 개념)은 후속 매핑 결정.
+- 다음 차단 개념은 **t-tk-01**(삼국) 설명 공백.
+
+## 6. 검증 명령
+
+작업 종료 시 실행·결과 기록: vitest / tsc -b / oxlint src / vite build / content-coverage.mjs / content-readiness.mjs.

@@ -4,14 +4,14 @@
 
 Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.
 
-단원 18 / 개념 목록 88 / 문항 102 / 카드 95 / 연표 70
-설명 원본 연결 7 / 설명 보충 81 / 명시적 개념 연결 문항 8 / 출처 URL 문항 8 / 실제 이미지 문항 0
+단원 18 / 개념 목록 88 / 문항 104 / 카드 95 / 연표 70
+설명 원본 연결 8 / 설명 보충 80 / 명시적 개념 연결 문항 10 / 출처 URL 문항 10 / 실제 이미지 문항 0
 
 ## 단원별 현황
 
 | 단원 | 개념 목록 | 문항 | 상태 |
 |---|---:|---:|---|
-| 선사 문화와 고조선 | 8 | 8 | source-checked-guide-expert-review-pending |
+| 선사 문화와 고조선 | 8 | 10 | source-checked-guide-expert-review-pending |
 | 삼국의 성립과 발전 | 7 | 8 | needs-guide |
 | 남북국 시대의 변화 | 4 | 7 | needs-guide |
 | 고려 광종과 성종 | 3 | 6 | needs-guide |
@@ -37,13 +37,13 @@ Keyword matches are research candidates, never runtime mappings or verified cove
 | 개념 | 설명 문단 | 회상 질문 | 명시적 연결 문항 | 조사 후보 문항/카드/연표 |
 |---|---:|---:|---|---|
 | t-pre-01 신석기 표지와 사회 | 2 | 1 | q-01, q-03, q-102 | 5/1/0 |
-| t-pre-02 청동기·군장 사회 | 2 | 1 | q-03, q-84, q-102 | 5/2/0 |
+| t-pre-02 청동기·군장 사회 | 2 | 1 | q-03, q-84, q-102 | 7/2/0 |
 | t-pre-03 고조선 성립과 전승 | 2 | 1 | q-51 | 3/1/0 |
-| t-pre-04 위만 집권과 후기 고조선 | 2 | 1 | q-02, q-51, q-79, q-102 | 4/2/1 |
-| t-pre-05 8조법 전승과 사회규범 | 2 | 1 | q-02, q-51 | 2/1/0 |
-| t-pre-06 부여·옥저·동예·삼한 | 0 | 0 | 없음 | 1/1/0 |
+| t-pre-04 위만 집권과 후기 고조선 | 2 | 1 | q-02, q-51, q-79, q-102 | 5/2/1 |
+| t-pre-05 8조법 전승과 사회규범 | 2 | 1 | q-02, q-51 | 4/1/0 |
+| t-pre-06 부여·옥저·동예·삼한 | 2 | 1 | q-103, q-104 | 3/1/0 |
 | t-pre-07 철기 보급과 농업 생산 | 2 | 1 | q-101 | 3/0/0 |
-| t-pre-08 선사~고조선 연표 | 2 | 1 | q-102 | 8/5/2 |
+| t-pre-08 선사~고조선 연표 | 2 | 1 | q-102 | 10/5/2 |
 | t-tk-01 고구려 전성기 왕 | 0 | 0 | 없음 | 4/5/2 |
 | t-tk-02 백제 전성·천도 | 0 | 0 | 없음 | 2/4/0 |
 | t-tk-03 신라 불교 공인 | 0 | 0 | 없음 | 3/3/0 |

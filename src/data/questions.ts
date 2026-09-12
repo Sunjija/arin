@@ -2112,6 +2112,59 @@ const authoredQuestions: Question[] = [
     contentVersion: 2,
     sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010',
   },
+  // ─── 부여·옥저·동예·삼한 (t-pre-06) ───
+  {
+    id: 'q-103',
+    stem: '다음 설명에 해당하는 나라로 옳은 것은?',
+    passage:
+      '왕이 중앙을 다스리고, 마가·우가·저가·구가 등 제가가 사출도를 나누어 다스렸다. 12월에는 영고라는 제천 행사를 열어 하늘에 제사하고 가무를 즐겼다.',
+    choices: [
+      '부여',
+      '옥저',
+      '동예',
+      '삼한',
+      '고조선',
+    ],
+    answerIndex: 0,
+    explanation:
+      '정답은 「부여」입니다. 왕과 제가의 사출도 통치, 12월 영고는 부여의 제도·풍속으로 연결됩니다. 「옥저」는 읍락 군장과 민며느리제가 핵심이며 사출도·영고와 맞지 않습니다. 「동예」는 무천·족외혼·책화가 표지입니다. 「삼한」은 천군·소도로 정치와 제사 영역을 가르는 설명이 핵심입니다. 「고조선」은 위만 집권·8조법 등과 연결되며 사출도·영고 설명과 일치하지 않습니다.',
+    era: 'prehistoric',
+    tags: ['source', 'political-system'],
+    difficulty: 1,
+    lessonId: 'lesson-01',
+    formatId: 'source-what',
+    ...META,
+    conceptIds: ['t-pre-06'],
+    familyId: 'pre-early-polity-match',
+    contentVersion: 1,
+    sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h61_0030_0020_0030',
+  },
+  {
+    id: 'q-104',
+    stem: '다음 학습용 재구성 자료를 읽고, ㉠에 들어갈 설명으로 가장 적절한 것은?',
+    passage:
+      '학습용 재구성 (원문 인용 아님)\n비교의 목적: 비슷한 이웃 나라를 제도·풍속으로 가른다.\n· 부여 — 왕과 제가의 사출도, 영고\n· 옥저 — 민며느리제, 큰 통합 왕권은 약함\n· 동예 — 무천·족외혼·책화\n· 삼한 — ㉠',
+    choices: [
+      '천군이 제사를 주관하고, 소도는 군장 세력이 미치지 못하는 신성 구역이었다.',
+      '왕이 중앙을 다스리고 제가가 사출도를 나누어 다스렸다.',
+      '어린 신부를 신랑 집에서 길러 혼인하는 민며느리제가 있었다.',
+      '다른 읍락의 생활권을 침범하면 책화로 배상하게 하였다.',
+      '8조법으로 살인·상해·절도를 다스렸다.',
+    ],
+    answerIndex: 0,
+    explanation:
+      '정답은 「천군이 제사를 주관하고, 소도는 군장 세력이 미치지 못하는 신성 구역이었다.」입니다. 재구성 표에서 삼한 칸은 정치 지배자와 제사(천군·소도)의 구분을 넣는 자리입니다. 「왕이 중앙을 다스리고 제가가 사출도를 나누어 다스렸다.」는 부여 칸의 내용입니다. 「어린 신부를 신랑 집에서 길러 혼인하는 민며느리제가 있었다.」는 옥저 칸입니다. 「다른 읍락의 생활권을 침범하면 책화로 배상하게 하였다.」는 동예 칸입니다. 「8조법으로 살인·상해·절도를 다스렸다.」는 고조선과 연결되며 이 비교표의 삼한 설명과 맞지 않습니다. 기초 확인용 자체 자료이며 실전 기출과 동등한 난이도라고 보지 않습니다.',
+    era: 'prehistoric',
+    tags: ['source', 'political-system'],
+    difficulty: 2,
+    lessonId: 'lesson-01',
+    formatId: 'source-what',
+    ...META,
+    conceptIds: ['t-pre-06'],
+    familyId: 'pre-early-states-compare',
+    contentVersion: 1,
+    sourceUrl: 'https://contents.history.go.kr/id/hm_007_0020',
+  },
 
 ]
 

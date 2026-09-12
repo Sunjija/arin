@@ -4,11 +4,11 @@ import type { LessonGuide } from '../types'
 export const lessonGuides: LessonGuide[] = [
   {
     lessonId: 'lesson-01',
-    contentVersion: 3,
+    contentVersion: 4,
     reviewStatus: 'source-checked',
-    checkedAt: '2026-09-11',
+    checkedAt: '2026-09-13',
     introduction:
-      '생활 도구와 생산 방식이 어떻게 달라졌는지 먼저 이해하고, 그 변화 속에서 고조선의 성립과 사회 모습을 연결해 봅니다.',
+      '생활 도구와 생산 방식이 어떻게 달라졌는지 먼저 이해하고, 그 변화 속에서 고조선의 성립과 사회 모습을 연결한 뒤, 이웃한 여러 나라의 제도·풍속을 비교합니다.',
     sections: [
       {
         conceptId: 't-pre-01',
@@ -94,6 +94,30 @@ export const lessonGuides: LessonGuide[] = [
           'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0020_0010',
           'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0010_0030_0030',
           'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0020_0020_0010_0030',
+        ],
+      },
+      {
+        conceptId: 't-pre-06',
+        title: '부여·옥저·동예·삼한: 제도로 이웃 나라 가리기',
+        paragraphs: [
+          '고조선 주변에도 여러 정치 집단이 있었습니다. 이름을 나열하기보다, 「누가 다스렸는가」와 「어떤 풍속이 그 사회를 보여 주는가」를 짝지어 기억하세요. 부여에는 왕이 있었고, 마가·우가·저가·구가 등 제가가 사출도(왕도 사방의 길·지역)를 나누어 다스렸습니다. 왕이 직접 다스리는 중앙과 합하면 5부 구조로 읽힙니다. 12월(정월)에는 영고라는 제천 행사를 열어 하늘에 제사하고 가무를 즐기며, 죄수를 풀어 주기도 했습니다.',
+          '옥저와 동예는 동해안 일대에서 읍군·삼로 같은 읍락 군장이 자기 집단을 다스렸지만, 부여처럼 큰 통합 왕권으로 묶이진 못했습니다. 옥저에는 민며느리제(어린 신부를 신랑 집에서 길러 혼인하는 풍속)가 있었고, 동예는 10월 무천·족외혼과 함께 다른 읍락 생활권을 침범하면 책화로 노비·소·말 등을 배상하게 했습니다. 삼한에는 정치적 지배자 외에 천군이 천신 제사를 주관했고, 소도는 군장 세력이 미치지 못하는 신성 구역으로 전해집니다. 비교의 의미는 「비슷한 이웃」을 제도·제사·혼인·배상 관습으로 갈라 고조선·부여와 혼동하지 않는 데 있습니다.',
+        ],
+        recallPrompt:
+          '부여의 왕·제가(사출도)·영고, 옥저의 민며느리제와 통합 왕권의 약함, 동예의 무천·책화·족외혼, 삼한의 천군·소도를 각각 짝지어 말해 보세요.',
+        expectedElements: [
+          '부여: 왕과 제가의 사출도, 영고',
+          '옥저: 민며느리제, 큰 통합 왕권은 약함',
+          '동예: 무천·족외혼·책화',
+          '삼한: 천군과 소도(제정 구분)',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h61_0030_0020_0030',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_h71_0030_0020_0020_0030',
+          'https://contents.history.go.kr/front/hm/view.do?levelId=hm_003_0020',
+          'https://contents.history.go.kr/id/hm_003_0070',
+          'https://contents.history.go.kr/id/hm_006_0020',
+          'https://contents.history.go.kr/id/hm_007_0020',
         ],
       },
     ],

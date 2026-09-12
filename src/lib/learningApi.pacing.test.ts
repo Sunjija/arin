@@ -10,7 +10,7 @@ import { lessonGuides } from '../data/lessonGuides'
 import { buildTodayPlan } from './studyService'
 import type { ActiveSession } from '../types'
 const date = '2026-01-05'
-const readyIds = ['t-pre-01','t-pre-02','t-pre-07','t-pre-03','t-pre-04','t-pre-05','t-pre-08']
+const readyIds = ['t-pre-01','t-pre-02','t-pre-07','t-pre-03','t-pre-04','t-pre-05','t-pre-08','t-pre-06']
 const done = (ids: string[]) => db.conceptProgress.bulkPut(ids.map(id => ({ ...emptyConceptProgress(id), learnState: 'completed' as const, firstLearnedAt: date, completedAt: date })))
 const answered = (session: ActiveSession): ActiveSession => ({ ...session, conceptDone: true, confirmedConceptIds: session.conceptIds, answered: session.questionIds.map(questionId => ({ questionId, selectedIndex: 0, correct: false, responseMs: null, attemptId: `attempt-${questionId}` })) })
 afterEach(async () => { vi.restoreAllMocks(); await resetAppDb() })
@@ -61,7 +61,7 @@ describe('scoped daily learning', () => {
     expect(await db.lessonCompletions.count()).toBe(1)
     const plan = await computeStudyPlan('2026-01-06')
     expect(plan.currentConceptIds).toEqual([])
-    expect(plan.conceptSchedule?.nextConceptId).toBe('t-pre-06')
+    expect(plan.conceptSchedule?.nextConceptId).toBe('t-tk-01')
     expect(plan.conceptFinishDate).toBeNull()
     await expect(startLesson({ today: '2026-01-06' })).rejects.toThrow('준비 중')
   })
