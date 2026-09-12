@@ -5,6 +5,7 @@ import { questions } from '../data/questions'
 import { CARD_LESSON_SCOPE } from '../data/cardLessonScope'
 import { db } from '../db/database'
 import { DataError } from './dataErrors'
+import { requireCurrentSession, revisedSession } from './studySessionConcurrency'
 import { addDays, isDateKey, isDue, toDateKey } from './dates'
 import { validateGoalInput } from './settingsValidation'
 import { questionFromSnapshot } from './examScoring'
@@ -432,6 +433,7 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
       dueOn: planned?.dueOn, lastWrongAt: planned?.lastWrongAt })]
   })
   const session: ActiveSession = {
+    revision: 0,
     questionContexts,
     id: `session-${today}-${crypto.randomUUID()}`,
     date: today,
@@ -594,12 +596,11 @@ async function completeSessionTransaction(session: ActiveSession): Promise<Compl
   const today = session.date
   const existingDay = await db.studyDays.get(today)
   if (existingDay?.finishedSessionIds?.includes(session.id)) {
-    const done = { ...session, step: 'result' as const, updatedAt: new Date().toISOString() }
-    // A retry of an old completion must not replace a newer session.
     const active = await db.activeSession.toCollection().first()
-    if (!active || active.id === session.id) await db.activeSession.put(done)
-    return { session: done, created: false }
+    // A receipt is read-only: retrying an old completion never recreates a row.
+    return { session: active?.id === session.id ? active : { ...session, step: 'result' }, created: false }
   }
+  await requireCurrentSession(session)
 
   // Wall-clock elapsed time includes overnight pauses; it is not active study time.
   const minutesMeasured = false
@@ -653,7 +654,7 @@ async function completeSessionTransaction(session: ActiveSession): Promise<Compl
     await db.meta.put({ ...meta, streak, lastStudyDate: today })
   }
 
-  const done = { ...session, step: 'result' as const, updatedAt: new Date().toISOString() }
+  const done = revisedSession({ ...session, step: 'result' })
   await db.activeSession.put(done)
   return { session: done, created: true }
 }

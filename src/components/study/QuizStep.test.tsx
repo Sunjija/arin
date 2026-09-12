@@ -7,6 +7,7 @@ import '@testing-library/jest-dom/vitest'
 import { QuizStep } from './QuizStep'
 import { questions } from '../../data/questions'
 import { db } from '../../db/database'
+import { saveSession } from '../../lib/studyService'
 import { questionContextCopy } from '../../lib/questionStudyContext'
 import { snapshotFromQuestion } from '../../lib/wrongCard'
 import { resetAppDb, seedCore } from '../../test/idb'
@@ -187,8 +188,9 @@ describe('QuizStep review context copy', () => {
     let session = baseSession({
       questionContexts: [contextFor(first.id, 'due-review', { priorAttemptCount: 1 })],
     })
-    const onChange = vi.fn(async (next: ActiveSession) => {
-      session = next
+    await db.activeSession.put(session)
+    const onChange = vi.fn(async (next: ActiveSession, persisted = false) => {
+      session = persisted ? next : await saveSession(next)
       rerender(<QuizStep session={session} onChange={onChange} />)
     })
     const { rerender } = render(<QuizStep session={session} onChange={onChange} />)
@@ -216,8 +218,9 @@ describe('QuizStep review context copy', () => {
         contextFor(second.id, 'recent-wrong', { priorAttemptCount: 2 }),
       ],
     })
-    const onChange = vi.fn(async (next: ActiveSession) => {
-      session = next
+    await db.activeSession.put(session)
+    const onChange = vi.fn(async (next: ActiveSession, persisted = false) => {
+      session = persisted ? next : await saveSession(next)
       rerender(<QuizStep session={session} onChange={onChange} />)
     })
     const { rerender, unmount } = render(<QuizStep session={session} onChange={onChange} />)
@@ -247,8 +250,9 @@ describe('QuizStep review context copy', () => {
         contextFor(second.id, 'review-practice'),
       ],
     })
-    const onChange = vi.fn(async (next: ActiveSession) => {
-      session = next
+    await db.activeSession.put(session)
+    const onChange = vi.fn(async (next: ActiveSession, persisted = false) => {
+      session = persisted ? next : await saveSession(next)
       rerender(<QuizStep session={session} onChange={onChange} />)
     })
     const { rerender } = render(<QuizStep session={session} onChange={onChange} />)

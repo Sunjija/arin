@@ -79,7 +79,7 @@ describe('P0 independent acceptance review', () => {
     const started = await startMock({ mode: 'sample', snapshots: [snapshot], durationMs: 60000 })
     if (!started.ok) throw new Error('fixture setup failed')
     vi.spyOn(db.mastery, 'put').mockRejectedValueOnce(new Error('storage failure'))
-    const args = { id: started.mock.id, answers: [snapshot.answerIndex] }
+    const args = { id: started.mock.id, revision: started.mock.revision, answers: [snapshot.answerIndex] }
     await expect(finalizeMock(args)).rejects.toThrow('storage failure')
     expect(await db.attempts.count()).toBe(0)
     expect(await db.mockResults.count()).toBe(0)

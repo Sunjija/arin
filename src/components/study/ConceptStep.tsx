@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button, InlineStatus } from '../ui'
 import { ERA_LABELS, type Lesson, type LessonGuide } from '../../types'
 import { guideForLesson } from '../../data/lessonGuides'
@@ -29,13 +29,17 @@ export function ConceptStep({
   const ids = guides.flatMap(item => item.sections.map(section => section.conceptId))
   const allConfirmed = !scoped || ids.length > 0 && ids.every(id => confirmedConceptIds.includes(id))
   const [busy, setBusy] = useState(false)
+  const lock = useRef(false)
+  const [draftMemo, setDraftMemo] = useState(memo)
+  const memoDirty = draftMemo !== memo
   const [error, setError] = useState<string | null>(null)
   const run = async (action: () => Promise<void>) => {
-    if (busy) return
+    if (lock.current) return
+    lock.current = true
     setBusy(true)
     try { await action(); setError(null) }
     catch { setError('진행을 저장하지 못했습니다. 다시 시도해 주세요.') }
-    finally { setBusy(false) }
+    finally { lock.current = false; setBusy(false) }
   }
   return (
     <div className="concept-content space-y-4">
@@ -66,15 +70,21 @@ export function ConceptStep({
         <textarea
           className="field-control mt-1"
           rows={3}
-          value={memo}
-          onChange={(event) => void onMemo(event.target.value).catch(() => setError('메모를 저장하지 못했습니다.'))}
+          value={draftMemo}
+          disabled={busy}
+          onChange={(event) => setDraftMemo(event.target.value)}
+          onBlur={() => { if (memoDirty) void run(() => onMemo(draftMemo)) }}
           placeholder="예: 자습서 고려 광종·성종 단원 p.42~45"
         />
       </label>
+      {memoDirty && <div>
+        <p className="meta-text">아직 저장하지 않은 메모가 있습니다.</p>
+        <Button variant="secondary" disabled={busy} onClick={() => void run(() => onMemo(draftMemo))}>메모 저장</Button>
+      </div>}
       {error && <InlineStatus tone="error">{error}</InlineStatus>}
       {scoped && <p className="meta-text">확인 {ids.filter(id => confirmedConceptIds.includes(id)).length}/{ids.length}개 · 읽기 확인은 숙련도 측정과 별도로 기록합니다.</p>}
       <div className="cta-dock">
-        <Button className="w-full" disabled={busy || !allConfirmed} onClick={() => void run(onDone)}>
+        <Button className="w-full" disabled={busy || memoDirty || !allConfirmed} onClick={() => void run(onDone)}>
           {questionCount === 0 ? '개념 확인 완료 · 다음으로' : '읽기 완료 · 확인 문제 풀기'}
         </Button>
       </div>

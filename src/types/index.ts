@@ -370,6 +370,8 @@ export interface LibraryPracticeSession {
 }
 
 export interface ActiveSession {
+  /** Optimistic concurrency token. Missing on legacy sessions means revision zero. */
+  revision?: number
   /** Frozen at start. Legacy sessions without it retain unknown history. */
   questionContexts?: QuestionStudyContext[]
   id: string

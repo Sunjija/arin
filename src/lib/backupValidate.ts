@@ -151,6 +151,7 @@ export function validateExportPayload(raw: unknown): { ok: true; payload: Export
   }
   if (isRecord(raw.activeSession)) {
     const session = raw.activeSession
+    if (session.revision !== undefined && (!Number.isSafeInteger(session.revision) || Number(session.revision) < 0)) return { ok: false, message: '학습 진행 버전이 손상되었습니다.' }
     if (session.questionContexts !== undefined && !validQuestionContexts(session.questionContexts, session.questionIds, session.newQuestionIds, session.reviewQuestionIds)) return { ok: false, message: '문제 선정 이유 또는 풀이 이력이 손상되었습니다.' }
     if (session.conceptIds !== undefined || session.guideSnapshots !== undefined || session.confirmedConceptIds !== undefined) {
       if (!idList(session.conceptIds) || new Set(session.conceptIds).size !== session.conceptIds.length || !idList(session.confirmedConceptIds) || !session.confirmedConceptIds.every(id => (session.conceptIds as string[]).includes(id)) || !Array.isArray(session.guideSnapshots) || !session.guideSnapshots.every(validGuide)) return { ok: false, message: '진행 중인 개념 원본이 손상되었습니다.' }

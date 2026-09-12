@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useFocusLayout } from '../components/layout/useFocusLayout'
 import { StudyFocusHeader } from '../components/study/StudyFocusHeader'
@@ -8,8 +8,7 @@ import { QuizStep } from '../components/study/QuizStep'
 import { ResultStep } from '../components/study/ResultStep'
 import { Button, InlineStatus } from '../components/ui'
 import { lessons } from '../data/lessons'
-import { finishSession, rateCard, saveSession, startOrResumeSession } from '../lib/studyService'
-import { MAX_DAILY_CARDS } from '../lib/studyLimits'
+import { advanceSessionCard, finishSession, getSavedSession, saveSession, startOrResumeSession } from '../lib/studyService'
 import { db } from '../db/database'
 import type { ActiveSession, FlashcardRecord, StudyEntryMode } from '../types'
 
@@ -23,6 +22,9 @@ export function StudySessionPage() {
   const [error, setError] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [closing, setClosing] = useState(false)
+  const [reloading, setReloading] = useState(false)
+  const [reloadVersion, setReloadVersion] = useState(0)
+  const saveLock = useRef(false)
 
   const focused = Boolean(session && session.step !== 'result')
   useFocusLayout(focused)
@@ -55,28 +57,50 @@ export function StudySessionPage() {
     [session?.lessonId],
   )
 
-  const persist = async (next: ActiveSession) => {
+  const reportFailure = (reason: unknown) => {
+    setSaveError(reason instanceof Error ? reason.message : '진행을 저장하지 못했습니다. 다시 시도하거나 저장된 진행을 불러와 주세요.')
+  }
+
+  const persist = async (next: ActiveSession, persisted = false) => {
+    if (persisted) {
+      setSession(current => current?.id === next.id && (current.revision ?? 0) <= (next.revision ?? 0) ? next : current)
+      setSaveError(null)
+      return
+    }
+    if (saveLock.current) throw new Error('진행을 저장 중입니다. 잠시 후 다시 시도해 주세요.')
+    saveLock.current = true
     try {
-      await saveSession(next)
-      setSession(next)
+      const saved = next.step === 'result' ? await finishSession(next) : await saveSession(next)
+      setSession(current => current?.id === saved.id && (current.revision ?? 0) <= (saved.revision ?? 0) ? saved : current)
       setSaveError(null)
     } catch (reason) {
-      setSaveError('진행을 저장하지 못했습니다. 이 화면에 머무릅니다.')
+      reportFailure(reason)
       throw reason
+    } finally {
+      saveLock.current = false
     }
   }
 
-  const closeToHome = async () => {
-    if (!session || closing) return
-    setClosing(true)
+  const reloadSaved = async () => {
+    if (reloading || saveLock.current) return
+    setReloading(true)
     try {
-      await saveSession(session)
+      const saved = await getSavedSession()
+      await refreshCards(saved.cardIds)
+      setSession(current => current?.id === saved.id && (current.revision ?? 0) > (saved.revision ?? 0) ? current : saved)
+      setReloadVersion(value => value + 1)
       setSaveError(null)
-      navigate(session.entryMode === 'review' ? '/cards' : '/')
-    } catch {
-      setSaveError('진행을 저장하지 못했습니다. 이 화면에 머무릅니다.')
-      setClosing(false)
+    } catch (reason) {
+      reportFailure(reason)
+    } finally {
+      setReloading(false)
     }
+  }
+
+  const closeToHome = () => {
+    if (!session || closing || saveLock.current) return
+    setClosing(true)
+    navigate(session.entryMode === 'review' ? '/cards' : '/')
   }
 
   const afterCards = async (next: ActiveSession) => {
@@ -86,7 +110,6 @@ export function StudySessionPage() {
     }
     if (next.entryMode === 'review' || next.conceptDone) {
       const done = { ...next, step: 'result' as const }
-      await finishSession(done)
       await persist(done)
       return
     }
@@ -130,35 +153,31 @@ export function StudySessionPage() {
         <InlineStatus tone="error">{saveError}</InlineStatus>
       ) : null}
 
+      {saveError && <Button variant="secondary" className="mb-4" disabled={reloading} onClick={() => void reloadSaved()}>
+        {reloading ? '진행을 불러오는 중…' : '저장된 진행 다시 불러오기'}
+      </Button>}
+      <fieldset disabled={reloading} className="min-w-0">
       {session.step === 'cards' && (
         <CardsStep
-          key={`${session.cardIndex}-${cards[session.cardIndex]?.id ?? 'loading'}`}
+          key={`${session.id}-${reloadVersion}-${session.cardIndex}-${cards[session.cardIndex]?.id ?? 'loading'}`}
           session={session}
           cards={cards}
           onAdvance={async (rating, requeue) => {
-            const card = cards[session.cardIndex]
-            if (!card) return
-            await rateCard(card.id, rating)
-            let nextIds = [...session.cardIds]
-            if (requeue && nextIds.length < MAX_DAILY_CARDS) {
-              const rest = nextIds.slice(session.cardIndex + 1)
-              const insertAt = Math.min(rest.length, 2)
-              rest.splice(insertAt, 0, card.id)
-              nextIds = [...nextIds.slice(0, session.cardIndex + 1), ...rest]
-            }
-            const nextIndex = session.cardIndex + 1
-            if (nextIndex >= nextIds.length) {
-              await afterCards({ ...session, cardIds: nextIds, cardIndex: nextIndex })
-            } else {
-              await persist({ ...session, cardIds: nextIds, cardIndex: nextIndex })
-              await refreshCards(nextIds)
+            try {
+              const saved = await advanceSessionCard(session, rating, requeue)
+              await persist(saved, true)
+              await refreshCards(saved.cardIds)
+            } catch (reason) {
+              reportFailure(reason)
+              throw reason
             }
           }}
-          onSkip={() => afterCards(session)}
+          onSkip={() => afterCards(session).catch(reportFailure)}
         />
       )}
       {session.step === 'concept' && (
         <ConceptStep
+          key={`${session.id}-${reloadVersion}`}
           lesson={lesson}
           memo={session.conceptMemo}
           guideSnapshots={session.guideSnapshots}
@@ -172,14 +191,14 @@ export function StudySessionPage() {
             else if (next.cardIds.length) await persist({ ...next, step: 'cards' })
             else {
               const done = { ...next, step: 'result' as const }
-              await finishSession(done)
-              setSession(done)
+              await persist(done)
             }
           }}
         />
       )}
-      {session.step === 'quiz' && <QuizStep session={session} onChange={persist} />}
+      {session.step === 'quiz' && <QuizStep key={`${session.id}-${reloadVersion}`} session={session} onChange={persist} onFailure={reportFailure} />}
       {session.step === 'result' && <ResultStep session={session} lessonTitle={lesson.title} />}
+      </fieldset>
     </div>
   )
 }

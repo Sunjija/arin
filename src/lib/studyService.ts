@@ -13,6 +13,8 @@ import { calculateNextInterval } from './spacedRepetition'
 import { MAX_DAILY_CARDS } from './studyLimits'
 import { quantitySettingsCopy } from './studyPlan'
 import { db } from '../db/database'
+import { questionFromSnapshot } from './examScoring'
+import { requireCurrentSession, revisedSession, StudySessionConflictError } from './studySessionConcurrency'
 import {
   completeSession,
   computeStudyPlan,
@@ -209,19 +211,92 @@ export async function startOrResumeSession(
   const today = input.today ?? toDateKey()
   const entryMode: StudyEntryMode = input.entryMode ?? 'daily'
 
-  const existing = await db.activeSession.toCollection().first()
-  if (existing && existing.step !== 'result') {
+  await startLesson({ today, entryMode, startNewReview: input.startNewReview })
+  return db.transaction('rw', db.activeSession, async () => {
+    const existing = await db.activeSession.toCollection().first()
+    if (!existing) throw new StudySessionConflictError()
     const normalized = normalizeResumedSession(existing)
-    if (normalized !== existing) await db.activeSession.put(normalized)
-    return normalized
-  }
-
-  return startLesson({ today, entryMode, startNewReview: input.startNewReview })
+    if (normalized === existing) return existing
+    const saved = revisedSession(normalized)
+    await db.activeSession.put(saved)
+    return saved
+  })
 }
 
-export async function saveSession(session: ActiveSession): Promise<void> {
-  session.updatedAt = new Date().toISOString()
-  await db.activeSession.put(session)
+export async function saveSession(session: ActiveSession): Promise<ActiveSession> {
+  return db.transaction('rw', db.activeSession, async () => {
+    await requireCurrentSession(session)
+    if (session.step === 'result') throw new Error('학습 완료는 완료 저장 기능을 사용해 주세요.')
+    const saved = revisedSession(session)
+    await db.activeSession.put(saved)
+    return saved
+  })
+}
+
+export async function getSavedSession(): Promise<ActiveSession> {
+  const session = await db.activeSession.toCollection().first()
+  if (!session) throw new Error('저장된 학습 진행이 없습니다. 오늘 화면에서 다시 시작해 주세요.')
+  return session
+}
+
+/** Answer, feedback position, wrong-answer log and mastery commit together. */
+export async function submitSessionAnswer(session: ActiveSession, responseMs: number | null): Promise<ActiveSession> {
+  return db.transaction('rw', [db.activeSession, db.attempts, db.wrongAnswers, db.mastery, db.conceptProgress], async () => {
+    const current = await requireCurrentSession(session)
+    const questionId = current.questionIds[current.questionIndex]
+    if (current.step !== 'quiz' || current.selectedIndex == null || current.answered.some(answer => answer.questionId === questionId)) throw new StudySessionConflictError()
+    const snapshot = current.questionSnapshots?.find(item => item.questionId === questionId)
+    const question = snapshot ? questionFromSnapshot(snapshot) : questions.find(item => item.id === questionId)
+    if (!question) throw new Error('저장된 문항을 찾을 수 없습니다.')
+    const attempt = await recordAnswer({ question, snapshot, selectedIndex: current.selectedIndex, correct: current.selectedIndex === question.answerIndex,
+      responseMs, cause: 'unknown', learningSource: current.entryMode === 'review' ? 'review' : 'today',
+      attemptId: `att-${current.id}-q${current.questionIndex}-${question.id}` })
+    // Old clients could write the attempt before failing to write feedback. Its
+    // original snapshot remains authoritative even if bundled content changed.
+    const questionSnapshots = [...(current.questionSnapshots ?? [])]
+    if (attempt.snapshot) {
+      const index = questionSnapshots.findIndex(item => item.questionId === question.id)
+      if (index < 0) questionSnapshots.push(attempt.snapshot)
+      else questionSnapshots[index] = attempt.snapshot
+    }
+    const saved = revisedSession({ ...current, quizPhase: 'feedback', selectedIndex: attempt.selectedIndex,
+      questionSnapshots: questionSnapshots.length ? questionSnapshots : current.questionSnapshots,
+      answered: [...current.answered, { questionId: question.id, correct: attempt.correct,
+        selectedIndex: attempt.selectedIndex, cause: attempt.cause, responseMs: attempt.responseMs,
+        eraGuess: current.eraGuess, clueMemo: current.clueMemo, attemptId: attempt.id }] })
+    await db.activeSession.put(saved)
+    return saved
+  })
+}
+
+export async function saveSessionAnswerCause(session: ActiveSession, cause: WrongCause): Promise<ActiveSession> {
+  return db.transaction('rw', [db.activeSession, db.attempts, db.wrongAnswers], async () => {
+    const current = await requireCurrentSession(session)
+    const answer = current.answered.find(item => item.questionId === current.questionIds[current.questionIndex])
+    if (current.step !== 'quiz' || !answer?.attemptId || answer.correct) throw new StudySessionConflictError()
+    await updateAttemptCause(answer.attemptId, cause)
+    const saved = revisedSession({ ...current, answered: current.answered.map(item => item.attemptId === answer.attemptId ? { ...item, cause } : item) })
+    await db.activeSession.put(saved)
+    return saved
+  })
+}
+
+/** A card occurrence is consumed only if its rating and next session position both save. */
+export async function advanceSessionCard(session: ActiveSession, rating: CardRating, requeue: boolean): Promise<ActiveSession> {
+  return db.transaction('rw', [db.activeSession, db.cards, db.studyDays, db.lessonCompletions, db.conceptProgress, db.meta], async () => {
+    const current = await requireCurrentSession(session)
+    const cardId = current.cardIds[current.cardIndex]
+    if (current.step !== 'cards' || !cardId) throw new StudySessionConflictError()
+    await rateCard(cardId, rating)
+    const cardIds = [...current.cardIds]
+    if (requeue && cardIds.length < MAX_DAILY_CARDS) cardIds.splice(Math.min(cardIds.length, current.cardIndex + 3), 0, cardId)
+    const next: ActiveSession = { ...current, cardIds, cardIndex: current.cardIndex + 1 }
+    if (next.cardIndex >= cardIds.length) {
+      next.step = next.conceptDone && next.questionIndex < next.questionIds.length ? 'quiz'
+        : next.entryMode === 'review' || next.conceptDone ? 'result' : 'concept'
+    }
+    return next.step === 'result' ? (await completeSession(next)).session : saveSession(next)
+  })
 }
 
 export async function rateCard(
@@ -320,8 +395,8 @@ export async function updateAttemptCause(
   })
 }
 
-export async function finishSession(session: ActiveSession): Promise<void> {
-  await completeSession(session)
+export async function finishSession(session: ActiveSession): Promise<ActiveSession> {
+  return (await completeSession(session)).session
 }
 
 export async function saveMockResult(result: MockExamResult): Promise<MockExamResult> {

@@ -3,13 +3,12 @@ import { Button, ChoiceOption, InlineStatus } from '../ui'
 import { getQuestionById } from '../../data/questions'
 import { questionFromSnapshot } from '../../lib/examScoring'
 import { questionContextCopy } from '../../lib/questionStudyContext'
-import { finishSession, recordQuizAnswer, updateAttemptCause } from '../../lib/studyService'
+import { finishSession, submitSessionAnswer, saveSessionAnswerCause } from '../../lib/studyService'
 import { createWrongCardFromQuestion, snapshotFromQuestion } from '../../lib/wrongCard'
 import {
   ERA_LABELS,
   WRONG_CAUSE_LABELS,
   type ActiveSession,
-  type SessionAnswer,
   type WrongCause,
 } from '../../types'
 import { choiceState } from './choiceState'
@@ -47,9 +46,11 @@ function QuestionStudyContextNote({
 export function QuizStep({
   session,
   onChange,
+  onFailure,
 }: {
   session: ActiveSession
-  onChange: (next: ActiveSession) => Promise<void>
+  onChange: (next: ActiveSession, persisted?: boolean) => Promise<void>
+  onFailure?: (reason: unknown) => void
 }) {
   const questionId = session.questionIds[session.questionIndex]
   const frozenQuestion = session.questionSnapshots?.find((snapshot) => snapshot.questionId === questionId)
@@ -59,6 +60,7 @@ export function QuizStep({
   const [causeSkipped, setCauseSkipped] = useState(false)
   const [busy, setBusy] = useState(false)
   const gradeLock = useRef(false)
+  const actionLock = useRef(false)
   const startedAt = useRef(Date.now())
   const frozenMs = useRef<number | null>(null)
 
@@ -66,6 +68,12 @@ export function QuizStep({
     () => session.answered.find((item) => item.questionId === questionId),
     [session.answered, questionId],
   )
+
+  const reportError = (reason: unknown) => {
+    onFailure?.(reason)
+    setMessageTone('error')
+    setMessage(reason instanceof Error ? reason.message : '진행을 저장하지 못했습니다.')
+  }
 
   useEffect(() => {
     const existing = session.answered.find((item) => item.questionId === questionId)
@@ -84,11 +92,11 @@ export function QuizStep({
       session.quizPhase === 'era' ||
       session.quizPhase === 'clue'
     if (legacyPhase) {
-      void onChange({ ...session, quizPhase: 'choices', revealedChoices: true })
+      void onChange({ ...session, quizPhase: 'choices', revealedChoices: true }).catch(reportError)
       return
     }
     if (session.quizPhase === 'cause' && !currentAnswer) {
-      void onChange({ ...session, quizPhase: 'choices' })
+      void onChange({ ...session, quizPhase: 'choices' }).catch(reportError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- normalize leftover multi-step sessions only
   }, [session.quizPhase, session.questionIndex, currentAnswer])
@@ -97,9 +105,10 @@ export function QuizStep({
     return (
       <div className="surface p-5">
         <p>문제가 없습니다.</p>
+        {message && <InlineStatus tone={messageTone}>{message}</InlineStatus>}
         <Button
           className="mt-4 w-full"
-          onClick={() => void finishSession(session).then(() => onChange({ ...session, step: 'result' }))}
+          onClick={() => void finishSession(session).then(saved => onChange(saved, true)).catch(reportError)}
         >
           결과 보기
         </Button>
@@ -116,45 +125,34 @@ export function QuizStep({
     return frozenMs.current
   }
 
-  const selectChoice = (index: number) => {
+  const selectChoice = async (index: number) => {
     if (revealed || gradeLock.current || busy) return
-    void onChange({ ...session, selectedIndex: index, quizPhase: 'choices' })
+    gradeLock.current = true
+    setBusy(true)
+    try {
+      await onChange({ ...session, selectedIndex: index, quizPhase: 'choices' })
+      setMessage(null)
+    } catch (error) {
+      onFailure?.(error)
+      setMessageTone('error')
+      setMessage(error instanceof Error ? error.message : '선택을 저장하지 못했습니다.')
+    } finally {
+      gradeLock.current = false
+      setBusy(false)
+    }
   }
 
   const submit = async () => {
     if (session.selectedIndex == null || revealed || gradeLock.current || busy) return
     gradeLock.current = true
     setBusy(true)
-    const chosen = session.selectedIndex
-    const isCorrect = chosen === question.answerIndex
     const responseMs = freezeResponseMs()
-    const attemptId = `att-${session.id}-q${session.questionIndex}-${question.id}`
     try {
-      const attempt = await recordQuizAnswer({
-        question,
-        selectedIndex: chosen,
-        correct: isCorrect,
-        responseMs,
-        cause: 'unknown',
-        source: 'practice',
-        learningSource: session.entryMode === 'review' ? 'review' : 'today',
-        attemptId,
-      })
-      const answered: SessionAnswer[] = [
-        ...session.answered.filter((item) => item.questionId !== question.id),
-        {
-          questionId: question.id,
-          correct: attempt.correct,
-          selectedIndex: attempt.selectedIndex,
-          cause: attempt.cause,
-          responseMs: attempt.responseMs,
-          eraGuess: session.eraGuess,
-          clueMemo: session.clueMemo,
-          attemptId: attempt.id,
-        },
-      ]
-      await onChange({ ...session, answered, quizPhase: 'feedback', selectedIndex: chosen })
+      const saved = await submitSessionAnswer(session, responseMs)
+      await onChange(saved, true)
+      setMessage(null)
     } catch (error) {
+      onFailure?.(error)
       gradeLock.current = false
       frozenMs.current = responseMs
       setMessageTone('error')
@@ -165,24 +163,25 @@ export function QuizStep({
   }
 
   const applyCause = async (cause: WrongCause) => {
-    if (!currentAnswer?.attemptId || busy) return
+    if (!currentAnswer?.attemptId || busy || actionLock.current) return
+    actionLock.current = true
     setBusy(true)
     try {
-      await updateAttemptCause(currentAnswer.attemptId, cause)
-      const answered = session.answered.map((item) =>
-        item.attemptId === currentAnswer.attemptId ? { ...item, cause } : item,
-      )
-      await onChange({ ...session, answered })
+      await onChange(await saveSessionAnswerCause(session, cause), true)
+      setMessage(null)
     } catch (error) {
+      onFailure?.(error)
       setMessageTone('error')
       setMessage(error instanceof Error ? error.message : '오답 원인을 저장하지 못했습니다.')
     } finally {
+      actionLock.current = false
       setBusy(false)
     }
   }
 
   const addWrongCard = async () => {
-    if (busy) return
+    if (busy || actionLock.current) return
+    actionLock.current = true
     setBusy(true)
     try {
       const result = await createWrongCardFromQuestion({
@@ -199,15 +198,18 @@ export function QuizStep({
       setMessageTone('success')
       setMessage(result.created ? '암기카드에 추가했습니다.' : '같은 카드가 이미 있어 추가하지 않았습니다.')
     } catch (error) {
+      onFailure?.(error)
       setMessageTone('error')
       setMessage(error instanceof Error ? error.message : '카드를 만들지 못했습니다.')
     } finally {
+      actionLock.current = false
       setBusy(false)
     }
   }
 
   const goNext = async () => {
-    if (!revealed || busy) return
+    if (!revealed || busy || actionLock.current) return
+    actionLock.current = true
     setBusy(true)
     try {
       const nextIndex = session.questionIndex + 1
@@ -217,8 +219,7 @@ export function QuizStep({
           return
         }
         const done = { ...session, questionIndex: nextIndex, step: 'result' as const }
-        await finishSession(done)
-        await onChange(done)
+        await onChange(await finishSession(done), true)
         return
       }
       await onChange({
@@ -230,7 +231,12 @@ export function QuizStep({
         selectedIndex: undefined,
         revealedChoices: true,
       })
+    } catch (error) {
+      onFailure?.(error)
+      setMessageTone('error')
+      setMessage(error instanceof Error ? error.message : '다음 진행을 저장하지 못했습니다.')
     } finally {
+      actionLock.current = false
       setBusy(false)
     }
   }
@@ -245,7 +251,7 @@ export function QuizStep({
         <div className="space-y-2" role="group" aria-label="선택지">
           {question.choices.map((choice, index) => <ChoiceOption key={`${question.id}-${index}`} index={index} label={choice}
             state={choiceState({index, selected: selectedIndex ?? null, revealed, answerIndex: question.answerIndex})}
-            onSelect={() => selectChoice(index)} />)}
+            onSelect={() => void selectChoice(index)} />)}
         </div>
         <p className="meta-text text-center mt-5">판단한 근거를 떠올린 뒤 확인해 보세요.</p>
         {message && <InlineStatus tone={messageTone}>{message}</InlineStatus>}
