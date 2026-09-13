@@ -24,7 +24,7 @@ describe('concept-based course pacing', () => {
     expect(result.studyDaysLeft).toBe(14)
     expect(result.recommendedPerDay).toBe(7)
     expect(result.availableTodayIds).toHaveLength(7)
-    expect(result.unavailableConcepts).toBe(77)
+    expect(result.unavailableConcepts).toBe(74)
     expect(result.allContentReadyFinishDate).toBeNull()
   })
   it('applies a manual concept limit even if the target requires more', () => {

@@ -24,7 +24,7 @@ describe('P2 three kingdoms early batch (t-tk-01..03)', () => {
     expect(lesson02?.reviewStatus).toBe('source-checked')
     expect(lesson02?.reviewStatus).not.toBe('approved')
     expect(lesson02?.contentVersion).toBeGreaterThanOrEqual(1)
-    expect(lesson02?.sections.map((section) => section.conceptId)).toEqual(['t-tk-01', 't-tk-03'])
+    expect(lesson02?.sections.filter((section) => ['t-tk-01', 't-tk-03'].includes(section.conceptId)).map((section) => section.conceptId)).toEqual(['t-tk-01', 't-tk-03'])
 
     const goguryeo = lesson02?.sections.find((section) => section.conceptId === 't-tk-01')
     expect(goguryeo?.paragraphs.join(' ')).toMatch(/소수림/)
@@ -45,7 +45,7 @@ describe('P2 three kingdoms early batch (t-tk-01..03)', () => {
     const lesson13 = guideForLesson('lesson-13')
     expect(lesson13?.reviewStatus).toBe('source-checked')
     expect(lesson13?.reviewStatus).not.toBe('approved')
-    expect(lesson13?.sections.map((section) => section.conceptId)).toEqual(['t-tk-02'])
+    expect(lesson13?.sections.filter((section) => section.conceptId === 't-tk-02').map((section) => section.conceptId)).toEqual(['t-tk-02'])
     const baekje = lesson13?.sections[0]
     expect(baekje?.paragraphs.join(' ')).toMatch(/근초고/)
     expect(baekje?.paragraphs.join(' ')).toMatch(/문주/)

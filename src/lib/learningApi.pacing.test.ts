@@ -10,21 +10,24 @@ import { lessonGuides } from '../data/lessonGuides'
 import { buildTodayPlan } from './studyService'
 import type { ActiveSession } from '../types'
 const date = '2026-01-05'
-const readyIds = ['t-pre-01','t-pre-02','t-pre-07','t-pre-03','t-pre-04','t-pre-05','t-pre-08','t-pre-06','t-tk-01','t-tk-02','t-tk-03']
+const readyIds = ['t-pre-01','t-pre-02','t-pre-07','t-pre-03','t-pre-04','t-pre-05','t-pre-08','t-pre-06','t-tk-01','t-tk-02','t-tk-03','t-tk-04','t-tk-05','t-tk-06']
 const done = (ids: string[]) => db.conceptProgress.bulkPut(ids.map(id => ({ ...emptyConceptProgress(id), learnState: 'completed' as const, firstLearnedAt: date, completedAt: date })))
 const answered = (session: ActiveSession): ActiveSession => ({ ...session, conceptDone: true, confirmedConceptIds: session.conceptIds, answered: session.questionIds.map(questionId => ({ questionId, selectedIndex: 0, correct: false, responseMs: null, attemptId: `attempt-${questionId}` })) })
 afterEach(async () => { vi.restoreAllMocks(); await resetAppDb() })
 
 describe('scoped daily learning', () => {
-  it('offers the six new checks after their three Kingdoms concepts and freezes their source versions', async () => {
+  it.each([
+    { completed: 8, concepts: ['t-tk-01', 't-tk-02', 't-tk-03'], checks: ['q-105', 'q-106', 'q-107', 'q-108', 'q-109', 'q-110'] },
+    { completed: 11, concepts: ['t-tk-04', 't-tk-05', 't-tk-06'], checks: ['q-111', 'q-112', 'q-113', 'q-114', 'q-115', 'q-116'] },
+  ])('offers the six new checks after $completed concepts and freezes their source versions', async ({ completed, concepts, checks }) => {
     await seedCore({ paceMode: 'manual', dailyNewConceptCount: 3, dailyQuestionCount: 15 })
-    await done(readyIds.slice(0, 8))
+    await done(readyIds.slice(0, completed))
     const session = await startLesson({ today: date })
-    expect(session.conceptIds).toEqual(['t-tk-01', 't-tk-02', 't-tk-03'])
-    expect([...session.newQuestionIds!].sort()).toEqual(['q-105', 'q-106', 'q-107', 'q-108', 'q-109', 'q-110'])
+    expect(session.conceptIds).toEqual(concepts)
+    expect([...session.newQuestionIds!].sort()).toEqual(checks)
     expect(session.guideSnapshots?.flatMap(guide => guide.sections.map(section => section.conceptId))).toEqual(session.conceptIds)
     const newSnapshots = session.questionSnapshots?.filter(snapshot => session.newQuestionIds!.includes(snapshot.questionId))
-    expect(newSnapshots?.map(snapshot => snapshot.questionId).sort()).toEqual(['q-105', 'q-106', 'q-107', 'q-108', 'q-109', 'q-110'])
+    expect(newSnapshots?.map(snapshot => snapshot.questionId).sort()).toEqual(checks)
     for (const snapshot of newSnapshots ?? []) {
       expect(snapshot.contentVersion).toBe(questions.find(question => question.id === snapshot.questionId)?.contentVersion)
     }
@@ -77,7 +80,7 @@ describe('scoped daily learning', () => {
     expect(await db.lessonCompletions.count()).toBe(3)
     const plan = await computeStudyPlan('2026-01-06')
     expect(plan.currentConceptIds).toEqual([])
-    expect(plan.conceptSchedule?.nextConceptId).toBe('t-tk-04')
+    expect(plan.conceptSchedule?.nextConceptId).toBe('t-tk-08')
     expect(plan.conceptFinishDate).toBeNull()
     await expect(startLesson({ today: '2026-01-06' })).rejects.toThrow('준비 중')
   })

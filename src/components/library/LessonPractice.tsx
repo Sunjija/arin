@@ -239,7 +239,7 @@ export function LessonPractice({ lessonId }: { lessonId: string }) {
         확인 문제 {session.questionIndex + 1} / {session.questionSnapshots.length}
       </p>
       <h3>{snapshot.stem}</h3>
-      {snapshot.passage && <blockquote className="passage-text">{snapshot.passage}</blockquote>}
+      {snapshot.passage && <blockquote className="passage-text mb-3 whitespace-pre-line">{snapshot.passage}</blockquote>}
       <div className="space-y-2" role="group" aria-label="답 선택">
         {snapshot.choices.map((text, option) => (
           <button

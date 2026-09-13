@@ -67,7 +67,7 @@ describe('t-pre-06 early states content batch', () => {
     ])
   })
 
-  it('keeps eight lesson-01 concepts ready while the published course reaches t-tk-03', () => {
+  it('keeps eight lesson-01 concepts ready while the published course reaches t-tk-06', () => {
     const concepts = catalogConcepts()
     const goal = toLearningGoal({
       ...defaultSettings(),
@@ -77,12 +77,12 @@ describe('t-pre-06 early states content batch', () => {
     })
     const schedule = buildConceptSchedule({ today: '2026-09-11', goal, concepts, progress: [] })
     expect(lessonGuides[0]?.sections).toHaveLength(8)
-    expect(schedule.unavailableConcepts).toBe(77)
+    expect(schedule.unavailableConcepts).toBe(74)
     const readyIds = concepts.filter((concept) => concept.summary.trim() && concept.source).map((c) => c.id)
-    expect(readyIds).toHaveLength(11)
+    expect(readyIds).toHaveLength(14)
     expect(new Set(readyIds)).toEqual(
-      new Set(['t-pre-01', 't-pre-02', 't-pre-07', 't-pre-03', 't-pre-04', 't-pre-05', 't-pre-08', 't-pre-06', 't-tk-01', 't-tk-02', 't-tk-03']),
+      new Set(['t-pre-01', 't-pre-02', 't-pre-07', 't-pre-03', 't-pre-04', 't-pre-05', 't-pre-08', 't-pre-06', 't-tk-01', 't-tk-02', 't-tk-03', 't-tk-04', 't-tk-05', 't-tk-06']),
     )
-    expect(schedule.blockedConceptId).toBe('t-tk-04')
+    expect(schedule.blockedConceptId).toBe('t-tk-08')
   })
 })

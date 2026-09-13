@@ -41,7 +41,7 @@ it('reads empty records without writes, separates dates and explains unavailable
   expect(screen.getByRole('status')).toHaveTextContent('불러오는 중')
   expect(await screen.findByText('0 / 88개')).toBeVisible()
   expect(screen.getByText('미정')).toBeVisible()
-  expect(screen.getByText('준비됨 11개 · 준비 중 77개')).toBeVisible()
+  expect(screen.getByText('준비됨 14개 · 준비 중 74개')).toBeVisible()
   expect(screen.getByText('저장된 학습이 없습니다.')).toBeVisible()
   expect(screen.getByRole('link', { name: '첫 실전 연습 시작' })).toHaveAttribute('href', '/mock')
   expect(await databaseContents()).toEqual(before)

@@ -27,7 +27,7 @@ describe('progress evidence summary', () => {
     ]
     const before = structuredClone(progress)
     const { schedule } = progressSummary({ ...input, progress })
-    expect(schedule).toMatchObject({ totalConcepts: 88, completedConcepts: 1, remainingConcepts: 87, readyRemainingConcepts: 10, unavailableConcepts: 77, allContentReadyFinishDate: null })
+    expect(schedule).toMatchObject({ totalConcepts: 88, completedConcepts: 1, remainingConcepts: 87, readyRemainingConcepts: 13, unavailableConcepts: 74, allContentReadyFinishDate: null })
     expect(progress).toEqual(before)
     expect(progressSummary(input).session).toEqual({ status: 'missing' })
     expect(progressSummary({ ...input, concepts: [] }).schedule.completedConcepts).toBe(0)
@@ -37,7 +37,7 @@ describe('progress evidence summary', () => {
     const { schedule } = progressSummary({ ...input, goal: { ...goal, studyWeekdays: [1], examDateUndecided: false, examDate: '2026-09-10', conceptTargetDate: '2026-09-09' } })
     expect(schedule.warnings.join(' ')).toContain('시험일이 지났습니다')
     expect(schedule.warnings.join(' ')).toContain('오늘은 쉬는 날')
-    expect(schedule.warnings.join(' ')).toContain('상세 설명이 준비되지 않은 개념이 77개')
+    expect(schedule.warnings.join(' ')).toContain('상세 설명이 준비되지 않은 개념이 74개')
     expect(schedule.studyDaysLeft).toBe(0)
     expect(progressSummary(input).schedule.targetDate).toBe('2026-09-30')
     expect(progressSummary(input).schedule.warnings.join(' ')).not.toContain('시험일이 지났습니다')

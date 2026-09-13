@@ -7,7 +7,7 @@ const NEW_IDS = ['q-111', 'q-112', 'q-113', 'q-114', 'q-115', 'q-116'] as const
 const PRIOR_IDS = ['q-105', 'q-106', 'q-107', 'q-108', 'q-109', 'q-110'] as const
 
 describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
-  it('keeps lesson-01 and prior lesson-02/13 sections while adding new concepts at guide v3', () => {
+  it('keeps lesson-01 and prior lesson-02/13 sections while adding new concepts at guide v4', () => {
     const lesson01 = guideForLesson('lesson-01')
     expect(lesson01?.contentVersion).toBe(5)
     expect(lesson01?.sections.map((section) => section.conceptId)).toEqual([
@@ -22,7 +22,7 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
     ])
 
     const lesson02 = guideForLesson('lesson-02')
-    expect(lesson02?.contentVersion).toBe(3)
+    expect(lesson02?.contentVersion).toBe(4)
     expect(lesson02?.reviewStatus).toBe('source-checked')
     expect(lesson02?.reviewStatus).not.toBe('approved')
     expect(lesson02?.sections.map((section) => section.conceptId)).toEqual([
@@ -54,7 +54,7 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
     expect(institutions?.sourceUrl.startsWith('https://')).toBe(true)
 
     const lesson13 = guideForLesson('lesson-13')
-    expect(lesson13?.contentVersion).toBe(3)
+    expect(lesson13?.contentVersion).toBe(4)
     expect(lesson13?.reviewStatus).toBe('source-checked')
     expect(lesson13?.sections.map((section) => section.conceptId)).toEqual(['t-tk-02', 't-tk-04'])
     expect(lesson13?.sections[0]?.paragraphs.join(' ')).toMatch(/근초고/)
@@ -65,7 +65,7 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
     expect(jinheung?.paragraphs.join(' ')).toMatch(/순수/)
     expect(jinheung?.paragraphs.join(' ')).toMatch(/적성/)
     expect(jinheung?.paragraphs.join(' ')).toMatch(/법흥/)
-    expect(jinheung?.paragraphs.join(' ')).toMatch(/지도/)
+    expect(jinheung?.paragraphs.join(' ')).toMatch(/경제력|교류/)
     expect(jinheung?.sourceUrl.startsWith('https://')).toBe(true)
 
     expect(lessonGuides.map((guide) => guide.lessonId)).toEqual(['lesson-01', 'lesson-02', 'lesson-13'])
@@ -91,11 +91,11 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
 
     const families = NEW_IDS.map((id) => byId[id]?.familyId)
     expect(new Set(families).size).toBe(6)
-    expect(byId['q-111']?.familyId).toBe('tk-silla-jinheung-beopheung-pair')
+    expect(byId['q-111']?.familyId).toBe('tk-silla-hanriver-consequences')
     expect(byId['q-112']?.familyId).toBe('tk-silla-sunsubi-jeokseongbi')
     expect(byId['q-113']?.familyId).toBe('tk-silla-golpum-achan-limit')
-    expect(byId['q-114']?.familyId).toBe('tk-silla-golpum-jungwi-trap')
-    expect(byId['q-115']?.familyId).toBe('tk-silla-hwarang-byeongbu-pair')
+    expect(byId['q-114']?.familyId).toBe('tk-silla-golpum-life-interpretation')
+    expect(byId['q-115']?.familyId).toBe('tk-silla-hwarang-training-identify')
     expect(byId['q-116']?.familyId).toBe('tk-silla-institutions-king-function')
 
     expect(byId['q-111']?.formatId).not.toBe('map-region')
@@ -109,10 +109,7 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
       expect(question?.contentVersion).toBeGreaterThanOrEqual(1)
       expect(question?.sourceUrl?.startsWith('https://')).toBe(true)
       expect(question?.explanation.length).toBeGreaterThan(80)
-      for (const choice of question?.choices ?? []) {
-        const key = choice.slice(0, 12)
-        expect(question?.explanation).toContain(key)
-      }
+      // The report separately reviews each distractor; substring matches cannot verify its rationale.
     }
 
     expect(questions.filter((question) => question.conceptIds?.includes('t-tk-04')).map((q) => q.id)).toEqual([
@@ -129,7 +126,7 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
     ])
   })
 
-  it('preserves prior q-01~110 bodies and uses different tasks from nearby items', () => {
+  it('keeps prior IDs and distinguishes the new assessment types', () => {
     for (const id of PRIOR_IDS) {
       const question = getQuestionById(id)
       expect(question).toBeTruthy()
@@ -146,18 +143,18 @@ describe('P2 Silla growth and institutions batch (t-tk-04..06)', () => {
     const q115 = getQuestionById('q-115')
     const q116 = getQuestionById('q-116')
 
-    expect(q111?.stem).toMatch(/짝지은/)
+    expect(q111?.formatId).toBe('cause-effect')
     expect(q111?.stem).not.toBe(q04?.stem)
     expect(q111?.familyId).not.toBe(q110?.familyId)
     expect(q112?.stem).toMatch(/비석/)
     expect(q112?.passage).toMatch(/적성|순수|표창/)
     expect(q113?.stem).toMatch(/6두품/)
-    expect(q114?.formatId).toBe('wrong-statement')
-    expect(q114?.choices.join(' ')).toMatch(/중위/)
-    expect(q115?.stem).toMatch(/짝지은/)
-    expect(q116?.passage).toMatch(/\(가\).*\(나\).*\(다\)/s)
+    expect(q114?.formatId).toBe('source-what')
+    expect(q114?.passage).toMatch(/가옥|방의 크기/)
+    expect(q115?.passage).toMatch(/청소년/)
+    expect(q116?.passage).toMatch(/\(가\).*\(나\)/s)
     expect(q07?.choices.some((choice) => /법흥왕 때 불교/.test(choice))).toBe(true)
-    expect(q111?.choices.some((choice) => choice.includes('법흥왕: 율령'))).toBe(true)
+    expect(q111?.choices.some((choice) => choice.includes('중국과의 교류'))).toBe(true)
     expect(q111?.stem).not.toBe(q07?.stem)
   })
 

@@ -2,11 +2,11 @@
   "method": "literal-source-inventory-v1",
   "inputHashes": {
     "src/data/lessons.ts": "36c6247817ed88ad11a84b5ee3c25a72f01eb169a7eb2994c4cefae90ad3746c",
-    "src/data/questions.ts": "7a3d667783bc82bec32369477a978c1c1703e6c5a6ec8812b9135b6501057870",
+    "src/data/questions.ts": "b4ccb15bd15a6c4d0dfc2baf7794086c7405b82defd723220260aa2e63dd5f3d",
     "src/data/cards.ts": "734cf1df9cd8d9f9bdce7f0c6041255aefdc9ba3528fde30a481daa5a05f3cdb",
     "src/data/timeline.ts": "692792c6de4c37297cfa40621b90df6278ec5b23440b2d81fa4c873826efdc32",
     "src/data/topicCatalog.ts": "eedf578379555fc3362b37f3746fae59c4c7ac94be8ea026477c4224a5ba3bbe",
-    "src/data/lessonGuides.ts": "95e29daaa9ce006971b745a8b4f3beca54ffe2d97f80e211491b89b4461af866"
+    "src/data/lessonGuides.ts": "3329654d6c4e00471b247e5a1befab41ddd44f3cee91868edcf0dcdc30c9d547"
   },
   "caveat": "Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.",
   "counts": {
@@ -22,7 +22,7 @@
     "conceptsWithoutGuide": 74,
     "questionsExplicitlyMapped": 22,
     "questionsWithSourceUrl": 22,
-    "questionsWithPassage": 54,
+    "questionsWithPassage": 56,
     "actualImageQuestions": 0,
     "calibratedQuestions": 0
   },
@@ -755,7 +755,8 @@
         "q-106",
         "q-109",
         "q-110",
-        "q-111"
+        "q-111",
+        "q-116"
       ],
       "candidateCardIds": [
         "c-12",
@@ -795,8 +796,7 @@
         "q-107",
         "q-108",
         "q-109",
-        "q-110",
-        "q-111"
+        "q-110"
       ],
       "candidateCardIds": [
         "c-13",
@@ -832,9 +832,7 @@
         "q-106",
         "q-109",
         "q-110",
-        "q-111",
         "q-112",
-        "q-115",
         "q-116"
       ],
       "candidateCardIds": [
@@ -871,7 +869,6 @@
         "q-110",
         "q-111",
         "q-112",
-        "q-115",
         "q-116"
       ],
       "candidateCardIds": [
@@ -902,9 +899,9 @@
         "q-114"
       ],
       "candidateQuestionIds": [
-        "q-111",
         "q-113",
-        "q-114"
+        "q-114",
+        "q-115"
       ],
       "candidateCardIds": [],
       "candidateTimelineIds": [],
@@ -928,7 +925,6 @@
         "q-116"
       ],
       "candidateQuestionIds": [
-        "q-111",
         "q-115",
         "q-116"
       ],
@@ -1009,7 +1005,6 @@
         "q-110",
         "q-111",
         "q-112",
-        "q-115",
         "q-116"
       ],
       "candidateCardIds": [
@@ -1060,7 +1055,6 @@
         "q-110",
         "q-111",
         "q-112",
-        "q-115",
         "q-116"
       ],
       "candidateCardIds": [
@@ -4973,17 +4967,13 @@
       ],
       "candidateConceptIds": [
         "t-tk-01",
-        "t-tk-02",
-        "t-tk-03",
         "t-tk-04",
-        "t-tk-05",
-        "t-tk-06",
         "t-tk-09",
         "t-tk-10"
       ],
-      "familyId": "tk-silla-jinheung-beopheung-pair",
-      "sourceUrl": "https://contents.history.go.kr/mobile/mid/kc_n101750",
-      "formatId": "king-compare",
+      "familyId": "tk-silla-hanriver-consequences",
+      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0030_0020_0030_0020",
+      "formatId": "cause-effect",
       "actualStimulus": "none",
       "points": 1,
       "calibratedDifficulty": null
@@ -5035,10 +5025,10 @@
       "candidateConceptIds": [
         "t-tk-05"
       ],
-      "familyId": "tk-silla-golpum-jungwi-trap",
-      "sourceUrl": "https://contents.history.go.kr/mobile/nh/view.do?levelId=nh_011_0020_0040_0030",
-      "formatId": "wrong-statement",
-      "actualStimulus": "none",
+      "familyId": "tk-silla-golpum-life-interpretation",
+      "sourceUrl": "https://contents.history.go.kr/mobile/hm/view.do?levelId=hm_018_0060",
+      "formatId": "source-what",
+      "actualStimulus": "text",
       "points": 2,
       "calibratedDifficulty": null
     },
@@ -5050,16 +5040,13 @@
         "t-tk-06"
       ],
       "candidateConceptIds": [
-        "t-tk-03",
-        "t-tk-04",
-        "t-tk-06",
-        "t-tk-09",
-        "t-tk-10"
+        "t-tk-05",
+        "t-tk-06"
       ],
-      "familyId": "tk-silla-hwarang-byeongbu-pair",
+      "familyId": "tk-silla-hwarang-training-identify",
       "sourceUrl": "https://contents.history.go.kr/id/hm_021_0020",
-      "formatId": "policy-content",
-      "actualStimulus": "none",
+      "formatId": "source-what",
+      "actualStimulus": "text",
       "points": 1,
       "calibratedDifficulty": null
     },
@@ -5071,6 +5058,7 @@
         "t-tk-06"
       ],
       "candidateConceptIds": [
+        "t-tk-01",
         "t-tk-03",
         "t-tk-04",
         "t-tk-06",
@@ -5079,7 +5067,7 @@
       ],
       "familyId": "tk-silla-institutions-king-function",
       "sourceUrl": "https://contents.history.go.kr/id/hm_011_0040",
-      "formatId": "source-what",
+      "formatId": "policy-content",
       "actualStimulus": "text",
       "points": 2,
       "calibratedDifficulty": null
