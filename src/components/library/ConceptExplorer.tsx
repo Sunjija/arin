@@ -91,7 +91,7 @@ export function ConceptExplorer({
                 })}
               </ol>
             </section>
-            {selected.id === 'lesson-01' && <LessonPractice key={selected.id} lessonId={selected.id} />}
+            <LessonPractice key={selected.id} lessonId={selected.id} />
           </article>
         </div>
       )}

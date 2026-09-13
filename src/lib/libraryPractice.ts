@@ -1,5 +1,5 @@
 import { db } from '../db/database'
-import { questions } from '../data/questions'
+import { preparedLibraryQuestions } from './libraryQuestionBank'
 import { lessons } from '../data/lessons'
 import { DataError } from './dataErrors'
 import { recordAnswer, snapshotFromQuestion } from './learningApi'
@@ -18,7 +18,7 @@ export async function getLibraryPractice(lessonId: string): Promise<LibraryPract
 
 async function createPractice(lessonId: string): Promise<LibraryPracticeSession> {
   if (!lessons.some(lesson => lesson.id === lessonId)) throw new DataError('not-found', '단원을 찾을 수 없습니다.')
-  const bank = questions.filter(question => question.lessonId === lessonId)
+  const bank = preparedLibraryQuestions(lessonId)
   if (!bank.length) throw new DataError('not-found', '이 단원의 확인 문제를 준비 중입니다.')
   const now = new Date().toISOString()
   const session: LibraryPracticeSession = {

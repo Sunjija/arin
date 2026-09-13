@@ -7,6 +7,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { LessonPractice } from './LessonPractice'
+import { ConceptExplorer } from './ConceptExplorer'
 import { questions } from '../../data/questions'
 import * as libraryPractice from '../../lib/libraryPractice'
 import {
@@ -19,6 +20,32 @@ import {
 import type { LibraryPracticeSession } from '../../types'
 
 const lessonBank = questions.filter((question) => question.lessonId === 'lesson-01')
+
+it('opens prepared Kingdoms questions from the library and restores a selection after switching lessons', async () => {
+  const user = userEvent.setup()
+  render(<ConceptExplorer era="all" q="" sort="asc" onEraChange={() => {}} onQueryChange={() => {}} onSortChange={() => {}} onReset={() => {}} />)
+  await user.click(screen.getByRole('button', { name: '삼국의 공간·천도' }))
+  await user.click(await screen.findByRole('button', { name: '이 단원 문제 풀기' }))
+  const question = questions.find(item => item.id === 'q-107')!
+  expect(await screen.findByRole('heading', { name: question.stem })).toBeVisible()
+  await chooseAnswer(user, question)
+  const saved = await getLibraryPractice('lesson-13')
+  expect(saved?.selectedIndex).toBe(question.answerIndex)
+  expect(saved?.questionSnapshots.map(item => item.questionId)).not.toContain('q-53')
+  await user.click(screen.getByRole('button', { name: '삼국의 성립과 발전' }))
+  await user.click(await screen.findByRole('button', { name: '이 단원 문제 풀기' }))
+  expect(await screen.findByRole('heading', { name: questions.find(item => item.id === 'q-105')!.stem })).toBeVisible()
+  await user.click(screen.getByRole('button', { name: '삼국의 공간·천도' }))
+  expect(await screen.findByRole('heading', { name: question.stem })).toBeVisible()
+  expect(screen.getByRole('button', { name: `${question.answerIndex + 1}. ${question.choices[question.answerIndex]}` })).toHaveAttribute('aria-pressed', 'true')
+  expect(await getLibraryPractice('lesson-13')).toEqual(saved)
+})
+
+it('reports unprepared checks instead of opening legacy questions without taught concepts', async () => {
+  render(<LessonPractice lessonId="lesson-03" />)
+  expect(await screen.findByText('이 단원의 확인 문제를 준비 중입니다.')).toBeVisible()
+  expect(screen.queryByRole('button', { name: '이 단원 문제 풀기' })).toBeNull()
+})
 
 function itemKey(row: LibraryPracticeSession) {
   return {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { questions } from '../../data/questions'
+import { preparedLibraryQuestions } from '../../lib/libraryQuestionBank'
 import { Button, InlineStatus } from '../ui'
 import { isDataError } from '../../lib/dataErrors'
 import {
@@ -41,7 +41,7 @@ function isConflictMessage(message: string) {
 }
 
 export function LessonPractice({ lessonId }: { lessonId: string }) {
-  const bankCount = questions.filter((question) => question.lessonId === lessonId).length
+  const bankCount = preparedLibraryQuestions(lessonId).length
   const generation = useRef(0)
   const lock = useRef(false)
   const [activeLesson, setActiveLesson] = useState(lessonId)
@@ -177,12 +177,12 @@ export function LessonPractice({ lessonId }: { lessonId: string }) {
   }
 
   if (view === 'intro' || !session) {
-    if (!bankCount) return null
+    if (!bankCount) return <InlineStatus>이 단원의 확인 문제를 준비 중입니다.</InlineStatus>
     return (
       <section>
         <h3>읽은 내용을 확인해 보세요</h3>
         <p className="mb-4">
-          이 단원의 {bankCount}문제를 풀고, 헷갈린 개념을 바로 확인하세요. 답안은 학습 기록에 저장됩니다.
+          설명이 준비된 개념의 확인 문제 {bankCount}개를 풀어 보세요. 답안은 학습 기록에 저장됩니다.
           중간에 나가도 이 단원에서 이어서 풀 수 있습니다. 자료실 문제 풀이만으로 단원 전체를 완료 처리하지는 않습니다.
         </p>
         <Button
