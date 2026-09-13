@@ -126,11 +126,11 @@ export const lessonGuides: LessonGuide[] = [
   },
   {
     lessonId: 'lesson-02',
-    contentVersion: 2,
+    contentVersion: 3,
     reviewStatus: 'source-checked',
     checkedAt: '2026-09-13',
     introduction:
-      '고구려 전성기 왕의 체제 정비·영토 확대·천도/남진을 구분한 뒤, 신라 법흥왕의 율령·불교 공인을 진흥왕의 영토 확장과 섞지 않도록 정리합니다.',
+      '고구려 전성기 왕의 체제 정비·영토 확대·천도/남진을 구분한 뒤, 신라 법흥왕의 율령·불교 공인을 정리하고, 골품제와 화랑·병부·상대등을 연결합니다.',
     sections: [
       {
         conceptId: 't-tk-01',
@@ -177,15 +177,62 @@ export const lessonGuides: LessonGuide[] = [
           'https://contents.history.go.kr/mobile/km/view.do?levelId=km_011_0020_0010',
         ],
       },
+      {
+        conceptId: 't-tk-05',
+        title: '골품제: 진골·6두품과 관등·생활 제한',
+        paragraphs: [
+          '법흥왕 대의 율령·관제 정비와 이어, 신라 사회를 오래 규정한 골품제를 살펴봅시다. 혈통에 따라 관등 진출과 생활 범위가 달라진다는 점이 핵심입니다.',
+          '골품제는 혈통의 높고 낮음에 따라 정치적 출세뿐 아니라 혼인, 가옥의 크기, 의복의 빛깔, 우마차 장식 등 일상에도 특권과 제약을 둡니다. 「능력만 있으면 신분이 바뀐다」로 읽지 마세요.',
+          '진골은 고위 관직 진출에서 유리한 신분입니다. 17관등 가운데 대아찬 이상(1~5등)은 진골만 받을 수 있었습니다. 6두품은 그다음 신분으로, 관등 상한은 제6관등 아찬입니다. 중위제(중아찬~4중아찬)는 아찬 안에서 특진 길을 연 제도이지, 대아찬 이상으로 넘어가게 해 주는 제도가 아닙니다.',
+          '왕위 자격은 성골·진골 구분과 성골 소멸처럼 시기에 따라 달라집니다. 모든 왕대의 왕위 자격을 한 문장으로 동일하게 설명하지 마세요. 이번 학습에서는 진골·6두품의 관등·생활 제한을 비교하는 데 집중합니다.',
+        ],
+        recallPrompt:
+          '진골과 6두품의 관등 상한 차이를 말하고, 중위제가 무엇을 바꾸지 않는지 설명해 보세요.',
+        expectedElements: [
+          '진골: 대아찬 이상(고위 관등) 가능',
+          '6두품: 아찬까지가 상한',
+          '중위제는 아찬 범주를 넘지 않음',
+          '혼인·가옥·의복 등 생활 제한',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/front/tg/view.do?ganada=&levelId=tg_001_0400&pageUnit=10&treeId=0209',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/front/nh/view.do?levelId=nh_011_0020_0040_0010',
+          'https://contents.history.go.kr/mobile/nh/view.do?levelId=nh_011_0020_0040_0030',
+          'https://contents.history.go.kr/id/hm_018_0030',
+        ],
+      },
+      {
+        conceptId: 't-tk-06',
+        title: '화랑·병부·상대등: 기능과 설치를 구분하기',
+        paragraphs: [
+          '골품으로 신분 질서를 이해했다면, 인재를 기르는 화랑과 중앙 관부인 병부·상대등을 구분해 봅시다. 비슷한 「나라의 일」이어도 성격이 다릅니다.',
+          '화랑은 청소년들이 도의·노래·산수 유람 등으로 수련하며 사람됨을 살피고, 뛰어난 이를 조정에 천거하는 인재 양성 조직입니다. 군사 훈련의 면이 있더라도 정규 군부대나 국가 관청으로 바꾸어 읽지 마세요.',
+          '병부는 군사 업무를 담당하는 관부입니다. 문헌에 보이는 신라 최초의 관부로서 법흥왕 대에 설치되었습니다. 상대등은 나라의 일을 총괄하는 최고 직위로, 역시 법흥왕 대에 처음 두었습니다. 『삼국사기』는 상대등을 당시(고려)의 재상에 비기지만, 오늘날의 총리와 동일하다고 단정하지 마세요.',
+          '정리하면 병부·상대등은 법흥왕 대의 중앙 체제 정비, 화랑은 수련·인재 양성의 조직입니다. 설치 왕과 기능을 뒤바꾸지 마세요.',
+        ],
+        recallPrompt:
+          '화랑·병부·상대등의 기능과, 병부·상대등을 설치한 왕을 구분해 말해 보세요.',
+        expectedElements: [
+          '화랑: 수련·인재 천거(정규 군부대·관청 아님)',
+          '병부: 군사 업무 관부(법흥왕 대 설치)',
+          '상대등: 국정 총괄 최고 직위(법흥왕 대 설치, 현대 총리와 동일시 금지)',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/id/hm_011_0040',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_n101130',
+          'https://contents.history.go.kr/id/hm_021_0020',
+          'https://contents.history.go.kr/mobile/mid/kc_n101750',
+        ],
+      },
     ],
   },
   {
     lessonId: 'lesson-13',
-    contentVersion: 2,
+    contentVersion: 3,
     reviewStatus: 'source-checked',
     checkedAt: '2026-09-13',
     introduction:
-      '백제의 전성기와 도읍 이동을 왕·원인·지명으로 구분합니다. 한성→웅진→사비를 한 왕의 연속 업적으로 묶지 않습니다.',
+      '백제의 전성기와 도읍 이동을 왕·원인·지명으로 구분한 뒤, 신라 진흥왕의 한강 확보와 순수비·적성비를 법흥왕과 섞지 않도록 정리합니다.',
     sections: [
       {
         conceptId: 't-tk-02',
@@ -209,6 +256,31 @@ export const lessonGuides: LessonGuide[] = [
           'https://contents.history.go.kr/front/nh/view.do?levelId=nh_006_0030_0020',
           'https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_10&levelId=kc_n101190',
           'https://contents.history.go.kr/id/hm_009_0050',
+        ],
+      },
+      {
+        conceptId: 't-tk-04',
+        title: '진흥왕: 한강 확보와 순수비·적성비',
+        paragraphs: [
+          '백제 도읍 이동을 구분했다면, 같은 6세기 중반 신라 진흥왕의 영토 확장을 살펴봅시다. 법흥왕의 체제 정비와 섞지 않는 것이 목표입니다.',
+          '진흥왕은 백제와 함께 고구려를 쳐서 한강 상류를 확보한 뒤, 다시 백제로부터 한강 하류까지 차지하며 한강 유역을 신라 영토로 삼았습니다. 새로 편입한 지역을 왕이 돌아보며(순수) 세운 비가 순수비입니다. 현재 알려진 진흥왕 순수비는 창녕·북한산·마운령·황초령 등입니다.',
+          '단양 적성비는 같은 진흥왕 대의 영토 확대와 관련되지만, 순수비와 성격이 다릅니다. 적성비는 척경에 공을 세운 지방민을 표창하고 충성을 권하는 내용이 중심입니다. 「적성비=순수비」로 묶지 마세요.',
+          '법흥왕은 율령·공복·불교 공인, 진흥왕은 한강 확보·순수입니다. 이번 설명에는 지도를 붙이지 않았으므로, 지명만으로 영역을 그림처럼 단정하지 마세요.',
+        ],
+        recallPrompt:
+          '진흥왕의 한강 확보·순수비와 법흥왕의 체제 정비를 구분하고, 적성비와 순수비의 성격 차이를 말해 보세요.',
+        expectedElements: [
+          '진흥왕: 한강 유역 확보·순수비',
+          '법흥왕: 율령·공복·불교 공인(혼동 대상)',
+          '순수비: 왕의 순수 기념',
+          '적성비: 공훈 표창·충성 권고(순수비와 구분)',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/mobile/mid/kc_n101750',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0030_0020_0030_0020',
+          'https://contents.history.go.kr/front/tg/view.do?ganada=&levelId=tg_001_0230&pageUnit=10&treeId=0206',
+          'https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_10&levelId=kc_r100340',
+          'https://contents.history.go.kr/id/hm_011_0040',
         ],
       },
     ],

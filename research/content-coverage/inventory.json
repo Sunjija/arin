@@ -2,27 +2,27 @@
   "method": "literal-source-inventory-v1",
   "inputHashes": {
     "src/data/lessons.ts": "36c6247817ed88ad11a84b5ee3c25a72f01eb169a7eb2994c4cefae90ad3746c",
-    "src/data/questions.ts": "dab9ce2f52844997d99cc0b54ef7f2b529b53599369cb42cf109f73cd63fc6c3",
+    "src/data/questions.ts": "7a3d667783bc82bec32369477a978c1c1703e6c5a6ec8812b9135b6501057870",
     "src/data/cards.ts": "734cf1df9cd8d9f9bdce7f0c6041255aefdc9ba3528fde30a481daa5a05f3cdb",
     "src/data/timeline.ts": "692792c6de4c37297cfa40621b90df6278ec5b23440b2d81fa4c873826efdc32",
     "src/data/topicCatalog.ts": "eedf578379555fc3362b37f3746fae59c4c7ac94be8ea026477c4224a5ba3bbe",
-    "src/data/lessonGuides.ts": "d1055d7f56b9a180437f69a57056d465a10f747e3816a70f06ec5941a741d2e1"
+    "src/data/lessonGuides.ts": "95e29daaa9ce006971b745a8b4f3beca54ffe2d97f80e211491b89b4461af866"
   },
   "caveat": "Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.",
   "counts": {
     "lessons": 18,
-    "questions": 110,
+    "questions": 116,
     "cards": 95,
     "timeline": 70,
     "concepts": 88,
     "guides": 3
   },
   "summary": {
-    "conceptsWithGuide": 11,
-    "conceptsWithoutGuide": 77,
-    "questionsExplicitlyMapped": 16,
-    "questionsWithSourceUrl": 16,
-    "questionsWithPassage": 52,
+    "conceptsWithGuide": 14,
+    "conceptsWithoutGuide": 74,
+    "questionsExplicitlyMapped": 22,
+    "questionsWithSourceUrl": 22,
+    "questionsWithPassage": 54,
     "actualImageQuestions": 0,
     "calibratedQuestions": 0
   },
@@ -89,7 +89,11 @@
         "q-105",
         "q-106",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-113",
+        "q-114",
+        "q-115",
+        "q-116"
       ]
     },
     {
@@ -377,7 +381,9 @@
       ],
       "questionIds": [
         "q-107",
-        "q-108"
+        "q-108",
+        "q-111",
+        "q-112"
       ]
     },
     {
@@ -748,7 +754,8 @@
         "q-105",
         "q-106",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-111"
       ],
       "candidateCardIds": [
         "c-12",
@@ -788,7 +795,8 @@
         "q-107",
         "q-108",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-111"
       ],
       "candidateCardIds": [
         "c-13",
@@ -823,7 +831,11 @@
         "q-105",
         "q-106",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-111",
+        "q-112",
+        "q-115",
+        "q-116"
       ],
       "candidateCardIds": [
         "c-08",
@@ -842,18 +854,25 @@
       "title": "진흥왕 한강·순수",
       "era": "three-kingdoms",
       "lessonId": "lesson-13",
-      "status": "needs-guide",
-      "sourceUrl": null,
-      "descriptionBlocks": 0,
-      "recallPrompts": 0,
-      "explicitQuestionIds": [],
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/mobile/mid/kc_n101750",
+      "descriptionBlocks": 4,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-111",
+        "q-112"
+      ],
       "candidateQuestionIds": [
         "q-04",
         "q-07",
         "q-53",
         "q-105",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-111",
+        "q-112",
+        "q-115",
+        "q-116"
       ],
       "candidateCardIds": [
         "c-10",
@@ -864,11 +883,8 @@
         "tl-12"
       ],
       "requiredNext": [
-        "learner-explanation",
-        "comparison",
-        "recall",
-        "explicit-question-mapping",
-        "fact-source",
+        "independent-confirmation-question",
+        "comparison-or-source-application",
         "expert-review"
       ]
     },
@@ -877,20 +893,24 @@
       "title": "골품제",
       "era": "three-kingdoms",
       "lessonId": "lesson-02",
-      "status": "needs-guide",
-      "sourceUrl": null,
-      "descriptionBlocks": 0,
-      "recallPrompts": 0,
-      "explicitQuestionIds": [],
-      "candidateQuestionIds": [],
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/front/tg/view.do?ganada=&levelId=tg_001_0400&pageUnit=10&treeId=0209",
+      "descriptionBlocks": 4,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-113",
+        "q-114"
+      ],
+      "candidateQuestionIds": [
+        "q-111",
+        "q-113",
+        "q-114"
+      ],
       "candidateCardIds": [],
       "candidateTimelineIds": [],
       "requiredNext": [
-        "learner-explanation",
-        "comparison",
-        "recall",
-        "explicit-question-mapping",
-        "fact-source",
+        "independent-confirmation-question",
+        "comparison-or-source-application",
         "expert-review"
       ]
     },
@@ -899,20 +919,24 @@
       "title": "화랑·중앙집권",
       "era": "three-kingdoms",
       "lessonId": "lesson-02",
-      "status": "needs-guide",
-      "sourceUrl": null,
-      "descriptionBlocks": 0,
-      "recallPrompts": 0,
-      "explicitQuestionIds": [],
-      "candidateQuestionIds": [],
+      "status": "source-checked-guide-expert-review-pending",
+      "sourceUrl": "https://contents.history.go.kr/id/hm_011_0040",
+      "descriptionBlocks": 4,
+      "recallPrompts": 1,
+      "explicitQuestionIds": [
+        "q-115",
+        "q-116"
+      ],
+      "candidateQuestionIds": [
+        "q-111",
+        "q-115",
+        "q-116"
+      ],
       "candidateCardIds": [],
       "candidateTimelineIds": [],
       "requiredNext": [
-        "learner-explanation",
-        "comparison",
-        "recall",
-        "explicit-question-mapping",
-        "fact-source",
+        "independent-confirmation-question",
+        "comparison-or-source-application",
         "expert-review"
       ]
     },
@@ -982,7 +1006,11 @@
         "q-107",
         "q-108",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-111",
+        "q-112",
+        "q-115",
+        "q-116"
       ],
       "candidateCardIds": [
         "c-08",
@@ -1029,7 +1057,11 @@
         "q-105",
         "q-106",
         "q-109",
-        "q-110"
+        "q-110",
+        "q-111",
+        "q-112",
+        "q-115",
+        "q-116"
       ],
       "candidateCardIds": [
         "c-08",
@@ -4929,6 +4961,126 @@
       "sourceUrl": "https://contents.history.go.kr/id/hm_011_0040",
       "formatId": "king-policy-match",
       "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-111",
+      "lessonId": "lesson-13",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-tk-04"
+      ],
+      "candidateConceptIds": [
+        "t-tk-01",
+        "t-tk-02",
+        "t-tk-03",
+        "t-tk-04",
+        "t-tk-05",
+        "t-tk-06",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": "tk-silla-jinheung-beopheung-pair",
+      "sourceUrl": "https://contents.history.go.kr/mobile/mid/kc_n101750",
+      "formatId": "king-compare",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-112",
+      "lessonId": "lesson-13",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-tk-04"
+      ],
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-04",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": "tk-silla-sunsubi-jeokseongbi",
+      "sourceUrl": "https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_10&levelId=kc_r100340",
+      "formatId": "source-what",
+      "actualStimulus": "text",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-113",
+      "lessonId": "lesson-02",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-tk-05"
+      ],
+      "candidateConceptIds": [
+        "t-tk-05"
+      ],
+      "familyId": "tk-silla-golpum-achan-limit",
+      "sourceUrl": "https://contents.history.go.kr/front/tg/view.do?ganada=&levelId=tg_001_0400&pageUnit=10&treeId=0209",
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-114",
+      "lessonId": "lesson-02",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-tk-05"
+      ],
+      "candidateConceptIds": [
+        "t-tk-05"
+      ],
+      "familyId": "tk-silla-golpum-jungwi-trap",
+      "sourceUrl": "https://contents.history.go.kr/mobile/nh/view.do?levelId=nh_011_0020_0040_0030",
+      "formatId": "wrong-statement",
+      "actualStimulus": "none",
+      "points": 2,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-115",
+      "lessonId": "lesson-02",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-tk-06"
+      ],
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-04",
+        "t-tk-06",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": "tk-silla-hwarang-byeongbu-pair",
+      "sourceUrl": "https://contents.history.go.kr/id/hm_021_0020",
+      "formatId": "policy-content",
+      "actualStimulus": "none",
+      "points": 1,
+      "calibratedDifficulty": null
+    },
+    {
+      "id": "q-116",
+      "lessonId": "lesson-02",
+      "status": "source-linked-editorial-review-pending",
+      "conceptIds": [
+        "t-tk-06"
+      ],
+      "candidateConceptIds": [
+        "t-tk-03",
+        "t-tk-04",
+        "t-tk-06",
+        "t-tk-09",
+        "t-tk-10"
+      ],
+      "familyId": "tk-silla-institutions-king-function",
+      "sourceUrl": "https://contents.history.go.kr/id/hm_011_0040",
+      "formatId": "source-what",
+      "actualStimulus": "text",
       "points": 2,
       "calibratedDifficulty": null
     }
