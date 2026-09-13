@@ -10,12 +10,28 @@ import { lessonGuides } from '../data/lessonGuides'
 import { buildTodayPlan } from './studyService'
 import type { ActiveSession } from '../types'
 const date = '2026-01-05'
-const readyIds = ['t-pre-01','t-pre-02','t-pre-07','t-pre-03','t-pre-04','t-pre-05','t-pre-08','t-pre-06']
+const readyIds = ['t-pre-01','t-pre-02','t-pre-07','t-pre-03','t-pre-04','t-pre-05','t-pre-08','t-pre-06','t-tk-01','t-tk-02','t-tk-03']
 const done = (ids: string[]) => db.conceptProgress.bulkPut(ids.map(id => ({ ...emptyConceptProgress(id), learnState: 'completed' as const, firstLearnedAt: date, completedAt: date })))
 const answered = (session: ActiveSession): ActiveSession => ({ ...session, conceptDone: true, confirmedConceptIds: session.conceptIds, answered: session.questionIds.map(questionId => ({ questionId, selectedIndex: 0, correct: false, responseMs: null, attemptId: `attempt-${questionId}` })) })
 afterEach(async () => { vi.restoreAllMocks(); await resetAppDb() })
 
 describe('scoped daily learning', () => {
+  it('offers the six new checks after their three Kingdoms concepts and freezes their source versions', async () => {
+    await seedCore({ paceMode: 'manual', dailyNewConceptCount: 3, dailyQuestionCount: 15 })
+    await done(readyIds.slice(0, 8))
+    const session = await startLesson({ today: date })
+    expect(session.conceptIds).toEqual(['t-tk-01', 't-tk-02', 't-tk-03'])
+    expect([...session.newQuestionIds!].sort()).toEqual(['q-105', 'q-106', 'q-107', 'q-108', 'q-109', 'q-110'])
+    expect(session.guideSnapshots?.flatMap(guide => guide.sections.map(section => section.conceptId))).toEqual(session.conceptIds)
+    const newSnapshots = session.questionSnapshots?.filter(snapshot => session.newQuestionIds!.includes(snapshot.questionId))
+    expect(newSnapshots?.map(snapshot => snapshot.questionId).sort()).toEqual(['q-105', 'q-106', 'q-107', 'q-108', 'q-109', 'q-110'])
+    for (const snapshot of newSnapshots ?? []) {
+      expect(snapshot.contentVersion).toBe(questions.find(question => question.id === snapshot.questionId)?.contentVersion)
+    }
+    const backup = await exportAllData()
+    expect((await restoreBackup(backup)).ok).toBe(true)
+    expect(await startLesson({ today: '2026-01-06' })).toEqual(session)
+  })
   it('freezes only the requested daily concepts and their eligible questions', async () => {
     await seedCore({ paceMode: 'manual', dailyNewConceptCount: 1 })
     const session = await startLesson({ today: date })
@@ -53,15 +69,15 @@ describe('scoped daily learning', () => {
     expect(await db.attempts.count()).toBe(0)
     expect(await db.lessonCompletions.count()).toBe(0)
   })
-  it('stops before unprepared content after the pilot, leaving the rest of the course uncompleted', async () => {
+  it('stops before unprepared content after the published batches, leaving the rest of the course uncompleted', async () => {
     await seedCore({ paceMode: 'manual', dailyNewConceptCount: 20 })
     const session = await startLesson({ today: date })
     expect(session.conceptIds).toEqual(readyIds)
     await completeSession(answered(session))
-    expect(await db.lessonCompletions.count()).toBe(1)
+    expect(await db.lessonCompletions.count()).toBe(3)
     const plan = await computeStudyPlan('2026-01-06')
     expect(plan.currentConceptIds).toEqual([])
-    expect(plan.conceptSchedule?.nextConceptId).toBe('t-tk-01')
+    expect(plan.conceptSchedule?.nextConceptId).toBe('t-tk-04')
     expect(plan.conceptFinishDate).toBeNull()
     await expect(startLesson({ today: '2026-01-06' })).rejects.toThrow('준비 중')
   })

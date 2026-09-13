@@ -2,11 +2,11 @@
   "method": "literal-source-inventory-v1",
   "inputHashes": {
     "src/data/lessons.ts": "36c6247817ed88ad11a84b5ee3c25a72f01eb169a7eb2994c4cefae90ad3746c",
-    "src/data/questions.ts": "b265bc78ce28fdbddec287f2673ce73b8c116e53056dbe7e0726adc107781130",
+    "src/data/questions.ts": "dab9ce2f52844997d99cc0b54ef7f2b529b53599369cb42cf109f73cd63fc6c3",
     "src/data/cards.ts": "734cf1df9cd8d9f9bdce7f0c6041255aefdc9ba3528fde30a481daa5a05f3cdb",
     "src/data/timeline.ts": "692792c6de4c37297cfa40621b90df6278ec5b23440b2d81fa4c873826efdc32",
     "src/data/topicCatalog.ts": "eedf578379555fc3362b37f3746fae59c4c7ac94be8ea026477c4224a5ba3bbe",
-    "src/data/lessonGuides.ts": "7ab485d95b4278495bf7ae99ad0d5ef99dc7f39483f4d522123cad3cb486e68c"
+    "src/data/lessonGuides.ts": "d1055d7f56b9a180437f69a57056d465a10f747e3816a70f06ec5941a741d2e1"
   },
   "caveat": "Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.",
   "counts": {
@@ -747,8 +747,6 @@
         "q-67",
         "q-105",
         "q-106",
-        "q-107",
-        "q-108",
         "q-109",
         "q-110"
       ],
@@ -775,7 +773,7 @@
       "era": "three-kingdoms",
       "lessonId": "lesson-13",
       "status": "source-checked-guide-expert-review-pending",
-      "sourceUrl": "https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0030_0010_0020_0020",
+      "sourceUrl": "https://contents.history.go.kr/id/hm_010_0020",
       "descriptionBlocks": 4,
       "recallPrompts": 1,
       "explicitQuestionIds": [
@@ -824,7 +822,6 @@
         "q-07",
         "q-105",
         "q-106",
-        "q-108",
         "q-109",
         "q-110"
       ],
@@ -1031,8 +1028,6 @@
         "q-67",
         "q-105",
         "q-106",
-        "q-107",
-        "q-108",
         "q-109",
         "q-110"
       ],
@@ -4865,10 +4860,8 @@
         "t-tk-02"
       ],
       "candidateConceptIds": [
-        "t-tk-01",
         "t-tk-02",
-        "t-tk-09",
-        "t-tk-10"
+        "t-tk-09"
       ],
       "familyId": "tk-baekje-ungjin-trigger",
       "sourceUrl": "https://contents.history.go.kr/front/nh/view.do?levelId=nh_006_0030_0020",
@@ -4885,13 +4878,10 @@
         "t-tk-02"
       ],
       "candidateConceptIds": [
-        "t-tk-01",
         "t-tk-02",
-        "t-tk-03",
-        "t-tk-09",
-        "t-tk-10"
+        "t-tk-09"
       ],
-      "familyId": "tk-baekje-sabi-identify",
+      "familyId": "tk-baekje-capital-move-context",
       "sourceUrl": "https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_10&levelId=kc_n101190",
       "formatId": "source-what",
       "actualStimulus": "text",

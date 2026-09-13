@@ -82,7 +82,7 @@ describe('P2 three kingdoms early batch (t-tk-01..03)', () => {
     expect(byId['q-105']?.familyId).toBe('tk-goguryeo-sosurim-reform')
     expect(byId['q-106']?.familyId).toBe('tk-goguryeo-king-wrong-match')
     expect(byId['q-107']?.familyId).toBe('tk-baekje-ungjin-trigger')
-    expect(byId['q-108']?.familyId).toBe('tk-baekje-sabi-identify')
+    expect(byId['q-108']?.familyId).toBe('tk-baekje-capital-move-context')
     expect(byId['q-109']?.familyId).toBe('tk-silla-ichadon-beopheung')
     expect(byId['q-110']?.familyId).toBe('tk-silla-beopheung-linked-reform')
 
@@ -96,7 +96,7 @@ describe('P2 three kingdoms early batch (t-tk-01..03)', () => {
       expect(question?.contentVersion).toBeGreaterThanOrEqual(1)
       expect(question?.sourceUrl?.startsWith('https://')).toBe(true)
       for (const choice of question?.choices ?? []) {
-        expect(question?.explanation).toContain(`「${choice}」`)
+        expect(question?.explanation.replace(/[.!?](?=」)/g, '')).toContain(`「${choice.replace(/[.!?]$/, '')}」`)
       }
     }
 
