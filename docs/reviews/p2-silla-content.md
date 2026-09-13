@@ -122,4 +122,6 @@
 
 ## 7. 제출 SHA
 
-로컬 커밋 후 본 절에 SHA를 기입한다. push·PR·배포 없음.
+로컬 커밋: `80c08a492f75674144168fcda27fb10cb5144f12`  
+브랜치: `cursor/content-silla-02`  
+push·PR·배포: 없음. 자동 생성 `artifacts/question-inspection-report.*`는 미커밋.
