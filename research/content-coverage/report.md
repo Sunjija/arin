@@ -4,15 +4,15 @@
 
 Keyword matches are research candidates, never runtime mappings or verified coverage. Source checks are not expert exam approval. Catalog is an internal draft, not the official complete syllabus.
 
-단원 18 / 개념 목록 88 / 문항 104 / 카드 95 / 연표 70
-설명 원본 연결 8 / 설명 보충 80 / 명시적 개념 연결 문항 10 / 출처 URL 문항 10 / 실제 이미지 문항 0
+단원 18 / 개념 목록 88 / 문항 110 / 카드 95 / 연표 70
+설명 원본 연결 11 / 설명 보충 77 / 명시적 개념 연결 문항 16 / 출처 URL 문항 16 / 실제 이미지 문항 0
 
 ## 단원별 현황
 
 | 단원 | 개념 목록 | 문항 | 상태 |
 |---|---:|---:|---|
 | 선사 문화와 고조선 | 8 | 10 | source-checked-guide-expert-review-pending |
-| 삼국의 성립과 발전 | 7 | 8 | needs-guide |
+| 삼국의 성립과 발전 | 7 | 12 | source-checked-guide-expert-review-pending |
 | 남북국 시대의 변화 | 4 | 7 | needs-guide |
 | 고려 광종과 성종 | 3 | 6 | needs-guide |
 | 고려 무신정권과 대몽항쟁 | 4 | 4 | needs-guide |
@@ -23,7 +23,7 @@ Keyword matches are research candidates, never runtime mappings or verified cove
 | 광복 이후 현대사 | 3 | 13 | needs-guide |
 | 문화유산으로 읽는 한국사 | 12 | 7 | needs-guide |
 | 고려 태조·전시과·공민왕 | 4 | 5 | needs-guide |
-| 삼국의 공간·천도 | 2 | 0 | needs-guide |
+| 삼국의 공간·천도 | 2 | 2 | source-checked-guide-expert-review-pending |
 | 조선 후기 수취·탕평 | 4 | 1 | needs-guide |
 | 통일신라 제도·발해 | 3 | 0 | needs-guide |
 | 동학·대한제국 | 2 | 1 | needs-guide |
@@ -44,16 +44,16 @@ Keyword matches are research candidates, never runtime mappings or verified cove
 | t-pre-06 부여·옥저·동예·삼한 | 4 | 1 | q-103, q-104 | 3/1/0 |
 | t-pre-07 철기 보급과 농업 생산 | 2 | 1 | q-101 | 3/0/0 |
 | t-pre-08 선사~고조선 연표 | 2 | 1 | q-102 | 10/5/2 |
-| t-tk-01 고구려 전성기 왕 | 0 | 0 | 없음 | 4/5/2 |
-| t-tk-02 백제 전성·천도 | 0 | 0 | 없음 | 2/4/0 |
-| t-tk-03 신라 불교 공인 | 0 | 0 | 없음 | 3/3/0 |
-| t-tk-04 진흥왕 한강·순수 | 0 | 0 | 없음 | 3/3/1 |
+| t-tk-01 고구려 전성기 왕 | 4 | 1 | q-105, q-106 | 10/5/2 |
+| t-tk-02 백제 전성·천도 | 4 | 1 | q-107, q-108 | 8/4/0 |
+| t-tk-03 신라 불교 공인 | 4 | 1 | q-109, q-110 | 8/3/0 |
+| t-tk-04 진흥왕 한강·순수 | 0 | 0 | 없음 | 6/3/1 |
 | t-tk-05 골품제 | 0 | 0 | 없음 | 0/0/0 |
 | t-tk-06 화랑·중앙집권 | 0 | 0 | 없음 | 0/0/0 |
 | t-tk-07 삼국 전쟁과 나당 | 0 | 0 | 없음 | 0/0/0 |
 | t-tk-08 삼국 불교·문화 | 0 | 0 | 없음 | 0/0/0 |
-| t-tk-09 삼국 왕 비교 | 0 | 0 | 없음 | 6/10/2 |
-| t-tk-10 삼국 왕대 연표 | 0 | 0 | 없음 | 6/10/3 |
+| t-tk-09 삼국 왕 비교 | 0 | 0 | 없음 | 12/10/2 |
+| t-tk-10 삼국 왕대 연표 | 0 | 0 | 없음 | 12/10/3 |
 | t-ns-01 신라 삼국 통일 | 0 | 0 | 없음 | 0/2/1 |
 | t-ns-02 녹읍·관료전·정전 | 0 | 0 | 없음 | 2/3/1 |
 | t-ns-03 골품 모순과 사회 동요 | 0 | 0 | 없음 | 2/1/0 |

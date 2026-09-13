@@ -124,6 +124,95 @@ export const lessonGuides: LessonGuide[] = [
       },
     ],
   },
+  {
+    lessonId: 'lesson-02',
+    contentVersion: 1,
+    reviewStatus: 'source-checked',
+    checkedAt: '2026-09-13',
+    introduction:
+      '고구려 전성기 왕의 체제 정비·영토 확대·천도/남진을 구분한 뒤, 신라 법흥왕의 율령·불교 공인을 진흥왕의 영토 확장과 섞지 않도록 정리합니다.',
+    sections: [
+      {
+        conceptId: 't-tk-01',
+        title: '고구려 전성기 왕: 체제 정비 → 영토 확대 → 평양 천도',
+        paragraphs: [
+          '선수 지식은 선사·고조선과 이웃 여러 나라의 제도 비교입니다. 이번 목표는 소수림왕·광개토왕·장수왕을 「누가 무엇을 했는가」로 구분하는 것입니다.',
+          '소수림왕(재위 371~384)은 전진으로부터 불교를 받아들여 국가 차원에서 지원하고, 태학을 세워 자제를 교육했으며, 율령을 반포해 통치 질서를 문서로 정리했습니다. 정복 전쟁으로 이름을 남긴 왕이 아니라, 위기를 딛고 체제를 정비한 왕으로 기억하세요.',
+          '광개토왕(광개토대왕)은 정복 전쟁을 통해 영토를 크게 넓혔습니다. 비문에 보이는 영역 확장·대외 원정이 이 왕의 표지입니다. 평양으로의 천도는 그의 업적이 아닙니다.',
+          '장수왕은 427년 국내성에서 평양으로 도읍을 옮기고 남진을 본격화했습니다. 475년경 백제 한성을 함락하며 한강 유역을 확보한 흐름도 장수왕의 남진과 연결됩니다. 「율령·태학」은 소수림, 「영토 확대」는 광개토, 「평양 천도·남진」은 장수로 짝지으세요.',
+        ],
+        recallPrompt:
+          '소수림왕·광개토왕·장수왕의 핵심 업적을 각각 한 가지씩 구분해서 말해 보세요.',
+        expectedElements: [
+          '소수림왕: 불교 수용·태학·율령(체제 정비)',
+          '광개토왕: 정복·영토 확대',
+          '장수왕: 평양 천도·남진(한성 함락 흐름)',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/id/hm_009_0030',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_n101200',
+          'https://contents.history.go.kr/mobile/hm/view.do?levelId=hm_009_0040',
+          'https://contents.history.go.kr/id/hm_009_0050',
+          'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0030_0020_0010_0020',
+        ],
+      },
+      {
+        conceptId: 't-tk-03',
+        title: '신라 법흥왕: 율령·공복과 불교 공인',
+        paragraphs: [
+          '선수 지식은 삼국 왕별 업적 구분입니다. 이번 목표는 법흥왕의 체제 정비·불교 공인을 진흥왕의 한강 진출·순수와 섞지 않는 것입니다.',
+          '법흥왕은 율령을 반포하고 관리의 공복을 정해 위계를 드러냈습니다. 병부 설치 등 관제 정비도 같은 왕의 체제 강화 흐름으로 읽습니다.',
+          '불교는 이미 알려졌으나 귀족의 반대로 공인이 늦었습니다. 이차돈의 순교를 계기로 법흥왕 대에 불교가 공식적으로 인정되었습니다. 「이차돈=불교 공인의 계기」를 「진흥왕=한강·순수비」와 바꾸어 외우지 마세요.',
+          '진흥왕은 한강 유역 확보와 순수비로 영토 확장을 드러낸 뒤 시대의 왕입니다. 이번 개념에서는 법흥왕의 율령·공복·불교 공인만 확인합니다.',
+        ],
+        recallPrompt:
+          '법흥왕의 율령·공복·불교 공인(이차돈)과, 진흥왕의 한강·순수를 각각 짝지어 말해 보세요.',
+        expectedElements: [
+          '법흥왕: 율령·공복, 이차돈을 계기로 한 불교 공인',
+          '진흥왕: 한강 유역·순수(이번 개념의 혼동 대상)',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/id/hm_011_0040',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_10&levelId=kc_n101130',
+          'https://contents.history.go.kr/mobile/km/view.do?levelId=km_011_0020_0010',
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: 'lesson-13',
+    contentVersion: 1,
+    reviewStatus: 'source-checked',
+    checkedAt: '2026-09-13',
+    introduction:
+      '백제의 전성기와 도읍 이동을 왕·원인·지명으로 구분합니다. 한성→웅진→사비를 한 왕의 연속 업적으로 묶지 않습니다.',
+    sections: [
+      {
+        conceptId: 't-tk-02',
+        title: '백제 전성·천도: 근초고왕과 웅진·사비',
+        paragraphs: [
+          '선수 지식은 고구려 전성기 왕의 구분입니다. 이번 목표는 근초고왕의 전성기, 문주왕의 웅진 천도, 성왕의 사비 천도를 원인과 함께 나누는 것입니다.',
+          '근초고왕 대에 백제는 전성기를 맞았습니다. 북으로는 고구려와 맞서고, 남으로는 마한의 남은 세력을 아우르며 영토를 크게 넓혔습니다. 교과서에는 「마한 전 지역 확보」처럼 정리되기도 하지만, 상세 서술에서는 잔여 세력 통합이 한 번에 완전히 끝난 것은 아니라고 봅니다. 학습에서는 「전성기·남쪽 세력 확대」로 두고, 「어느 해에 마한 전체가 한꺼번에 끝났다」고 단정하지 마세요.',
+          '475년 고구려(장수왕)의 공격으로 한성이 함락되자, 문주왕은 도읍을 웅진(오늘날 공주)으로 옮겼습니다. 국난에 따른 긴급 천도입니다.',
+          '성왕은 538년 웅진에서 사비(오늘날 부여)로 천도하고 국호를 남부여로 고치며 중흥과 체제 정비를 추진했습니다. 웅진 천도(문주)와 사비 천도(성왕)를 같은 왕·같은 이유로 묶지 마세요.',
+        ],
+        recallPrompt:
+          '근초고왕의 전성기, 문주왕의 웅진 천도 계기, 성왕의 사비 천도를 각각 구분해 말해 보세요.',
+        expectedElements: [
+          '근초고왕: 전성기·마한 남은 세력 아우름(완전 일괄 통합으로 단정하지 않음)',
+          '문주왕: 한성 함락 뒤 웅진 천도',
+          '성왕: 사비 천도·남부여',
+        ],
+        sourceUrl: 'https://contents.history.go.kr/mobile/ta/view.do?levelId=ta_m71_0030_0010_0020_0020',
+        additionalSourceUrls: [
+          'https://contents.history.go.kr/front/nh/print.do?levelId=nh_006_0020_0020_0040',
+          'https://contents.history.go.kr/front/nh/view.do?levelId=nh_006_0030_0020',
+          'https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_10&levelId=kc_n101190',
+          'https://contents.history.go.kr/id/hm_009_0050',
+        ],
+      },
+    ],
+  },
 ]
 
 export function guideForLesson(lessonId: string): LessonGuide | undefined {
