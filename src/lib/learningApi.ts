@@ -401,8 +401,9 @@ async function startLessonTransaction(input: StartLessonInput): Promise<ActiveSe
     const guide = guideForLesson(concept?.lessonId ?? '')
     const section = guide?.sections.find(item => item.conceptId === id)
     if (!guide || !section) continue
-    const group = guideSnapshots.find(item => item.lessonId === guide.lessonId)
-    if (group) group.sections.push(structuredClone(section))
+    // Merge only adjacent sections: the course can return to a lesson after another lesson.
+    const group = guideSnapshots.at(-1)
+    if (group?.lessonId === guide.lessonId) group.sections.push(structuredClone(section))
     else guideSnapshots.push(structuredClone({ ...guide, introduction: '오늘 배울 개념의 연결을 살펴보세요.', sections: [section] }))
   }
   const nextProgress = markConceptsLearning(ensureProgressRows(progress, conceptIds), conceptIds, today)
